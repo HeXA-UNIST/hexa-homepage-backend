@@ -1,22 +1,61 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '2.7.7'
-	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'org.springframework.boot' version '2.6.11'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
-group = 'com.example'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+group = 'pro.hexa'
+version = '0.0.1'
 
 repositories {
 	mavenCentral()
 }
 
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+allprojects {
+	apply plugin: 'java'
+	sourceCompatibility = '11'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
+subprojects {
+	sourceCompatibility = '11'
+	apply plugin: 'java'
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
+
+	buildscript {
+		ext {
+			queryDslVersion = "5.0.0"
+		}
+	}
+
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		compileOnly 'org.projectlombok:lombok'
+		annotationProcessor 'org.projectlombok:lombok'
+	}
+
+	configurations {
+		compileOnly {
+			extendsFrom annotationProcessor
+		}
+	}
+
+	test {
+		useJUnitPlatform()
+	}
+
+	tasks {
+		register("prepareKotlinBuildScriptModel"){}
+	}
+}
+
+dependencies {
+}
+
+project('hexa-homepage-backend-main-app') {
+	dependencies {
+		implementation project(':hexa-homepage-backend-core')
+	}
 }
