@@ -57,5 +57,6 @@ dependencies {
 project('hexa-homepage-backend-main-app') {
 	dependencies {
 		implementation project(':hexa-homepage-backend-core')
+		implementation project(':hexa-homepage-backend-domain')
 	}
 }
