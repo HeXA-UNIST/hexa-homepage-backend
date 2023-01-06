@@ -1,1 +1,3 @@
-rootProject.name = 'demo'
+rootProject.name = 'hexa-homepage-backend'
+include 'hexa-homepage-backend-main-app'
+include 'hexa-homepage-backend-core'

@@ -1,0 +1,15 @@
+version: 0.0.1
+server:
+  port: 8080
+---
+spring:
+  config:
+    activate:
+      on-profile: default,development
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
