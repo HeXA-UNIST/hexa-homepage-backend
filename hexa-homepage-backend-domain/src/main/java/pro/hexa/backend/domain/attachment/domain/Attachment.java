@@ -20,4 +20,16 @@ public class Attachment extends AbstractEntity {
     @Column(name = "attachment_id")
     private Long id;
 
+    @Comment(value = "위치")
+    @Column(length = 200)
+    @Column
+    private String location;
+
+    @Comment(value = "이름")
+    @Column(length = 100)
+    private String name;
+    
+    @Comment(value = "날짜")
+    private int date;
+
 }

@@ -10,18 +10,18 @@ import javax.persistence.Id;
 import lombok.Getter;
 import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.model.model.AbstractEntity;
-import pro.hexa.backend.domain.news.model.NEWS_TYPE;
+import pro.hexa.backend.domain.board.model.BOARD_TYPE;
 
-@Entity(name = "news")
+@Entity(name = "board")
 @Getter
-public class News extends AbstractEntity {
+public class Board extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "news_id")
+    @Column(name = "board_id")
     private Long id;
 
-    @Comment(value = "뉴스 종류")
+    @Comment(value = "게시글 종류")
     @Enumerated(value = EnumType.STRING)
     @Column(length = 2)
     private NEWS_TYPE newsType;
@@ -37,4 +37,17 @@ public class News extends AbstractEntity {
     @Comment(value = "게시글")
     @Column(length = 3000)
     private String content;
+
+    @Comment(value = "댓글")
+    @Column(length = 300)
+    private String comments;//??? 어케 구현하지
+
+    @Comment(value = "작성자")
+    private int writerUser;
+
+    @Comment(value = "추천")
+    private int recommend;
+
+    @Comment(value = "스크랩")
+    private int scrap;
 }
