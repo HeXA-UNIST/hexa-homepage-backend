@@ -3,8 +3,10 @@ package pro.hexa.backend.domain.project.model;
 import pro.hexa.backend.domain.model.model.EnumModel;
 
 public enum DISCLOSURE_TYPE implements EnumModel {
-    공개("공개"),
-    비공개("비공개");
+    Member("member"),
+    Graduate("graduate"),
+    Pro("pro"),
+    Admin("admin");
 
     private final String value;
 
