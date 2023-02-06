@@ -2,6 +2,7 @@ package pro.hexa.backend.domain.project.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -36,11 +37,11 @@ public class Project extends AbstractEntity{
 
     @Comment(value = "시작일")
     @Column
-    private int startDate;
+    private LocalDateTime startDate;
 
     @Comment(value = "종료일")
     @Column
-    private int endDate;
+    private LocalDateTime endDate;
 
     @Comment(value = "기술스택")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -52,12 +53,12 @@ public class Project extends AbstractEntity{
 
     @Comment(value = "노출")
     @Enumerated(EnumType.STRING)
-    @Column
+    @Column(length = 8)
     private DISCLOSURE_TYPE disclosure;
 
     @Comment(value = "상태")
     @Enumerated(EnumType.STRING)
-    @Column
+    @Column(length = 4)
     private STATE_TYPE state;
 
     @Comment(value = "내용")

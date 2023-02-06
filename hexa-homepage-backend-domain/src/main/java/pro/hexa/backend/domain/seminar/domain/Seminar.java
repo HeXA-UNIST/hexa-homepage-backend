@@ -2,6 +2,7 @@ package pro.hexa.backend.domain.seminar.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,7 +18,7 @@ import pro.hexa.backend.domain.attachment.domain.Attachment;
 public class Seminar extends AbstractActivity {
     @Comment("날짜")
     @Column
-    private int date;
+    private LocalDateTime date;
 
 //    @Comment("작성자")
 //    @Column

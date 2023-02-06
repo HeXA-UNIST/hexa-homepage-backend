@@ -34,6 +34,6 @@ public class ProjectMember extends AbstractEntity {
 
     @Comment("권한")
     @Enumerated(EnumType.STRING)
-    @Column
+    @Column(length = 8)
     private AUTHORIZATION_TYPE authorization;
 }
