@@ -25,7 +25,7 @@ public abstract class BoardComment extends AbstractEntity {
 
     @Comment(value = "작성자")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="id")
+    @JoinColumn(name="user_id")
     private User writerUser;
 
 }
