@@ -3,6 +3,7 @@ package pro.hexa.backend.domain.Board.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,7 +21,7 @@ public class ChildBoardComment extends BoardComment {
     @Column(name = "childBoardComment_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="parentBoardComment_id")
     private Board parentComment;
 }

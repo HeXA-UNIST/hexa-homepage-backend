@@ -31,6 +31,7 @@ public class News extends AbstractEntity {
     private String title;
     
     @Comment(value = "날짜")
+    @Column
     private int date;
 
     @Comment(value = "게시글")

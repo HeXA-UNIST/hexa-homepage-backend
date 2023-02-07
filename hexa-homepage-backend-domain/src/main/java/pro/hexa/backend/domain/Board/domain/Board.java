@@ -3,10 +3,12 @@ package pro.hexa.backend.domain.Board.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,24 +36,28 @@ public class Board extends AbstractEntity {
     @Comment(value = "제목")
     @Column(length = 300)
     private String title;
-    
-    @Comment(value = "날짜")
-    private int date;
 
     @Comment(value = "게시글")
     @Column(length = 3000)
     private String content;
 
-    @OneToMany(mappedBy="board")
-    private List<ParentBoardComment> parentBoardComments = new ArrayList<ParentBoardComment>();
+    @Comment("댓글")
+    @OneToMany(mappedBy="board", 
+        fetch = FetchType.LAZY, 
+        cascade = CascadeType.REMOVE, 
+        orphanRemoval = true)
+    private List<ParentBoardComment> parentBoardComments = new ArrayList<>();
 
 
     @Comment(value = "작성자")
+    @Column
     private int writerUser;
 
     @Comment(value = "추천")
+    @Column
     private int recommend;
 
     @Comment(value = "스크랩")
+    @Column
     private int scrap;
 }

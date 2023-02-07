@@ -29,7 +29,8 @@ public class Attachment extends AbstractEntity {
     @Column(length = 100)
     private String name;
     
-    @Comment(value = "날짜")
-    private int date;
+    @Comment(value = "용량")
+    @Column
+    private int size;
 
 }
