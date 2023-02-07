@@ -25,6 +25,7 @@ import pro.hexa.backend.domain.user.model.AUTHORIZATION_TYPE;
 import pro.hexa.backend.domain.user.model.GENDER_TYPE;
 import pro.hexa.backend.domain.user.model.POSITION_TYPE;
 import pro.hexa.backend.domain.user.model.STATE_TYPE;
+import pro.hexa.backend.domain.project_member.domain.ProjectMember;
 
 @Entity(name = "user")
 @Getter
@@ -103,7 +104,7 @@ public class User extends AbstractEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<SNS> snsList = new ArrayList<>();
 
-//    @Comment("참여 프로젝트 - 프로젝트 멤버 리스트")
-//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-//    private List<ProjectMember> projectMembers = new ArrayList<>();
+    @Comment("참여 프로젝트 - 프로젝트 멤버 리스트")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ProjectMember> projectMembers = new ArrayList<>();
 }
