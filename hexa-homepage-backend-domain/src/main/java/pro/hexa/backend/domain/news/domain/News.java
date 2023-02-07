@@ -1,5 +1,6 @@
 package pro.hexa.backend.domain.news.domain;
 
+import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -29,10 +30,10 @@ public class News extends AbstractEntity {
     @Comment(value = "제목")
     @Column(length = 300)
     private String title;
-    
+
     @Comment(value = "날짜")
     @Column
-    private int date;
+    private LocalDate date;
 
     @Comment(value = "게시글")
     @Column(length = 3000)

@@ -22,10 +22,6 @@ import lombok.Getter;
 @Entity(name = "parentBoardComment")
 @Getter
 public class ParentBoardComment extends BoardComment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "parentBoardComment_id")
-    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="board_id")
@@ -33,8 +29,8 @@ public class ParentBoardComment extends BoardComment {
 
     @Comment("대댓글")
     @OneToMany(mappedBy="parentComment",
-        fetch = FetchType.LAZY, 
-        cascade = CascadeType.REMOVE, 
+        fetch = FetchType.LAZY,
+        cascade = CascadeType.REMOVE,
         orphanRemoval = true)
     private List<ChildBoardComment> childBoardComments = new ArrayList<>();
 
