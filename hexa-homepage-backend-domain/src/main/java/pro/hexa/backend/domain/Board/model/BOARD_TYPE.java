@@ -1,14 +1,14 @@
-package pro.hexa.backend.domain.news.model;
+package pro.hexa.backend.domain.Board.model;
 
 import pro.hexa.backend.domain.model.model.EnumModel;
 
-public enum NEWS_TYPE implements EnumModel {
+public enum BOARD_TYPE implements EnumModel {
     공지("공지"),
     수상("수상");
 
     private String value;
 
-    NEWS_TYPE(String value) {
+    BOARD_TYPE(String value) {
         this.value = value;
     }
 

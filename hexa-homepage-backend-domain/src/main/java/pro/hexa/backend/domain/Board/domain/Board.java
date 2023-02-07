@@ -1,4 +1,4 @@
-package pro.hexa.backend.domain.news.domain;
+package pro.hexa.backend.domain.Board.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import lombok.Getter;
 import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.model.model.AbstractEntity;
-import pro.hexa.backend.domain.board.model.BOARD_TYPE;
+import pro.hexa.backend.domain.Board.model.BOARD_TYPE;
 
 @Entity(name = "board")
 @Getter
@@ -24,11 +24,10 @@ public class Board extends AbstractEntity {
     @Comment(value = "게시글 종류")
     @Enumerated(value = EnumType.STRING)
     @Column(length = 2)
-    private NEWS_TYPE newsType;
+    private BOARD_TYPE boardType;
 
     @Comment(value = "제목")
     @Column(length = 300)
-    @Column
     private String title;
     
     @Comment(value = "날짜")

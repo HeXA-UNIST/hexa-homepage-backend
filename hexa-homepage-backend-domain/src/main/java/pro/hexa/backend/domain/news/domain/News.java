@@ -28,7 +28,6 @@ public class News extends AbstractEntity {
 
     @Comment(value = "제목")
     @Column(length = 300)
-    @Column
     private String title;
     
     @Comment(value = "날짜")
