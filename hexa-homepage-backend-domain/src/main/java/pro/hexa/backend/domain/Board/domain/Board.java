@@ -1,5 +1,8 @@
 package pro.hexa.backend.domain.Board.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -7,6 +10,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
 import lombok.Getter;
 import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.model.model.AbstractEntity;
@@ -37,9 +42,9 @@ public class Board extends AbstractEntity {
     @Column(length = 3000)
     private String content;
 
-    @Comment(value = "댓글")
-    @Column(length = 300)
-    private String comments;//??? 어케 구현하지
+    @OneToMany(mappedBy="board")
+    private List<ParentBoardComment> parentBoardComments = new ArrayList<ParentBoardComment>();
+
 
     @Comment(value = "작성자")
     private int writerUser;
