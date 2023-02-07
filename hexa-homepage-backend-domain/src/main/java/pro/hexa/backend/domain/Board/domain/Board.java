@@ -12,11 +12,14 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import lombok.Getter;
 import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.model.model.AbstractEntity;
+import pro.hexa.backend.domain.user.domain.User;
 import pro.hexa.backend.domain.Board.model.BOARD_TYPE;
 
 @Entity(name = "board")
@@ -48,10 +51,10 @@ public class Board extends AbstractEntity {
         orphanRemoval = true)
     private List<ParentBoardComment> parentBoardComments = new ArrayList<>();
 
-
     @Comment(value = "작성자")
-    @Column
-    private int writerUser;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="id")
+    private User writerUser;
 
     @Comment(value = "추천")
     @Column

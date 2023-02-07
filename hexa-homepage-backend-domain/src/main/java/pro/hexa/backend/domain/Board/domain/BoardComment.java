@@ -4,13 +4,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.MappedSuperclass;
 
 import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.model.model.AbstractEntity;
 
 @Entity
-@MappedSuperclass
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class BoardComment extends AbstractEntity {
 
