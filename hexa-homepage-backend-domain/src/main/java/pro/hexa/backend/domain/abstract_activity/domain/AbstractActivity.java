@@ -14,7 +14,7 @@ import pro.hexa.backend.domain.model.model.AbstractEntity;
 @Entity(name = "abstract_activity")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Getter
-public class AbstractActivity extends AbstractEntity {
+public abstract class AbstractActivity extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "abstract_activity_id")
