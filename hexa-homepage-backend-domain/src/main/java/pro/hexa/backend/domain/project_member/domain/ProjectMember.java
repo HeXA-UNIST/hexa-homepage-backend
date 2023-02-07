@@ -13,7 +13,7 @@ import lombok.Getter;
 import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.model.model.AbstractEntity;
 import pro.hexa.backend.domain.project.domain.Project;
-//import pro.hexa.backend.domain.user.domain.User;
+import pro.hexa.backend.domain.user.domain.User;
 import pro.hexa.backend.domain.project_member.model.AUTHORIZATION_TYPE;
 
 @Entity(name = "project_member")
@@ -28,9 +28,9 @@ public class ProjectMember extends AbstractEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
 
-//    @Comment("참여 맴버")
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private User user;
+    @Comment("참여 맴버")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     @Comment("권한")
     @Enumerated(EnumType.STRING)
