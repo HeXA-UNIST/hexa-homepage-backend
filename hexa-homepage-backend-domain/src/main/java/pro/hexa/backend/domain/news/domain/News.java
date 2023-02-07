@@ -27,10 +27,14 @@ public class News extends AbstractEntity {
     private NEWS_TYPE newsType;
 
     @Comment(value = "제목")
-    @Column
+    @Column(length = 300)
     private String title;
+    
+    @Comment(value = "날짜")
+    @Column
+    private int date;
 
-    @Comment(value = "세부 내용")
+    @Comment(value = "게시글")
     @Column(length = 3000)
-    private String detail;
+    private String content;
 }

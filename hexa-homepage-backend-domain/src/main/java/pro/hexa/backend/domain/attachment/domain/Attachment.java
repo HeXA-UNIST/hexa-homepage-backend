@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import lombok.Getter;
+import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.model.model.AbstractEntity;
 
 @Entity(name = "attachment")
@@ -19,5 +20,17 @@ public class Attachment extends AbstractEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "attachment_id")
     private Long id;
+
+    @Comment(value = "위치")
+    @Column(length = 200)
+    private String location;
+
+    @Comment(value = "이름")
+    @Column(length = 100)
+    private String name;
+    
+    @Comment(value = "용량")
+    @Column
+    private int size;
 
 }
