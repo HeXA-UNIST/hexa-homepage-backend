@@ -16,11 +16,6 @@ import lombok.Getter;
 @Getter
 public class ChildBoardComment extends BoardComment {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "childBoardComment_id")
-    private Long id;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="parentBoardComment_id")
     private Board parentComment;
