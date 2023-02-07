@@ -20,7 +20,7 @@ import pro.hexa.backend.domain.attachment.domain.Attachment;
 import pro.hexa.backend.domain.model.model.AbstractEntity;
 import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
 import pro.hexa.backend.domain.project_member.domain.ProjectMember;
-import pro.hexa.backend.domain.project.model.DISCLOSURE_TYPE;
+import pro.hexa.backend.domain.project_member.model.AUTHORIZATION_TYPE;
 import pro.hexa.backend.domain.project.model.STATE_TYPE;
 
 @Entity(name = "project")
@@ -54,7 +54,7 @@ public class Project extends AbstractEntity{
     @Comment(value = "노출")
     @Enumerated(EnumType.STRING)
     @Column(length = 8)
-    private DISCLOSURE_TYPE disclosure;
+    private AUTHORIZATION_TYPE authorization;
 
     @Comment(value = "상태")
     @Enumerated(EnumType.STRING)
