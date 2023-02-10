@@ -26,15 +26,15 @@ public class ProjectPageController {
                                                                       @RequestParam(required = false) String sort,
                                                                       @RequestParam(required = false) String includeTechStack,
                                                                       @RequestParam(required = false) String excludeTechStack,
-                                                                      @RequestParam(required = false) int year,
-                                                                      @RequestParam(required = false) int pageNum,
-                                                                      @RequestParam(required = false) int page) {
+                                                                      @RequestParam(required = false) Integer year,
+                                                                      @RequestParam(required = false) Integer pageNum,
+                                                                      @RequestParam(required = false) Integer page) {
         return new ResponseEntity<>(projectPageService.getProjectListResponse(), HttpStatus.OK);
     }
 
     @Operation(description = "project를 조회")
     @GetMapping()
-    public ResponseEntity<ProjectResponse> getProjectResponse(@RequestParam int projectId) {
-        return new ResponseEntity<>(projectPageService.getProjectResponse(), HttpStatus.OK);
+    public ResponseEntity<ProjectResponse> getProjectResponse(@RequestParam Long projectId) {
+        return new ResponseEntity<>(projectPageService.getProjectResponse(projectId), HttpStatus.OK);
     }
 }

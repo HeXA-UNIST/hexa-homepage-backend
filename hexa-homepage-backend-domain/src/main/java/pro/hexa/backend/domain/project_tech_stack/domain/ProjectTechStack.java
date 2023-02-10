@@ -2,9 +2,9 @@ package pro.hexa.backend.domain.project_tech_stack.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import lombok.Getter;
@@ -17,7 +17,7 @@ import pro.hexa.backend.domain.project.domain.Project;
 public class ProjectTechStack extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "projcet_tech_stack_id")
+    @Column(name = "project_tech_stack_id")
     private Long id;
 
     @Comment("내용")

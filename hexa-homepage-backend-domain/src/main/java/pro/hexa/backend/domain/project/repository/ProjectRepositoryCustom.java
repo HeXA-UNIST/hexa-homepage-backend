@@ -5,5 +5,5 @@ import pro.hexa.backend.domain.project.domain.Project;
 
 public interface ProjectRepositoryCustom {
     List<Project> findForProjectListByQuery();
-    Project findForProjectByQuery();
+    Project findForProjectByQuery(Long projectId);
 }

@@ -1,10 +1,12 @@
 package pro.hexa.backend.domain.project.repository;
 
-import java.util.List;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import pro.hexa.backend.domain.project.domain.Project;
 import pro.hexa.backend.domain.project.domain.QProject;
+import pro.hexa.backend.domain.project_member.domain.QProjectMember;
+import pro.hexa.backend.domain.project_tech_stack.domain.QProjectTechStack;
 
 @RequiredArgsConstructor
 public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
@@ -20,9 +22,19 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
     }
 
     @Override
-    public Project findForProjectByQuery() {
+    public Project findForProjectByQuery(Long id) {
+        if (id == null) {
+            return null;
+        }
+
         QProject project = QProject.project;
+        QProjectMember projectMember = QProjectMember.projectMember;
+        QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
+
         return queryFactory.selectFrom(project)
-                .fetchOne();    // 이게 맞나요?
+            .leftJoin(project.members, projectMember).fetchJoin()
+            .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
+            .where(project.id.eq(id))
+            .fetchOne();
     }
 }

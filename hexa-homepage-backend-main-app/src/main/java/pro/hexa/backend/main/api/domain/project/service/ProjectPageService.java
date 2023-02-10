@@ -1,9 +1,7 @@
 package pro.hexa.backend.main.api.domain.project.service;
 
-import static pro.hexa.backend.main.api.common.utils.constant.yyyy_MM_dd;
-
-import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,12 +19,16 @@ import pro.hexa.backend.main.api.domain.project.dto.ProjectResponse;
 @RequiredArgsConstructor
 public class ProjectPageService {
 
-    private ProjectRepository projectRepository;
+    private final ProjectRepository projectRepository;
 
     public ProjectListResponse getProjectListResponse() {
         List<Project> projectList = projectRepository.findForProjectListByQuery();
         List<ProjectDto> projects = projectList.stream()
-                .map(this::transformProjectToProjectListDto)
+                .map(project -> {
+                    ProjectDto projectDto = new ProjectDto();
+                    projectDto.fromProject(project);
+                    return projectDto;
+                })
                 .collect(Collectors.toList());
 
         return ProjectListResponse.builder()
@@ -36,40 +38,12 @@ public class ProjectPageService {
                 .build();
     }
 
-    private ProjectDto transformProjectToProjectListDto(Project project) {
-        return ProjectDto.builder()
-                .projectId(project.getId())
-                .title(project.getTitle())
-                .thumbnailUrl(project.getThumbnail().getLocation())
-                .startDate(project.getStartDate().format(DateTimeFormatter.ofPattern(yyyy_MM_dd)))
-                .endDate(project.getEndDate().format(DateTimeFormatter.ofPattern(yyyy_MM_dd)))
-                .techStackList(project.getProjectTechStacks())
-                .memberList(project.getMembers())
-                .status(project.getState())
-                .public_status(project.getAuthorization())
-                .build();
-    }
+    public ProjectResponse getProjectResponse(Long projectId) {
+        ProjectResponse projectResponse = new ProjectResponse();
 
-    public ProjectResponse getProjectResponse() {
-        Project _project = projectRepository.findForProjectByQuery();
-        ProjectDto project = transformProjectToProjectDto(_project);
-        return ProjectResponse.builder()
-                .project(project)
-                .build();
-    }
+        Optional.ofNullable(projectRepository.findForProjectByQuery(projectId))
+            .ifPresent(projectResponse::fromProject);
 
-    private ProjectDto transformProjectToProjectDto(Project project) {
-        return ProjectDto.builder()
-                .projectId(project.getId())
-                .title(project.getTitle())
-                .thumbnailUrl(project.getThumbnail().getLocation())
-                .startDate(project.getStartDate().format(DateTimeFormatter.ofPattern(yyyy_MM_dd)))
-                .endDate(project.getEndDate().format(DateTimeFormatter.ofPattern(yyyy_MM_dd)))
-                .techStackList(project.getProjectTechStacks())
-                .memberList(project.getMembers())
-                .status(project.getState())
-                .public_status(project.getAuthorization())
-                .content(project.getContent())
-                .build();
+        return projectResponse;
     }
 }
