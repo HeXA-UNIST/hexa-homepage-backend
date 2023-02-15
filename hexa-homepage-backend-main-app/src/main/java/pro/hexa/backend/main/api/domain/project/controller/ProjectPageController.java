@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectListResponse;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectResponse;
+import pro.hexa.backend.main.api.domain.project.dto.ProjectTechStackResponse;
 import pro.hexa.backend.main.api.domain.project.service.ProjectPageService;
 import java.util.List;
 
@@ -38,5 +39,11 @@ public class ProjectPageController {
     @GetMapping()
     public ResponseEntity<ProjectResponse> getProjectResponse(@RequestParam Long projectId) {
         return new ResponseEntity<>(projectPageService.getProjectResponse(projectId), HttpStatus.OK);
+    }
+
+    @Operation(description = "techStackList를 가져오는 API ")
+    @GetMapping("/techStackList")
+    public ResponseEntity<ProjectTechStackResponse> getProjectTechStackResponse() {
+        return new ResponseEntity<>(projectPageService.getProjectTechStackResponse(), HttpStatus.OK);
     }
 }

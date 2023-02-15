@@ -1,6 +1,7 @@
 package pro.hexa.backend.domain.project.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -66,5 +67,12 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
             .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
             .where(project.id.eq(id))
             .fetchOne();
+    }
+
+    @Override
+    public List<String> findTechStackByQuery() {
+        QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
+        List<String> techStackList = new ArrayList<String>();
+        return techStackList;
     }
 }

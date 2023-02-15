@@ -12,6 +12,7 @@ import pro.hexa.backend.domain.project.repository.ProjectRepository;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectDto;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectListResponse;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectResponse;
+import pro.hexa.backend.main.api.domain.project.dto.ProjectTechStackResponse;
 
 @Service
 @Slf4j
@@ -46,5 +47,12 @@ public class ProjectPageService {
             .ifPresent(projectResponse::fromProject);
 
         return projectResponse;
+    }
+
+    public ProjectTechStackResponse getProjectTechStackResponse() {
+        ProjectTechStackResponse projectTechStackResponse = new ProjectTechStackResponse();
+        List<String> techStackList = projectRepository.findTechStackByQuery();
+
+        return projectTechStackResponse;
     }
 }
