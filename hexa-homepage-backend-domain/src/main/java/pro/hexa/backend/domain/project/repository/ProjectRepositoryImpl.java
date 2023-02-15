@@ -23,7 +23,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
         List<STATE_TYPE> stats = status.stream().map(STATE_TYPE::valueOf).collect(Collectors.toList());
 
-        List<Project> content = queryFactory.selectFrom(project)
+        return queryFactory.selectFrom(project)
             .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
             .leftJoin(project.members, projectMember).fetchJoin()
             .where(project.title.contains(searchText),
@@ -36,8 +36,6 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
             .offset(pageNum)
             .limit(page)
             .fetch();
-
-        return content;
     }
 
     @Override
@@ -48,7 +46,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
         List<STATE_TYPE> stats = status.stream().map(STATE_TYPE::valueOf).collect(Collectors.toList());
 
-        int maxPage = queryFactory.selectFrom(project)
+        return queryFactory.selectFrom(project)
             .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
             .leftJoin(project.members, projectMember).fetchJoin()
             .where(project.title.contains(searchText),
@@ -58,8 +56,6 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
                 // year는 무엇을 기준으로 할지 제대로 정의 되어있지 않음
             )
             .fetch().size();
-
-        return maxPage;
     }
 
     @Override
