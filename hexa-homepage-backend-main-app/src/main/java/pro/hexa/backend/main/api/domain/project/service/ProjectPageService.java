@@ -40,10 +40,14 @@ public class ProjectPageService {
             })
             .collect(Collectors.toList());
 
+        int maxPage = projectRepository.getMaxPage(
+            searchText, status, sort, includeTechStack, excludeTechStack, year, pageNum, page
+        );
+
         return ProjectListResponse.builder()
             .projects(projects)
             .page(page)
-            .maxPage(3) // 임시로 넣어놨습니다
+            .maxPage(maxPage)
             .build();
     }
 

@@ -28,10 +28,13 @@ public class SeminarPageService {
                 return seminarDto;
             })
             .collect(Collectors.toList());
+
+        int maxPage = seminarRepository.getMaxPage(searchText, year, pageNum, page);
+
         return SeminarListResponse.builder()
             .seminars(seminars)
             .page(page)
-            .maxPage(3) // 임시로 넣어놨습니다
+            .maxPage(maxPage)
             .build();
     }
 }

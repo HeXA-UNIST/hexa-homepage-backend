@@ -9,4 +9,7 @@ public interface ProjectRepositoryCustom {
         List<String> excludeTechStack, Integer year, Integer pageNum, Integer page);
 
     Project findForProjectByQuery(Long projectId);
+
+    int getMaxPage(String searchText, List<String> status, String sort, List<String> includeTechStack,
+        List<String> excludeTechStack, Integer year, Integer pageNum, Integer page);
 }

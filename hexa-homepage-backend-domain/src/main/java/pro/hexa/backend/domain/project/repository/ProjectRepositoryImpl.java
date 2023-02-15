@@ -40,7 +40,18 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
             .limit(page)
             .fetch();
 
-        int totalsize = queryFactory.selectFrom(project)
+        return content; // totalsize도 같이 넘겨야됨
+    }
+
+    @Override
+    public int getMaxPage(String searchText, List<String> status, String sort, List<String> includeTechStack,
+        List<String> excludeTechStack, Integer year, Integer pageNum, Integer page) {
+        QProject project = QProject.project;
+        QProjectMember projectMember = QProjectMember.projectMember;
+        QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
+        List<STATE_TYPE> stats = status.stream().map(STATE_TYPE::valueOf).collect(Collectors.toList());
+
+        int maxPage = queryFactory.selectFrom(project)
             .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
             .leftJoin(project.members, projectMember).fetchJoin()
             .where(project.title.contains(searchText),
@@ -51,7 +62,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
             )
             .fetch().size();
 
-        return content; // totalsize도 같이 넘겨야됨
+        return maxPage;
     }
 
     @Override
