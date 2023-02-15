@@ -21,8 +21,9 @@ public class ProjectPageService {
 
     private final ProjectRepository projectRepository;
 
-    public ProjectListResponse getProjectListResponse() {
-        List<Project> projectList = projectRepository.findForProjectListByQuery();
+    public ProjectListResponse getProjectListResponse(String searchText, List<String> status, String sort, List<String> includeTechStack,
+                                                      List<String> excludeTechStack, Integer year, Integer pageNum, Integer page) {
+        List<Project> projectList = projectRepository.findForProjectListByQuery(searchText, status, sort, includeTechStack, excludeTechStack, year, pageNum, page);
         List<ProjectDto> projects = projectList.stream()
                 .map(project -> {
                     ProjectDto projectDto = new ProjectDto();
@@ -33,7 +34,7 @@ public class ProjectPageService {
 
         return ProjectListResponse.builder()
                 .projects(projects)
-                .page(2)    // 임시로 넣어놨습니다
+                .page(page)
                 .maxPage(3) // 임시로 넣어놨습니다
                 .build();
     }

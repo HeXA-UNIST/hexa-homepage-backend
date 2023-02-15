@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectListResponse;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectResponse;
 import pro.hexa.backend.main.api.domain.project.service.ProjectPageService;
+import java.util.List;
 
 @RestController
 @RequestMapping("/project")
@@ -22,14 +23,15 @@ public class ProjectPageController {
     @Operation(description = "project 리스트를 조회")
     @GetMapping("/query")
     public ResponseEntity<ProjectListResponse> getProjectListResponse(@RequestParam(required = false, defaultValue = "") String searchText,
-                                                                      @RequestParam(required = false) String status,
+                                                                      @RequestParam(required = false) List<String> status,
                                                                       @RequestParam(required = false) String sort,
-                                                                      @RequestParam(required = false) String includeTechStack,
-                                                                      @RequestParam(required = false) String excludeTechStack,
+                                                                      @RequestParam(required = false) List<String> includeTechStack,
+                                                                      @RequestParam(required = false) List<String> excludeTechStack,
                                                                       @RequestParam(required = false) Integer year,
                                                                       @RequestParam(required = false) Integer pageNum,
                                                                       @RequestParam(required = false) Integer page) {
-        return new ResponseEntity<>(projectPageService.getProjectListResponse(), HttpStatus.OK);
+        return new ResponseEntity<>(projectPageService.getProjectListResponse(searchText, status, sort,
+                includeTechStack, excludeTechStack, year, pageNum, page), HttpStatus.OK);
     }
 
     @Operation(description = "project를 조회")
