@@ -15,6 +15,7 @@ import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.attachment.domain.Attachment;
 import pro.hexa.backend.domain.major.domain.Major;
@@ -29,7 +30,8 @@ import pro.hexa.backend.domain.project_member.domain.ProjectMember;
 
 @Entity(name = "user")
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class User extends AbstractEntity {
 
     @Id
