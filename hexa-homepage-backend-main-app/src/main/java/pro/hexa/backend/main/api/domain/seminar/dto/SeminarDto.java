@@ -27,9 +27,8 @@ public class SeminarDto {
     @Schema(description = "유저 이름")
     protected String writerName;
 
-//    @Schema(description = "컨텐츠")
-//    protected String content;
-//    // content 없어요
+    @Schema(description = "컨텐츠")
+    protected String content;
 
     @Schema(description = "첨부파일")
     protected List<SeminarAttatchmentDto> attachment;
@@ -40,6 +39,7 @@ public class SeminarDto {
         this.date = toFormat(seminar.getDate(), YYYY_MM_DD);
         this.writerUserId = seminar.getUser().getId();
         this.writerName = seminar.getUser().getName();
+        this.content = seminar.getContent();
         this.attachment = seminar.getAttachments().stream()
                 .map(SeminarAttatchmentDto::fromSeminarAttatchment)
                 .collect(Collectors.toList());
