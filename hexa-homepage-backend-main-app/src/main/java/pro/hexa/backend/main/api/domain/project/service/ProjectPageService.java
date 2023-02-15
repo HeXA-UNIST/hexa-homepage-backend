@@ -25,22 +25,26 @@ public class ProjectPageService {
     private final ProjectRepository projectRepository;
     private final ProjectTechStackRepository projectTechStackRepository;
 
-    public ProjectListResponse getProjectListResponse(String searchText, List<String> status, String sort, List<String> includeTechStack,
-                                                      List<String> excludeTechStack, Integer year, Integer pageNum, Integer page) {
-        List<Project> projectList = projectRepository.findForProjectListByQuery(searchText, status, sort, includeTechStack, excludeTechStack, year, pageNum, page);
+    public ProjectListResponse getProjectListResponse(
+        String searchText, List<String> status, String sort, List<String> includeTechStack, List<String> excludeTechStack, Integer year,
+        Integer pageNum, Integer page
+    ) {
+        List<Project> projectList = projectRepository.findForProjectListByQuery(
+            searchText, status, sort, includeTechStack, excludeTechStack, year, pageNum, page
+        );
         List<ProjectDto> projects = projectList.stream()
-                .map(project -> {
-                    ProjectDto projectDto = new ProjectDto();
-                    projectDto.fromProject(project);
-                    return projectDto;
-                })
-                .collect(Collectors.toList());
+            .map(project -> {
+                ProjectDto projectDto = new ProjectDto();
+                projectDto.fromProject(project);
+                return projectDto;
+            })
+            .collect(Collectors.toList());
 
         return ProjectListResponse.builder()
-                .projects(projects)
-                .page(page)
-                .maxPage(3) // 임시로 넣어놨습니다
-                .build();
+            .projects(projects)
+            .page(page)
+            .maxPage(3) // 임시로 넣어놨습니다
+            .build();
     }
 
     public ProjectResponse getProjectResponse(Long projectId) {

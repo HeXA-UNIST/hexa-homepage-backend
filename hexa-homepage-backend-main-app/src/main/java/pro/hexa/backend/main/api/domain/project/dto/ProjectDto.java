@@ -16,6 +16,7 @@ import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
 @Getter
 @NoArgsConstructor
 public class ProjectDto {
+
     @Schema(description = "id")
     protected Long projectId;
 
@@ -28,7 +29,7 @@ public class ProjectDto {
     @Schema(description = "시작 날짜", example = "2022.01.01")
     protected String startDate;
 
-    @Schema(description = "종료 날짜", defaultValue ="", example = "2022.01.01")
+    @Schema(description = "종료 날짜", defaultValue = "", example = "2022.01.01")
     protected String endDate;
 
     @Schema(description = "기술스택리스트")

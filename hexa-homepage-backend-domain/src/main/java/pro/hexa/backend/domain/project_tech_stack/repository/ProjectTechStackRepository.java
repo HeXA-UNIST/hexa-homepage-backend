@@ -6,4 +6,5 @@ import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
 
 @Repository
 public interface ProjectTechStackRepository extends JpaRepository<ProjectTechStack, Long>, ProjectTechStackRepositoryCustom {
+
 }

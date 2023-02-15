@@ -9,6 +9,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class SeminarRepositoryImpl implements SeminarRepositoryCustom {
+
     private final JPAQueryFactory queryFactory;
 
     @Override
@@ -17,18 +18,18 @@ public class SeminarRepositoryImpl implements SeminarRepositoryCustom {
         QAttachment attatchment = QAttachment.attachment;
 
         List<Seminar> content = queryFactory.selectFrom(seminar)
-                .leftJoin(seminar.attachments, attatchment).fetchJoin()
-                .where(seminar.title.contains(searchText)
+            .leftJoin(seminar.attachments, attatchment).fetchJoin()
+            .where(seminar.title.contains(searchText)
                 // year는 무엇을 기준으로 할지 제대로 정의 되어있지 않음
-                )
-                .offset(pageNum)
-                .limit(page)
-                .fetch();
+            )
+            .offset(pageNum)
+            .limit(page)
+            .fetch();
         int totalsize = queryFactory.selectFrom(seminar)
-                .where(seminar.title.contains(searchText)
-                        // year는 무엇을 기준으로 할지 제대로 정의 되어있지 않음
-                )
-                .fetch().size();
+            .where(seminar.title.contains(searchText)
+                // year는 무엇을 기준으로 할지 제대로 정의 되어있지 않음
+            )
+            .fetch().size();
         return content; // totalsize도 같이 넘겨야됨
 
     }

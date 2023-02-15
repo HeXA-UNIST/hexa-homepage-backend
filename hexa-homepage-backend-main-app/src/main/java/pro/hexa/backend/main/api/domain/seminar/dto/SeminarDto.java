@@ -2,6 +2,7 @@ package pro.hexa.backend.main.api.domain.seminar.dto;
 
 import static pro.hexa.backend.main.api.common.utils.DateUtils.YYYY_MM_DD;
 import static pro.hexa.backend.main.api.common.utils.DateUtils.toFormat;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import pro.hexa.backend.domain.seminar.domain.Seminar;
 @Getter
 @NoArgsConstructor
 public class SeminarDto {
+
     @Schema(description = "id")
     protected Long seminarId;
 
@@ -41,7 +43,7 @@ public class SeminarDto {
         this.writerName = seminar.getUser().getName();
         this.content = seminar.getContent();
         this.attachment = seminar.getAttachments().stream()
-                .map(SeminarAttatchmentDto::fromSeminarAttatchment)
-                .collect(Collectors.toList());
+            .map(SeminarAttatchmentDto::fromSeminarAttatchment)
+            .collect(Collectors.toList());
     }
 }

@@ -23,16 +23,18 @@ public class ProjectPageController {
 
     @Operation(description = "project 리스트를 조회")
     @GetMapping("/query")
-    public ResponseEntity<ProjectListResponse> getProjectListResponse(@RequestParam(required = false, defaultValue = "") String searchText,
-                                                                      @RequestParam(required = false) List<String> status,
-                                                                      @RequestParam(required = false) String sort,
-                                                                      @RequestParam(required = false) List<String> includeTechStack,
-                                                                      @RequestParam(required = false) List<String> excludeTechStack,
-                                                                      @RequestParam(required = false) Integer year,
-                                                                      @RequestParam(required = false) Integer pageNum,
-                                                                      @RequestParam(required = false) Integer page) {
+    public ResponseEntity<ProjectListResponse> getProjectListResponse(
+        @RequestParam(required = false, defaultValue = "") String searchText,
+        @RequestParam(required = false) List<String> status,
+        @RequestParam(required = false) String sort,
+        @RequestParam(required = false) List<String> includeTechStack,
+        @RequestParam(required = false) List<String> excludeTechStack,
+        @RequestParam(required = false) Integer year,
+        @RequestParam(required = false) Integer pageNum,
+        @RequestParam(required = false) Integer page
+    ) {
         return new ResponseEntity<>(projectPageService.getProjectListResponse(searchText, status, sort,
-                includeTechStack, excludeTechStack, year, pageNum, page), HttpStatus.OK);
+            includeTechStack, excludeTechStack, year, pageNum, page), HttpStatus.OK);
     }
 
     @Operation(description = "project를 조회")

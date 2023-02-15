@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class SeminarListResponse {
+
     @Schema(description = "세미나 목록")
     private List<SeminarDto> seminars;
 

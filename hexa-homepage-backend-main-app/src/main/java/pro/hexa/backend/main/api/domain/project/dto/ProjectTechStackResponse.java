@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class ProjectTechStackResponse {
+
     @Schema(description = "테크스텍 목록")
     private List<String> techStackList;
 }

@@ -9,6 +9,7 @@ import pro.hexa.backend.domain.user.domain.User;
 @Getter
 @NoArgsConstructor
 public class ProjectMemberDto {
+
     @Schema(description = "사용자 id")
     private String userId;
     private String name;

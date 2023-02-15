@@ -16,21 +16,22 @@ import pro.hexa.backend.main.api.domain.seminar.dto.SeminarListResponse;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class SeminarPageService {
+
     private final SeminarRepository seminarRepository;
 
     public SeminarListResponse getSeminarListResponse(String searchText, Integer year, Integer pageNum, Integer page) {
         List<Seminar> seminarList = seminarRepository.findForSeminarListByQuery(searchText, year, pageNum, page);
         List<SeminarDto> seminars = seminarList.stream()
-                .map(seminar -> {
-                    SeminarDto seminarDto = new SeminarDto();
-                    seminarDto.fromSeminar(seminar);
-                    return seminarDto;
-                })
-                .collect(Collectors.toList());
+            .map(seminar -> {
+                SeminarDto seminarDto = new SeminarDto();
+                seminarDto.fromSeminar(seminar);
+                return seminarDto;
+            })
+            .collect(Collectors.toList());
         return SeminarListResponse.builder()
-                .seminars(seminars)
-                .page(page)
-                .maxPage(3) // 임시로 넣어놨습니다
-                .build();
+            .seminars(seminars)
+            .page(page)
+            .maxPage(3) // 임시로 넣어놨습니다
+            .build();
     }
 }

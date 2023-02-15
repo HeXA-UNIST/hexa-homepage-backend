@@ -14,9 +14,11 @@ import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.abstract_activity.domain.AbstractActivity;
 import pro.hexa.backend.domain.attachment.domain.Attachment;
 import pro.hexa.backend.domain.user.domain.User;
+
 @Entity(name = "seminar")
 @Getter
 public class Seminar extends AbstractActivity {
+
     @Comment("날짜")
     @Column
     private LocalDateTime date;

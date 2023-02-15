@@ -8,6 +8,7 @@ import pro.hexa.backend.domain.attachment.domain.Attachment;
 @Getter
 @NoArgsConstructor
 public class SeminarAttatchmentDto {
+
     @Schema(description = "첨부파일 url")
     private String url;
     private String name;

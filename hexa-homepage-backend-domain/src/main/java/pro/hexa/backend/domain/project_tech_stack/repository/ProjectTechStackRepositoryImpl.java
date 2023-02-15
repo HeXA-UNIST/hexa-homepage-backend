@@ -9,6 +9,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class ProjectTechStackRepositoryImpl implements ProjectTechStackRepositoryCustom {
+
     private final JPAQueryFactory queryFactory;
 
     @Override
