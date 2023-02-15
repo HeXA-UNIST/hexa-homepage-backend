@@ -31,6 +31,6 @@ public class Attachment extends AbstractEntity {
     
     @Comment(value = "용량")
     @Column
-    private int size;
+    private Long size;
 
 }
