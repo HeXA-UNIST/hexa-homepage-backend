@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pro.hexa.backend.domain.project.domain.Project;
 import pro.hexa.backend.domain.project.repository.ProjectRepository;
+import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
+import pro.hexa.backend.domain.project_tech_stack.repository.ProjectTechStackRepository;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectDto;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectListResponse;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectResponse;
@@ -21,6 +23,7 @@ import pro.hexa.backend.main.api.domain.project.dto.ProjectTechStackResponse;
 public class ProjectPageService {
 
     private final ProjectRepository projectRepository;
+    private final ProjectTechStackRepository projectTechStackRepository;
 
     public ProjectListResponse getProjectListResponse(String searchText, List<String> status, String sort, List<String> includeTechStack,
                                                       List<String> excludeTechStack, Integer year, Integer pageNum, Integer page) {
@@ -50,9 +53,16 @@ public class ProjectPageService {
     }
 
     public ProjectTechStackResponse getProjectTechStackResponse() {
-        ProjectTechStackResponse projectTechStackResponse = new ProjectTechStackResponse();
-        List<String> techStackList = projectRepository.findTechStackByQuery();
+        List<ProjectTechStack> techStackList = projectTechStackRepository.findTechStackByQuery();
 
-        return projectTechStackResponse;
+        return ProjectTechStackResponse
+            .builder()
+            .techStackList(
+                techStackList
+                    .stream()
+                    .map(ProjectTechStack::getContent)
+                    .collect(Collectors.toList())
+            )
+            .build();
     }
 }

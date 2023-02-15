@@ -10,6 +10,7 @@ import pro.hexa.backend.domain.project.domain.Project;
 import pro.hexa.backend.domain.project.domain.QProject;
 import pro.hexa.backend.domain.project.model.STATE_TYPE;
 import pro.hexa.backend.domain.project_member.domain.QProjectMember;
+import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
 import pro.hexa.backend.domain.project_tech_stack.domain.QProjectTechStack;
 
 @RequiredArgsConstructor
@@ -67,12 +68,5 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
             .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
             .where(project.id.eq(id))
             .fetchOne();
-    }
-
-    @Override
-    public List<String> findTechStackByQuery() {
-        QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
-        List<String> techStackList = new ArrayList<String>();
-        return techStackList;
     }
 }
