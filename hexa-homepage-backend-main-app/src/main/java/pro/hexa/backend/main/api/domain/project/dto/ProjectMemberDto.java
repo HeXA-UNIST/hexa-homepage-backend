@@ -9,15 +9,18 @@ import pro.hexa.backend.domain.user.domain.User;
 @Getter
 @NoArgsConstructor
 public class ProjectMemberDto {
-
     @Schema(description = "사용자 id")
     private String userId;
+    private String name;
+    private String profileUrl;
 
     public static ProjectMemberDto fromProjectMember(ProjectMember projectMember) {
         User user = projectMember.getUser();
 
         ProjectMemberDto projectMemberDto = new ProjectMemberDto();
         projectMemberDto.userId = user.getId();
+        projectMemberDto.name = user.getName();
+        projectMemberDto.profileUrl = user.getProfileImage().getLocation();
         return projectMemberDto;
     }
 }

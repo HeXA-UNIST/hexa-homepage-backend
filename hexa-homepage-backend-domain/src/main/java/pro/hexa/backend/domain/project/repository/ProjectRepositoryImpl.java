@@ -9,9 +9,7 @@ import pro.hexa.backend.domain.project.domain.Project;
 import pro.hexa.backend.domain.project.domain.QProject;
 import pro.hexa.backend.domain.project.model.STATE_TYPE;
 import pro.hexa.backend.domain.project_member.domain.QProjectMember;
-import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
 import pro.hexa.backend.domain.project_tech_stack.domain.QProjectTechStack;
-import pro.hexa.backend.domain.user.domain.QUser;
 
 @RequiredArgsConstructor
 public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
@@ -28,7 +26,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         List<Project> content = queryFactory.selectFrom(project)
                 .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
                 .leftJoin(project.members, projectMember).fetchJoin()
-                .where(project.title.in(searchText),
+                .where(project.title.contains(searchText),
                         project.state.in(stats),
                         projectTechStack.content.in(includeTechStack),
                         projectTechStack.content.notIn(excludeTechStack)
@@ -42,7 +40,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         int totalsize = queryFactory.selectFrom(project)
                 .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
                 .leftJoin(project.members, projectMember).fetchJoin()
-                .where(project.title.in(searchText),
+                .where(project.title.contains(searchText),
                         project.state.in(stats),
                         projectTechStack.content.in(includeTechStack),
                         projectTechStack.content.notIn(excludeTechStack)
