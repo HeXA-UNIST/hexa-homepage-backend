@@ -29,7 +29,7 @@ public class ProjectPageService {
         String searchText, List<String> status, String sort, List<String> includeTechStack, List<String> excludeTechStack, Integer year,
         Integer pageNum, Integer page
     ) {
-        List<Project> projectList = projectRepository.findForProjectListByQuery(
+        List<Project> projectList = projectRepository.findAllByQuery(
             searchText, status, sort, includeTechStack, excludeTechStack, year, pageNum, page
         );
         List<ProjectDto> projects = projectList.stream()
@@ -54,7 +54,7 @@ public class ProjectPageService {
     public ProjectResponse getProjectResponse(Long projectId) {
         ProjectResponse projectResponse = new ProjectResponse();
 
-        Optional.ofNullable(projectRepository.findForProjectByQuery(projectId))
+        Optional.ofNullable(projectRepository.findByQuery(projectId))
             .ifPresent(projectResponse::fromProject);
 
         return projectResponse;

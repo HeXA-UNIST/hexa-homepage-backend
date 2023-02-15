@@ -20,7 +20,7 @@ public class SeminarPageService {
     private final SeminarRepository seminarRepository;
 
     public SeminarListResponse getSeminarListResponse(String searchText, Integer year, Integer pageNum, Integer page) {
-        List<Seminar> seminarList = seminarRepository.findForSeminarListByQuery(searchText, year, pageNum, page);
+        List<Seminar> seminarList = seminarRepository.findAllByQuery(searchText, year, pageNum, page);
         List<SeminarDto> seminars = seminarList.stream()
             .map(seminar -> {
                 SeminarDto seminarDto = new SeminarDto();

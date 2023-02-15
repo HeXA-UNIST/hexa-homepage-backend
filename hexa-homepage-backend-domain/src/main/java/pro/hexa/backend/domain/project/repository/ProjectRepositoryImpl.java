@@ -1,8 +1,6 @@
 package pro.hexa.backend.domain.project.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +8,6 @@ import pro.hexa.backend.domain.project.domain.Project;
 import pro.hexa.backend.domain.project.domain.QProject;
 import pro.hexa.backend.domain.project.model.STATE_TYPE;
 import pro.hexa.backend.domain.project_member.domain.QProjectMember;
-import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
 import pro.hexa.backend.domain.project_tech_stack.domain.QProjectTechStack;
 
 @RequiredArgsConstructor
@@ -19,7 +16,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Project> findForProjectListByQuery(String searchText, List<String> status, String sort, List<String> includeTechStack,
+    public List<Project> findAllByQuery(String searchText, List<String> status, String sort, List<String> includeTechStack,
         List<String> excludeTechStack, Integer year, Integer pageNum, Integer page) {
         QProject project = QProject.project;
         QProjectMember projectMember = QProjectMember.projectMember;
@@ -40,7 +37,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
             .limit(page)
             .fetch();
 
-        return content; // totalsize도 같이 넘겨야됨
+        return content;
     }
 
     @Override
@@ -66,7 +63,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
     }
 
     @Override
-    public Project findForProjectByQuery(Long id) {
+    public Project findByQuery(Long id) {
         if (id == null) {
             return null;
         }

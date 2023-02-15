@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface SeminarRepositoryCustom {
 
-    List<Seminar> findForSeminarListByQuery(String searchText, Integer year, Integer pageNum, Integer page);
+    List<Seminar> findAllByQuery(String searchText, Integer year, Integer pageNum, Integer page);
 
     int getMaxPage(String searchText, Integer year, Integer pageNum, Integer page);
 }

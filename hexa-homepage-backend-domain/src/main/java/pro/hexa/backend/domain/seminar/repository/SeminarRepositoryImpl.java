@@ -13,7 +13,7 @@ public class SeminarRepositoryImpl implements SeminarRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Seminar> findForSeminarListByQuery(String searchText, Integer year, Integer pageNum, Integer page) {
+    public List<Seminar> findAllByQuery(String searchText, Integer year, Integer pageNum, Integer page) {
         QSeminar seminar = QSeminar.seminar;
         QAttachment attatchment = QAttachment.attachment;
 
@@ -26,7 +26,7 @@ public class SeminarRepositoryImpl implements SeminarRepositoryCustom {
             .limit(page)
             .fetch();
 
-        return content; // totalsize도 같이 넘겨야됨
+        return content;
 
     }
 
