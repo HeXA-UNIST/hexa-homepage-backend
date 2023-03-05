@@ -1,14 +1,12 @@
-package pro.hexa.backend.main.api.domain.login.dto;
+package pro.hexa.backend.main.api.common.config.security.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
-public class JwtRequestDto {
+public class LoginUserDto {
     @Schema(description = "이름")
-    private String userName;
+    private String userId;
 
     @Schema(description = "비번")
     private String password;
