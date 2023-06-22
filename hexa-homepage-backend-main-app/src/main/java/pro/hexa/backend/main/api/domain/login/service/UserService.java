@@ -40,15 +40,13 @@ public class UserService {
         GENDER_TYPE genderType = GENDER_TYPE.findKeyBYApiValue(request.getGender());
         STATE_TYPE stateType = STATE_TYPE.findKeyBYApiValue(request.getState());
         short regYear = Short.parseShort(request.getRegYear());
-        User user = User.create(request.getId(), request.getEmail(), genderType,
-            stateType, regYear, request.getRegNum(),
-            request.getName(), passwordEncoder.encode(request.getPassword1()));
+
+        User user = User.create(request.getId(), request.getEmail(), genderType, stateType,
+                regYear, request.getRegNum(), request.getName(), passwordEncoder.encode(request.getPassword1()));
 
         userRepository.save(user);
 
         return user.getId();
-
-
     }
 
 
