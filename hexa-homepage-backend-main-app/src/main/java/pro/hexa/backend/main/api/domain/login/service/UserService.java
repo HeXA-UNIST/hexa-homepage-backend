@@ -13,7 +13,6 @@ import pro.hexa.backend.domain.user.repository.UserRepository;
 import pro.hexa.backend.main.api.common.exception.BadRequestException;
 import pro.hexa.backend.main.api.common.exception.BadRequestType;
 import pro.hexa.backend.main.api.domain.login.dto.*;
-import pro.hexa.backend.main.api.domain.login.dto.UserFindPasswordRequestDto;
 
 import java.util.AbstractMap;
 import java.util.List;
