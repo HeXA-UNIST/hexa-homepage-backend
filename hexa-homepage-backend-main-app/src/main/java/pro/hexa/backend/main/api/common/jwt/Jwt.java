@@ -37,7 +37,7 @@ public class Jwt {
         Timestamp expiration = Timestamp.valueOf(LocalDateTime.now().plusMinutes(ACCESS_TOKEN_EXPIRE_MINUTE));
         return Jwts.builder()
             .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-            .setExpiration(expiration)
+            .setExpiration(expiration) // 토큰 유효기간
             .claim(JWT_USER_ID, userId)
             .claim(JWT_ISSUED_AT, new Date().getTime())
             .signWith(SignatureAlgorithm.HS256, Jwt.jwtSecretKey)

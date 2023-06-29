@@ -26,11 +26,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Profile({"default", "development"})
 public class H2DataSourceConfig {
 
+    // hibernate Bean container와 관련된 객체임. hibernate의 sessionFactoryBean과 동일한 역할을 한다.
+    // DB가 자동으로 붙어지게끔 만드는 일.
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
         EntityManagerFactoryBuilder builder,
         ConfigurableListableBeanFactory beanFactory
     ) {
+        // 빌더와 beanFactory를 인자로 받고, 빈 하나를 생성한다. 빈은 builder에 여러가지 메서드를 사용하여 만든다.
         LocalContainerEntityManagerFactoryBean bean = builder
             .dataSource(dataSource())
             .properties(new HashMap<>())
@@ -59,6 +62,7 @@ public class H2DataSourceConfig {
         return dataSource;
     }
 
+    // 데이터베이스config에 transaction manager 빈 설정하기
     @Bean
     public PlatformTransactionManager transactionManager(LocalContainerEntityManagerFactoryBean entityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();

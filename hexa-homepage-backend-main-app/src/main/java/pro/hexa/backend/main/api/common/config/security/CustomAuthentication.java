@@ -6,7 +6,8 @@ import pro.hexa.backend.main.api.common.config.security.dto.CustomUserDetails;
 
 
 public class CustomAuthentication extends UsernamePasswordAuthenticationToken {
-
+    // principal, credentials,
+    // 인증 전 생성자
     public CustomAuthentication(Object principal, Object credentials) {
         super(principal, credentials);
     }
@@ -21,4 +22,5 @@ public class CustomAuthentication extends UsernamePasswordAuthenticationToken {
     public String getPassword(){
         return getCustomUserDetails().getPassword();
     }
+
 }

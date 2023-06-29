@@ -18,11 +18,14 @@ public final class FilterUtils {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public static void response(HttpServletResponse response, HttpStatus status, Object object) throws IOException {
+        // 이 메서드는 response를 하기전에 그 값을 설정하는데 그 의의가 있다. 암호화 및 HttpStatus를 설정한다.
+        // 인증 성공 시 OK가 이 메서드로 전달될 것이다.
         response.setContentType(ContentType.APPLICATION_JSON.getMimeType());
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setStatus(status.value());
         if (object != null) {
-            response.getWriter().write(objectMapper.writeValueAsString(object));
+            // 입력받은 loginTokenDto를 객체 형식으로 받고, String으로 바꿔준 후 response에 기록한다.
+            response.getWriter().write(objectMapper.writeValueAsString(object)); // String형태로 Serialize함.
         }
     }
 

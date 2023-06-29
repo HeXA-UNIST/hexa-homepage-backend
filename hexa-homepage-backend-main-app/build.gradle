@@ -26,6 +26,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'com.github.jasontypescodes:mn-config-based-auth:2.2.0'
+    implementation 'com.github.jasontypescodes:mn-config-based-auth:2.2.0'
+    implementation 'com.github.jasontypescodes:mn-config-based-auth:2.2.0'
+    implementation 'com.github.jasontypescodes:mn-config-based-auth:2.2.0'
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 

@@ -11,7 +11,7 @@ import pro.hexa.backend.main.api.common.utils.FilterUtils;
 
 public class CustomAuthenticationEntryPoint implements
     AuthenticationEntryPoint {
-
+    //EntryPoint란 예외 발생시 다시 돌아가기위한 원점임.
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
         throws IOException {

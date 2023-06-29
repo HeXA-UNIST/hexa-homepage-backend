@@ -6,5 +6,7 @@ import pro.hexa.backend.domain.user.domain.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, String>, UserRepositoryCustom {
+    static boolean existsByName(String name){
 
+    }
 }

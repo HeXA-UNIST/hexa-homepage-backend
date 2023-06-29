@@ -22,7 +22,7 @@ public class ProjectMember extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_member_id")
-    private String id;
+    private String id; // 왜 string이노
 
     @Comment("프로젝트")
     @ManyToOne(fetch = FetchType.LAZY)

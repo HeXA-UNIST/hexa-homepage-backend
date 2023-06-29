@@ -30,16 +30,18 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private final UserRepository userRepository;
     private final List<String> authenticationUnnecessaryRequests;
-
+    // JwtAuthorizationFilter는 AuthenticationManager와 UserRepository를 인자를 받아 생성된다.
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) {
         super(authenticationManager);
         this.userRepository = userRepository;
+        // 다음 변수는 AuthenticationUnnecessaryRequests이다.
         this.authenticationUnnecessaryRequests = Arrays.asList(WebSecurityConfig.AUTHENTICATION_UNNECESSARY_REQUESTS);
     }
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws ServletException, IOException {
+        // 전반적으로 doFilterInternal은 request, response, FilterChain을 인자로 받고, request와 response 사이에 filter를 intercept함.
         String servletPath = request.getServletPath();
         String accessToken = request.getHeader("Authorization");
         if (accessToken == null || authenticationUnnecessaryRequests.contains(servletPath)) {
@@ -56,8 +58,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 .orElseThrow(() -> new BadRequestException(BadRequestType.CANNOT_FIND_USER));
             CustomUserDetails customUserDetails = new CustomUserDetails(user);
             CustomAuthentication customAuthentication = new CustomAuthentication(customUserDetails, null);
+            // SecurityContextHolder의 Authentication값을 CustomAuthentication값으로 세팅한다.
             SecurityContextHolder.getContext().setAuthentication(customAuthentication);
-            chain.doFilter(request, response);
+            chain.doFilter(request, response); // FilterChain에 doFilter로 request와 response 사이에 intercept를 한다.
         } catch (Exception e) {
             FilterUtils.responseError(response, HttpStatus.UNAUTHORIZED, AuthorizationExceptionType.UNKNOWN, e);
         }
