@@ -19,7 +19,7 @@ public class StringCryptoConverter implements AttributeConverter<String, String>
 
     private static final String ALGORITHM = "AES/CBC/PKCS5Padding";
 
-    @Value("#{'${secretKey}'.getBytes()}")
+    @Value("")
     private byte[] secretKey;
 
     @Value("#{new javax.crypto.spec.IvParameterSpec('${secretIv}'.getBytes())}")

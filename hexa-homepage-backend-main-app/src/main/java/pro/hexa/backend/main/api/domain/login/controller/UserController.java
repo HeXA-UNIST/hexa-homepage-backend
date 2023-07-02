@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pro.hexa.backend.main.api.domain.login.dto.UserCreateRequestDto;
+import pro.hexa.backend.main.api.domain.login.dto.UserFindIdRequestDto;
+import pro.hexa.backend.main.api.domain.login.dto.UserFindPasswordRequestDto;
 import pro.hexa.backend.main.api.domain.login.service.UserService;
 
 
@@ -25,5 +27,17 @@ public class UserController {
         return new ResponseEntity<>(userService.userSignup(request), HttpStatus.OK);
     }
 
+    @Operation(description = "아이디 찾기")
+    @PostMapping("/find_id")
+    public ResponseEntity<String> findUserId(@RequestBody UserFindIdRequestDto request) {
+        String userId = userService.findUserId(request);
+        return ResponseEntity.ok(userId);
+    }
 
+    @Operation(description = "비밀번호 찾기")
+    @PostMapping("/find_password")
+    public ResponseEntity<String> findUserPassword(@RequestBody UserFindPasswordRequestDto request) {
+        String newPassword = userService.findUserPassword(request);
+        return ResponseEntity.ok(newPassword);
+    }
 }
