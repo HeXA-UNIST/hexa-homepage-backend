@@ -131,4 +131,19 @@ public class User extends AbstractEntity {
         return user;
 
     }
+
+    @Comment("인증번호")
+    @Column(length = 6)
+    private String verificationCode;
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+    public void setPassword(String newPassword) {
+        this.password=newPassword;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
 }
