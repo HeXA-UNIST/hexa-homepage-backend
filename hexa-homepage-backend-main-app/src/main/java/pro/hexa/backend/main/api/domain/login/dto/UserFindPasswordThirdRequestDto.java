@@ -6,8 +6,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserFindPasswordThirdRequestDto {
+    @Schema(description = "아이디")
+    private String id;
+
     @Schema(description = "새 비밀번호")
     private String password_1;
+
     @Schema(description = "비밀번호 확인")
     private String password_2;
 }

@@ -35,9 +35,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         super(authenticationManager);
         this.userRepository = userRepository;
         // 다음 변수는 AuthenticationUnnecessaryRequests이다.
+        // 로그인이 필요없는 unnecessary request임.
         this.authenticationUnnecessaryRequests = Arrays.asList(WebSecurityConfig.AUTHENTICATION_UNNECESSARY_REQUESTS);
     }
-
+    // 만약 로그인을 한 상태라면 doFilterInternal 메서드로 간다.
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws ServletException, IOException {
@@ -58,7 +59,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 .orElseThrow(() -> new BadRequestException(BadRequestType.CANNOT_FIND_USER));
             CustomUserDetails customUserDetails = new CustomUserDetails(user);
             CustomAuthentication customAuthentication = new CustomAuthentication(customUserDetails, null);
-            // SecurityContextHolder의 Authentication값을 CustomAuthentication값으로 세팅한다.
+            // SecurityContextHolder의 Authentication값을 CustomAuthentication값으로 세팅한다. (권한 설정)
             SecurityContextHolder.getContext().setAuthentication(customAuthentication);
             chain.doFilter(request, response); // FilterChain에 doFilter로 request와 response 사이에 intercept를 한다.
         } catch (Exception e) {

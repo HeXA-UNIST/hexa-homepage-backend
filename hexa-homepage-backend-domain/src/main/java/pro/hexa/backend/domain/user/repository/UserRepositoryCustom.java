@@ -1,5 +1,7 @@
 package pro.hexa.backend.domain.user.repository;
 
-public interface UserRepositoryCustom {
+import pro.hexa.backend.domain.user.domain.User;
 
+public interface UserRepositoryCustom {
+    User findByNameAndEmail(String name, String email);
 }
