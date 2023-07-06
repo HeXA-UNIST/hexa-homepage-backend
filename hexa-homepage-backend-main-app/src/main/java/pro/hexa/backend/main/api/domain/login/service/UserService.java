@@ -10,8 +10,14 @@ import pro.hexa.backend.domain.user.domain.User;
 import pro.hexa.backend.domain.user.model.GENDER_TYPE;
 import pro.hexa.backend.domain.user.model.STATE_TYPE;
 import pro.hexa.backend.domain.user.repository.UserRepository;
+import pro.hexa.backend.main.api.common.email.EmailServiceImpl;
+import pro.hexa.backend.main.api.common.email.TempEmailService;
 import pro.hexa.backend.main.api.common.exception.BadRequestException;
 import pro.hexa.backend.main.api.common.exception.BadRequestType;
+import pro.hexa.backend.main.api.domain.login.dto.FindIdRequestDto;
+import pro.hexa.backend.main.api.domain.login.dto.FindIdResponse;
+import pro.hexa.backend.main.api.domain.login.dto.FindIdWithCodeRequestDto;
+import pro.hexa.backend.main.api.domain.login.dto.FindIdWithCodeResponse;
 import pro.hexa.backend.main.api.domain.login.dto.UserCreateRequestDto;
 
 @Service
@@ -24,6 +30,10 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final AuthenticationManager authenticationManager;
+
+    private final EmailServiceImpl emailService;
+
+
 
     @Transactional
     public String userSignup(UserCreateRequestDto request) {
@@ -47,6 +57,31 @@ public class UserService {
         userRepository.save(user);
 
         return user.getId();
+    }
+
+    public FindIdResponse userFindId(FindIdRequestDto request){
+        User user=userRepository.findbyNameAndEmail(request.getName(),request.getEmail());
+
+        if(user==null){
+            return FindIdResponse.builder()
+                .error(1)
+                .build();
+        }
+
+        /*
+        TODO: generate and save the authentication code.
+        */
+
+        emailService.sendEmail(request.getEmail(), "blahblah", "authentication code");
+
+        return FindIdResponse.builder()
+            .error(0)
+            .build();
+
+    }
+
+    public FindIdWithCodeResponse userFindIdWithCode(FindIdWithCodeRequestDto request){
+
     }
 
 
