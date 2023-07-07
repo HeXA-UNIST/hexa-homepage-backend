@@ -35,10 +35,7 @@ public class Board extends AbstractEntity {
     @Enumerated(value = EnumType.STRING)
     @Column(length = 2)
     private BOARD_TYPE boardType;
-//    public void a(){
-//        this.boardType.getKey(); <- 이렇게 쓰면 col_name을 얻음
-//        this.boardType.getValue(); <- 이렇게 쓰면 "수상", "공지" 등, boardtype을 준다.
-//    }
+
 
     @Comment(value = "제목")
     @Column(length = 300)

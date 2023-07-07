@@ -1,17 +1,7 @@
 package pro.hexa.backend.main.api.common.config.security;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.asm.MemberSubstitution.Substitution.Chain;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,11 +15,20 @@ import pro.hexa.backend.main.api.common.exception.BadRequestType;
 import pro.hexa.backend.main.api.common.jwt.Jwt;
 import pro.hexa.backend.main.api.common.utils.FilterUtils;
 
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
 @Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private final UserRepository userRepository;
     private final List<String> authenticationUnnecessaryRequests;
+
     // JwtAuthorizationFilter는 AuthenticationManager와 UserRepository를 인자를 받아 생성된다.
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) {
         super(authenticationManager);
@@ -38,10 +37,11 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         // 로그인이 필요없는 unnecessary request임.
         this.authenticationUnnecessaryRequests = Arrays.asList(WebSecurityConfig.AUTHENTICATION_UNNECESSARY_REQUESTS);
     }
+
     // 만약 로그인을 한 상태라면 doFilterInternal 메서드로 간다.
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
         // 전반적으로 doFilterInternal은 request, response, FilterChain을 인자로 받고, request와 response 사이에 filter를 intercept함.
         String servletPath = request.getServletPath();
         String accessToken = request.getHeader("Authorization");
@@ -56,7 +56,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 return;
             }
             User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BadRequestException(BadRequestType.CANNOT_FIND_USER));
+                    .orElseThrow(() -> new BadRequestException(BadRequestType.CANNOT_FIND_USER));
             CustomUserDetails customUserDetails = new CustomUserDetails(user);
             CustomAuthentication customAuthentication = new CustomAuthentication(customUserDetails, null);
             // SecurityContextHolder의 Authentication값을 CustomAuthentication값으로 세팅한다. (권한 설정)

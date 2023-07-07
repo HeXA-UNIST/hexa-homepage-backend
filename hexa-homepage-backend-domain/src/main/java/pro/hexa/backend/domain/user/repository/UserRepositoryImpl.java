@@ -4,18 +4,21 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import pro.hexa.backend.domain.user.domain.User;
 
-import static pro.hexa.backend.domain.user.domain.QUser.user;
+import java.util.Optional;
+
+import static pro.hexa.backend.domain.user.domain.QUser;
 
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public User findByNameAndEmail(String requestedName, String requestedEmail){
+    public Optional<User> findByNameAndEmail(String requestedName, String requestedEmail) {
+        QUser user = Quser.user;
 
-        return queryFactory
-                .selectFrom(user)
-                .where(user.name.eq(requestedName).and(user.email.eq(requestedEmail))).
-                fetchOne();
+        return Optional.ofNullable(queryFactory.selectFrom(user)
+                .where(user.name.eq(requestedName),
+                        user.email.eq(requestedEmail))
+                .fetchOne());
     }
 }

@@ -1,7 +1,7 @@
 package pro.hexa.backend.main.api.common.config.security;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,12 +12,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import pro.hexa.backend.main.api.common.config.security.dto.CustomUserDetails;
 
 @RequiredArgsConstructor
-@Log4j2
+@Slf4j
 public class CustomAuthenticationProvider implements AuthenticationProvider {
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder passwordEncoder;
-
-
 
 
     @Override
@@ -29,7 +27,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         // UserDetailsService를 통해 DB에서 아이디로 사용자 조회
         CustomUserDetails customUserDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(username);
 
-        if(!passwordEncoder.matches(userPw, customUserDetails.getPassword())){
+        if (!passwordEncoder.matches(userPw, customUserDetails.getPassword())) {
             throw new BadCredentialsException(customUserDetails.getUsername() + "Invalid password");
         }
 

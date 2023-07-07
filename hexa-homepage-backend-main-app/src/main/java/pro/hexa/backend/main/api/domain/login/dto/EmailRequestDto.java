@@ -8,13 +8,12 @@ import lombok.Setter;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-@Data
 @Getter
 @Setter
 public class EmailRequestDto {
     @Schema(description = "이름")
     private String name;
     @Email
-    @NotBlank(message = "이메일")
+    @Schema(description =  "이메일")
     private String email;
 }

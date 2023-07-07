@@ -131,4 +131,7 @@ public class User extends AbstractEntity {
         return user;
 
     }
+    public void setPassword(String newPassword){
+        this.password = newPassword;
+    }
 }
