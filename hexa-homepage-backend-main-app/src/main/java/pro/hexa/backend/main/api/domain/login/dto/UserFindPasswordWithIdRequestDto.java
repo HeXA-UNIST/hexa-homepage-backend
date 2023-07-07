@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserFindPasswordFirstRequestDto {
+public class UserFindPasswordWithIdRequestDto {
     @Schema(description = "아이디")
     private String Id;
 }

@@ -1,20 +1,21 @@
 package pro.hexa.backend.main.api.common.config.security;
 
-import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import pro.hexa.backend.main.api.common.exception.CommonExceptionResponse;
 import pro.hexa.backend.main.api.common.utils.FilterUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 public class CustomAccessDeniedHandler implements
-    AccessDeniedHandler {
+        AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)
-        throws IOException {
+            throws IOException {
         // handle 메서드를 사용하면서 발생할 예외처리를 하는 구문.
         // 쉽게 말하자면 Exception 을 하나로만 처리하는 게 아니라, exception의
         // 종류를 세분화 시켜서 디버깅에 있어 이점을 가져가기 위함이다.

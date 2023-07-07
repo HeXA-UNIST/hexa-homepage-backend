@@ -51,12 +51,7 @@ subprojects {
 	}
 }
 
-dependencies {
-implementation 'com.github.jasontypescodes:mn-config-based-auth:2.2.0'
-	implementation 'com.github.jasontypescodes:mn-config-based-auth:2.2.0'
-	implementation 'com.github.jasontypescodes:mn-config-based-auth:2.2.0'
-	implementation 'com.github.jasontypescodes:mn-config-based-auth:2.2.0'
-}
+
 
 project('hexa-homepage-backend-main-app') {
 	dependencies {

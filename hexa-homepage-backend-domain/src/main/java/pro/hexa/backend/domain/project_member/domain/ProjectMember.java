@@ -1,20 +1,13 @@
 package pro.hexa.backend.domain.project_member.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import lombok.Getter;
 import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.model.model.AbstractEntity;
 import pro.hexa.backend.domain.project.domain.Project;
-import pro.hexa.backend.domain.user.domain.User;
 import pro.hexa.backend.domain.project_member.model.AUTHORIZATION_TYPE;
+import pro.hexa.backend.domain.user.domain.User;
+
+import javax.persistence.*;
 
 @Entity(name = "project_member")
 @Getter
@@ -22,7 +15,7 @@ public class ProjectMember extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_member_id")
-    private String id; // 왜 string이노
+    private Long id; // 왜 string이노
 
     @Comment("프로젝트")
     @ManyToOne(fetch = FetchType.LAZY)
