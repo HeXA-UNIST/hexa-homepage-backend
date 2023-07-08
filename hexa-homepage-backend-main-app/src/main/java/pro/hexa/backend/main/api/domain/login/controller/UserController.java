@@ -37,23 +37,23 @@ public class UserController {
     }
 
     @Operation(description = "비밀번호 찾기(id)")
-    @PostMapping("/find_password1")
-    public ResponseEntity<String> findUserPassword1(@RequestBody UserFindPasswordRequestDto1 request) {
-        String newPassword = userService.findUserPassword1(request);
+    @PostMapping("/find_passwordbyId")
+    public ResponseEntity<String> findUserPasswordbyId(@RequestBody UserFindPasswordRequestDto1 request) {
+        String newPassword = userService.findUserPasswordbyId(request);
         return ResponseEntity.ok(newPassword);
     }
 
     @Operation(description = "비밀번호 찾기(인증번호)")
-    @PostMapping("/find_password2")
-    public ResponseEntity<String> findUserPassword2(@RequestBody UserFindPasswordRequestDto2 request) {
-        String newPassword = userService.findUserPassword2(request);
-        return ResponseEntity.ok(newPassword);
+    @PostMapping("/find_passwordbyemail")
+    public ResponseEntity<String> findUserPasswordbyEmail(@RequestBody UserFindPasswordRequestDto2 request) {
+        String generatePassword = userService.findUserPasswordbyEmail(request);
+        return ResponseEntity.ok(generatePassword);
     }
 
     @Operation(description = "비밀번호 찾기(비밀번호 변경)")
-    @PostMapping("/find_password3")
-    public ResponseEntity<String> findUserPassword3(@RequestBody UserFindPasswordRequestDto3 request, String Id) {
-        String newPassword = userService.findUserPassword3(request, Id);
+    @PostMapping("/password_change")
+    public ResponseEntity<String> changingUserPassword(@RequestBody UserFindPasswordRequestDto3 request, String Id) {
+        String newPassword = userService.changingUserPassword(request, Id);
         return ResponseEntity.ok(newPassword);
     }
 }

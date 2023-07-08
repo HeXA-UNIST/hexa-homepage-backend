@@ -109,6 +109,10 @@ public class User extends AbstractEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ProjectMember> projectMembers = new ArrayList<>();
 
+    @Comment("인증번호")
+    @Column(length = 6)
+    private String verificationCode;
+
     public static User create(
         String id,
         String email,
@@ -132,13 +136,6 @@ public class User extends AbstractEntity {
 
     }
 
-    @Comment("인증번호")
-    @Column(length = 6)
-    private String verificationCode;
-
-    public String getVerificationCode() {
-        return verificationCode;
-    }
     public void setPassword(String newPassword) {
         this.password=newPassword;
     }

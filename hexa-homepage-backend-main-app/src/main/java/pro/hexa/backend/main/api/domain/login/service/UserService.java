@@ -17,8 +17,9 @@ import pro.hexa.backend.main.api.domain.login.dto.UserCreateRequestDto;
 import pro.hexa.backend.main.api.domain.login.dto.UserFindIdRequestDto;
 import pro.hexa.backend.main.api.domain.login.dto.UserFindPasswordRequestDto1;
 import pro.hexa.backend.main.api.domain.login.dto.UserFindPasswordRequestDto3;
+
+import java.security.SecureRandom;
 import java.util.Optional;
-import java.util.Random;
 
 @Service
 @Slf4j
@@ -83,7 +84,7 @@ public class UserService {
         return user.getId();
     }
 
-    public String findUserPassword1(UserFindPasswordRequestDto1 request) {
+    public String findUserPasswordbyId(UserFindPasswordRequestDto1 request) {
         String userid=request.getId();
 
         Optional<User> userOptional = userRepository.findById(userid);
@@ -96,7 +97,7 @@ public class UserService {
         return user.getId();
     }
 
-    public String findUserPassword2(UserFindPasswordRequestDto2 request) {
+    public String findUserPasswordbyEmail(UserFindPasswordRequestDto2 request) {
         String name = request.getName();
         String email = request.getEmail();
 
@@ -123,7 +124,8 @@ public class UserService {
         return user.getId();
     }
 
-    public String findUserPassword3(UserFindPasswordRequestDto3 request, String Id) {
+    @Transactional
+    public String changingUserPassword(UserFindPasswordRequestDto3 request, String Id) {
         String password1 = request.getPassword1();
         String password2 = request.getPassword2();
 
@@ -140,7 +142,7 @@ public class UserService {
 
         // 비밀번호 변경 로직...
         user.setPassword(passwordEncoder.encode(password1));
-        userRepository.save(user);
+        userRepository.flush();
 
         return "finish";
     }
@@ -148,12 +150,9 @@ public class UserService {
 
     private String generateVerificationCode() {
         // 6자리 난수 생성
-        Random random = new Random();
-        int code = random.nextInt(900000) + 100000; // 100000 이상 999999 이하의 난수 생성
+        SecureRandom secureRandom = new SecureRandom();
+        int code = secureRandom.nextInt(900000) + 100000; // 100000 이상 999999 이하의 난수 생성
         return String.valueOf(code);
     }
-
-
-
 
 }
