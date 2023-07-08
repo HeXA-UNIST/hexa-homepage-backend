@@ -56,6 +56,7 @@ public class UserService {
         return user.getId();
     }
 
+    @Transactional
     public String findUserId(UserFindIdRequestDto request) {
         String name = request.getName();
         String email = request.getEmail();
@@ -77,7 +78,8 @@ public class UserService {
         user.setVerificationCode(verificationCode);
         userRepository.save(user);
 
-        if (!verificationCode.equals(user.getVerificationCode())) {
+        String userVerificationCode=request.getVerificationCode();
+        if (!userVerificationCode.equals(user.getVerificationCode())) {
             throw new BadRequestException(BadRequestType.INCORRECT_VERIFICATION_CODE);
         }
 
