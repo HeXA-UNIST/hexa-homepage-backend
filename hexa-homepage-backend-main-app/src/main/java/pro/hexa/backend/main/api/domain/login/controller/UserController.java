@@ -29,24 +29,38 @@ public class UserController {
         return new ResponseEntity<>(userService.userSignup(request), HttpStatus.OK);
     }
 
-    @Operation(description = "아이디 찾기")
-    @PostMapping("/find_id")
-    public ResponseEntity<String> findUserId(@RequestBody UserFindIdRequestDto request) {
-        String userId = userService.findUserId(request);
-        return ResponseEntity.ok(userId);
+    @Operation(description = "아이디 찾기(인증번호 전송)")
+    @PostMapping("/find_id(SendVerificationCode)")
+    public ResponseEntity<String> findUserIdSendVerificationCode(@RequestBody UserFindIdRequestDto request) {
+        userService.findUserIdSendVerificationCode(request);
+        return ResponseEntity.ok("Verification code sent successfully!");
     }
 
-    @Operation(description = "비밀번호 찾기(id)")
+    @Operation(description = "아이디 찾기(인증번호 확인)")
+    @PostMapping("/find_id(verifyVerificationCode)")
+    public ResponseEntity<String> IdverifyVerificationCode(@RequestBody UserFindIdRequestDto request) {
+        String userid = userService.IdverifyVerificationCode(request);
+        return ResponseEntity.ok(userid);
+    }
+
+    @Operation(description = "비밀번호 찾기(id 입력)")
     @PostMapping("/find_passwordbyId")
     public ResponseEntity<String> findUserPasswordbyId(@RequestBody UserFindPasswordRequestDto1 request) {
         String newPassword = userService.findUserPasswordbyId(request);
         return ResponseEntity.ok(newPassword);
     }
 
-    @Operation(description = "비밀번호 찾기(인증번호)")
-    @PostMapping("/find_passwordbyemail")
-    public ResponseEntity<String> findUserPasswordbyEmail(@RequestBody UserFindPasswordRequestDto2 request) {
-        String generatePassword = userService.findUserPasswordbyEmail(request);
+    @Operation(description = "비밀번호 찾기(인증번호 전송)")
+    @PostMapping("/find_password_SendVerificationCode")
+    public ResponseEntity<String> findUserPasswordSendVerificationCode(@RequestBody UserFindPasswordRequestDto2 request) {
+        userService.findUserPasswordSendVerificationCode(request);
+        return ResponseEntity.ok("Verification code sent successfully!");
+    }
+
+    @Operation(description = "비밀번호 찾기(인증번호 확인)")
+    @PostMapping("/find_password_verifyVerificiationCode")
+    public ResponseEntity<String> PasswordverifyVerificationCode(@RequestBody UserFindPasswordRequestDto2 request) {
+        String generatePassword = userService.PasswordverifyVerificationCode(request);
         return ResponseEntity.ok(generatePassword);
     }
 

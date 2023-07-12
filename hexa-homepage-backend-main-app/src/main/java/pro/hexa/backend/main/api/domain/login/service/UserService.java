@@ -57,7 +57,7 @@ public class UserService {
     }
 
     @Transactional
-    public String findUserId(UserFindIdRequestDto request) {
+    public void findUserIdSendVerificationCode(UserFindIdRequestDto request) {
         String name = request.getName();
         String email = request.getEmail();
 
@@ -77,8 +77,19 @@ public class UserService {
         // Store the verification code in the user's record
         user.setVerificationCode(verificationCode);
         userRepository.save(user);
+    }
 
-        String userVerificationCode=request.getVerificationCode();
+    public String IdverifyVerificationCode(UserFindIdRequestDto request) {
+        String name = request.getName();
+        String userVerificationCode = request.getVerificationCode();
+
+        Optional<User> userOptional = userRepository.findByName(name);
+        if (userOptional.isEmpty()) {
+            throw new BadRequestException(BadRequestType.CANNOT_FIND_USER);
+        }
+
+        User user = userOptional.get();
+
         if (!userVerificationCode.equals(user.getVerificationCode())) {
             throw new BadRequestException(BadRequestType.INCORRECT_VERIFICATION_CODE);
         }
@@ -99,7 +110,7 @@ public class UserService {
         return user.getId();
     }
 
-    public String findUserPasswordbyEmail(UserFindPasswordRequestDto2 request) {
+    public void findUserPasswordSendVerificationCode(UserFindPasswordRequestDto2 request) {
         String name = request.getName();
         String email = request.getEmail();
 
@@ -116,8 +127,18 @@ public class UserService {
         // 인증번호 user에 저장
         user.setVerificationCode(verificationCode);
         userRepository.save(user);
-        //인증번호 입력받기
-        String userVerificationCode=request.getVerificationCode();
+    }
+
+    public String PasswordverifyVerificationCode(UserFindPasswordRequestDto2 request) {
+        String name = request.getName();
+        String userVerificationCode = request.getVerificationCode();
+
+        Optional<User> userOptional = userRepository.findByName(name);
+        if (userOptional.isEmpty()) {
+            throw new BadRequestException(BadRequestType.CANNOT_FIND_USER);
+        }
+
+        User user = userOptional.get();
 
         if (!userVerificationCode.equals(user.getVerificationCode())) {
             throw new BadRequestException(BadRequestType.INCORRECT_VERIFICATION_CODE);
@@ -149,12 +170,10 @@ public class UserService {
         return "finish";
     }
 
-
     private String generateVerificationCode() {
         // 6자리 난수 생성
         SecureRandom secureRandom = new SecureRandom();
         int code = secureRandom.nextInt(900000) + 100000; // 100000 이상 999999 이하의 난수 생성
         return String.valueOf(code);
     }
-
 }
