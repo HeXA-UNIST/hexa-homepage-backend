@@ -1,8 +1,10 @@
 package pro.hexa.backend.main.api.domain.login.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
 
-public class FindIdWithCodeRequestDto {
+@Getter
+public class VerifyEmailWithCodeRequestDto {
 
     @Schema(description = "유저 이름")
     private String name;

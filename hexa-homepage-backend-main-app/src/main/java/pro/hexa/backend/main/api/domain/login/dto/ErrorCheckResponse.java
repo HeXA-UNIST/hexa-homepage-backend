@@ -6,10 +6,8 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class FindIdWithCodeResponse {
+public class ErrorCheckResponse {
+
     @Schema(description = "에러 여부")
     private int error;
-
-    @Schema(description = "사용자 id")
-    private String userId;
 }

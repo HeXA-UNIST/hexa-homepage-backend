@@ -1,8 +1,9 @@
 package pro.hexa.backend.domain.user.repository;
 
+import java.util.Optional;
 import pro.hexa.backend.domain.user.domain.User;
 
 public interface UserRepositoryCustom {
 
-    User findbyNameAndEmail(String name, String email);
+    Optional<User> findbyNameAndEmail(String name, String email);
 }
