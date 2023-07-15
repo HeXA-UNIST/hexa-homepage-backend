@@ -1,5 +1,6 @@
 package pro.hexa.backend.main.api.common.jwt;
 
+import aj.org.objectweb.asm.signature.SignatureReader;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;
@@ -42,6 +43,7 @@ public class Jwt {
             .claim(JWT_ISSUED_AT, new Date().getTime())
             .signWith(SignatureAlgorithm.HS256, Jwt.jwtSecretKey)
             .compact();
+
     }
 
     public static String generateRefreshToken() {

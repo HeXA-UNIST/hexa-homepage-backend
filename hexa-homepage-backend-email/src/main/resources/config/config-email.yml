@@ -1,0 +1,12 @@
+spring:
+  mail:
+    host: {smtp 서버 호스트 ex : smtp.gmail.com}
+    username: Hexa@hexa.com
+    password: 12345678
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

@@ -7,6 +7,7 @@ public enum BadRequestType {
     INVALID_TOKEN("잘못된 토큰"),
     INVALID_PASSWORD("잘못된 패스워드"),
     INVALID_ID("잘못된 아이디"),
+    EMPTY_NAME("이름 칸이 비어있습니다"),
     INVALID_EMAIL("잘못된 이메일 형식"),
     CANNOT_FIND_USER("사용자를 찾을 수 없습니다."),
     NOT_MATCH_BETWEEN_NAME_AND_EMAIL("사용자를 찾을 수 없습니다."),
