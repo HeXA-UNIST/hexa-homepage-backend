@@ -1,8 +1,12 @@
 package pro.hexa.backend.main.api.domain.login.service;
 
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,10 +17,14 @@ import pro.hexa.backend.domain.user.repository.UserRepository;
 import pro.hexa.backend.dto.EmailRequestDto;
 import pro.hexa.backend.main.api.common.exception.BadRequestException;
 import pro.hexa.backend.main.api.common.exception.BadRequestType;
+import pro.hexa.backend.main.api.common.jwt.Jwt;
 import pro.hexa.backend.main.api.domain.login.dto.*;
 import pro.hexa.backend.service.EmailService;
 
 import java.security.SecureRandom;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -95,8 +103,18 @@ public class UserService {
         if (!userVerificationCode.equals(user.getVerificationCode())) {
             throw new BadRequestException(BadRequestType.INCORRECT_VERIFICATION_CODE);
         }
+        String userId = user.getId();
+        String accessToken = Jwt.generateAccessToken(userId);
 
-        return user.getId();
+        // 현재 시간과 AccessToken의 만료 시간 비교
+        Timestamp expiration = Timestamp.valueOf(LocalDateTime.now().plusMinutes(Jwt.ACCESS_TOKEN_EXPIRE_MINUTE));
+        Date now = new Date();
+        if (now.after(expiration)) {
+            String refreshToken = Jwt.generateRefreshToken();
+            return refreshToken;
+        }
+
+        return accessToken;
     }
 
     public String findUserPasswordbyId(UserFindPasswordRequestDto1 request) {
@@ -151,15 +169,30 @@ public class UserService {
             throw new BadRequestException(BadRequestType.INCORRECT_VERIFICATION_CODE);
         }
 
-        return user.getId();
+        String userId = user.getId();
+        String accessToken = Jwt.generateAccessToken(userId);
+
+        // 현재 시간과 AccessToken의 만료 시간 비교
+        Timestamp expiration = Timestamp.valueOf(LocalDateTime.now().plusMinutes(Jwt.ACCESS_TOKEN_EXPIRE_MINUTE));
+        Date now = new Date();
+        if (now.after(expiration)) {
+            String refreshToken = Jwt.generateRefreshToken();
+            return refreshToken;
+        }
+
+        return accessToken;
     }
 
     @Transactional
-    public String changingUserPassword(UserFindPasswordRequestDto3 request, String Id) {
+    public String changingUserPassword(UserFindPasswordRequestDto3 request, String token) {
         String password1 = request.getPassword1();
         String password2 = request.getPassword2();
 
-        Optional<User> userOptional = userRepository.findById(Id);
+        // 토큰 검증
+        Claims claims = Jwt.validate(token, Jwt.jwtSecretKey);
+        String userId = claims.get(Jwt.JWT_USER_ID, String.class);
+
+        Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty()) {
             throw new BadRequestException(BadRequestType.CANNOT_FIND_USER);
         }
@@ -174,7 +207,11 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(password1));
         userRepository.flush();
 
-        return "finish";
+        // JWT 토큰 갱신
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, null);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String newJwtToken = Jwt.generateAccessToken(user.getId());
+        return newJwtToken;
     }
 
     private String generateVerificationCode() {
