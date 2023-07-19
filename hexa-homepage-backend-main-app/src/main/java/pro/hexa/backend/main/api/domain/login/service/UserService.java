@@ -110,8 +110,7 @@ public class UserService {
         Timestamp expiration = Timestamp.valueOf(LocalDateTime.now().plusMinutes(Jwt.ACCESS_TOKEN_EXPIRE_MINUTE));
         Date now = new Date();
         if (now.after(expiration)) {
-            String refreshToken = Jwt.generateRefreshToken();
-            return refreshToken;
+            return Jwt.generateRefreshToken();
         }
 
         return accessToken;
@@ -176,8 +175,7 @@ public class UserService {
         Timestamp expiration = Timestamp.valueOf(LocalDateTime.now().plusMinutes(Jwt.ACCESS_TOKEN_EXPIRE_MINUTE));
         Date now = new Date();
         if (now.after(expiration)) {
-            String refreshToken = Jwt.generateRefreshToken();
-            return refreshToken;
+            return Jwt.generateRefreshToken();
         }
 
         return accessToken;
