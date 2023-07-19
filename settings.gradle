@@ -2,3 +2,5 @@ rootProject.name = 'hexa-homepage-backend'
 include 'hexa-homepage-backend-main-app'
 include 'hexa-homepage-backend-domain'
 include 'hexa-homepage-backend-core'
+include 'hexa-homepage-backend-email'
+

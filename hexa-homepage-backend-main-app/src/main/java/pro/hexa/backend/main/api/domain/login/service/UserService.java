@@ -10,13 +10,11 @@ import pro.hexa.backend.domain.user.domain.User;
 import pro.hexa.backend.domain.user.model.GENDER_TYPE;
 import pro.hexa.backend.domain.user.model.STATE_TYPE;
 import pro.hexa.backend.domain.user.repository.UserRepository;
+import pro.hexa.backend.dto.EmailRequestDto;
 import pro.hexa.backend.main.api.common.exception.BadRequestException;
 import pro.hexa.backend.main.api.common.exception.BadRequestType;
-import pro.hexa.backend.main.api.domain.login.dto.UserFindPasswordRequestDto2;
-import pro.hexa.backend.main.api.domain.login.dto.UserCreateRequestDto;
-import pro.hexa.backend.main.api.domain.login.dto.UserFindIdRequestDto;
-import pro.hexa.backend.main.api.domain.login.dto.UserFindPasswordRequestDto1;
-import pro.hexa.backend.main.api.domain.login.dto.UserFindPasswordRequestDto3;
+import pro.hexa.backend.main.api.domain.login.dto.*;
+import pro.hexa.backend.service.EmailService;
 
 import java.security.SecureRandom;
 import java.util.Optional;
@@ -31,7 +29,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final AuthenticationManager authenticationManager;
-
+    private final EmailService emailService;
     @Transactional
     public String userSignup(UserCreateRequestDto request) {
         boolean userExists = userRepository.existsById(request.getId());
@@ -70,9 +68,13 @@ public class UserService {
 
         // Generate verification code
         String verificationCode = generateVerificationCode();
-
         // Send verification code to the user's email
-        emailService.sendVerificationCodeByEmail(email, verificationCode);
+        EmailRequestDto emailRequestDto = EmailRequestDto.builder()
+                .sendTo(email)
+                .Subject("Verification Code")
+                .Text("Your verification code is: " + verificationCode)
+                .build();
+        emailService.send(emailRequestDto);
 
         // Store the verification code in the user's record
         user.setVerificationCode(verificationCode);
@@ -123,7 +125,12 @@ public class UserService {
         //인증번호 생성
         String verificationCode = generateVerificationCode();
         // 이메일로 인증번호 전송
-        emailService.sendVerificationCodeByEmail(email, verificationCode);
+        EmailRequestDto emailRequestDto = EmailRequestDto.builder()
+                .sendTo(email)
+                .Subject("Verification Code")
+                .Text("Your verification code is: " + verificationCode)
+                .build();
+        emailService.send(emailRequestDto);
         // 인증번호 user에 저장
         user.setVerificationCode(verificationCode);
         userRepository.save(user);
