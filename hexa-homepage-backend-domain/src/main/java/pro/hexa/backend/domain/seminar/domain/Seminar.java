@@ -10,6 +10,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.OneToMany;
 import javax.persistence.ManyToOne;
 import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.abstract_activity.domain.AbstractActivity;
 import pro.hexa.backend.domain.attachment.domain.Attachment;
@@ -17,6 +18,7 @@ import pro.hexa.backend.domain.user.domain.User;
 
 @Entity(name = "seminar")
 @Getter
+@Setter
 public class Seminar extends AbstractActivity {
 
     @Comment("날짜")

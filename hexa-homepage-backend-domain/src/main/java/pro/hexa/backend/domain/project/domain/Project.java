@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.attachment.domain.Attachment;
 import pro.hexa.backend.domain.model.model.AbstractEntity;
@@ -25,6 +26,7 @@ import pro.hexa.backend.domain.project.model.STATE_TYPE;
 
 @Entity(name = "project")
 @Getter
+@Setter
 public class Project extends AbstractEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
