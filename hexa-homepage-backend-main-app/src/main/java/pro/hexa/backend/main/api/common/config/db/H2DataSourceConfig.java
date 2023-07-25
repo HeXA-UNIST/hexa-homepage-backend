@@ -55,7 +55,7 @@ public class H2DataSourceConfig {
         dataSource.setDriverClassName("org.h2.Driver");
         dataSource.setUsername("sa");
         dataSource.setPassword("1234");
-        dataSource.setJdbcUrl("jdbc:h2:mem:standby;INIT=CREATE SCHEMA IF NOT EXISTS standby;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE");
+        dataSource.setJdbcUrl("jdbc:h2:mem:hexa;INIT=CREATE SCHEMA IF NOT EXISTS hexa;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE");
         return dataSource;
     }
 
@@ -75,7 +75,7 @@ public class H2DataSourceConfig {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-        properties.setProperty("hibernate.default_catalog", "standby");
+        properties.setProperty("hibernate.default_catalog", "hexa");
         properties.setProperty("hibernate.format_sql", "true");
         properties.setProperty("hibernate.physical_naming_strategy", "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl");
 
