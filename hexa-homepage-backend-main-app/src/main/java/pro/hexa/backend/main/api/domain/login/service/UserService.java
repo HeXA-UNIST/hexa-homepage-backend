@@ -60,7 +60,7 @@ public class UserService {
 
         User user = User.create(request.getId(), request.getEmail(), genderType, stateType,
                 regYear, request.getRegNum(), request.getName(), passwordEncoder.encode(request.getPassword1()));
-
+        
         userRepository.save(user);
 
         return user.getId();
@@ -93,7 +93,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public String IdverifyVerificationCode(UserFindIdRequestDto request) {
+    public String verifyId(UserFindIdRequestDto request) {
         String name = request.getName();
         String userVerificationCode = request.getVerificationCode();
 
@@ -137,12 +137,8 @@ public class UserService {
         String name = request.getName();
         String email = request.getEmail();
 
-        Optional<User> userOptional = userRepository.findByName(name);
-        if (userOptional.isEmpty()) {
-            throw new BadRequestException(BadRequestType.CANNOT_FIND_USER);
-        }
-
-        User user = userOptional.get();
+        User user = userRepository.findByName(name)
+                .orElseThrow(() -> new BadRequestException(BadRequestType.CANNOT_FIND_USER));
         //인증번호 생성
         String verificationCode = generateVerificationCode();
         // 이메일로 인증번호 전송
@@ -161,12 +157,8 @@ public class UserService {
         String name = request.getName();
         String userVerificationCode = request.getVerificationCode();
 
-        Optional<User> userOptional = userRepository.findByName(name);
-        if (userOptional.isEmpty()) {
-            throw new BadRequestException(BadRequestType.CANNOT_FIND_USER);
-        }
-
-        User user = userOptional.get();
+        User user = userRepository.findByName(name)
+                .orElseThrow(() -> new BadRequestException(BadRequestType.CANNOT_FIND_USER));
 
         if (!userVerificationCode.equals(user.getVerificationCode())) {
             throw new BadRequestException(BadRequestType.INCORRECT_VERIFICATION_CODE);
