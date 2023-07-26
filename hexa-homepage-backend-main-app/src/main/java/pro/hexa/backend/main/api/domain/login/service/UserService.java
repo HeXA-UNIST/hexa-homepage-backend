@@ -109,16 +109,7 @@ public class UserService {
             throw new BadRequestException(BadRequestType.INCORRECT_VERIFICATION_CODE);
         }
         String userId = user.getId();
-        String accessToken = Jwt.generateAccessToken(userId);
-
-        // 현재 시간과 AccessToken의 만료 시간 비교
-        Timestamp expiration = Timestamp.valueOf(LocalDateTime.now().plusMinutes(Jwt.ACCESS_TOKEN_EXPIRE_MINUTE));
-        Date now = new Date();
-        if (now.after(expiration)) {
-            return Jwt.generateRefreshToken();
-        }
-
-        return accessToken;
+        return userId;
     }
 
     public String findUserPasswordById(UserFindPasswordRequestDto1 request) {
@@ -154,7 +145,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public String PasswordverifyVerificationCode(UserFindPasswordRequestDto2 request) {
+    public String verifyPassword(UserFindPasswordRequestDto2 request) {
         String name = request.getName();
         String userVerificationCode = request.getVerificationCode();
 

@@ -60,7 +60,7 @@ public class UserController {
     @Operation(description = "비밀번호 찾기(인증번호 확인)")
     @PostMapping("/find_password_verifyVerificiationCode")
     public ResponseEntity<String> PasswordverifyVerificationCode(@RequestBody UserFindPasswordRequestDto2 request) {
-        String generatePassword = userService.PasswordverifyVerificationCode(request);
+        String generatePassword = userService.verifyPassword(request);
         return ResponseEntity.ok(generatePassword);
     }
 
