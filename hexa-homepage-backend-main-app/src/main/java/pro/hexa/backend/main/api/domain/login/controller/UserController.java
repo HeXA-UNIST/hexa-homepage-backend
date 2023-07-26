@@ -13,6 +13,7 @@ import pro.hexa.backend.main.api.domain.login.dto.UserFindIdRequestDto;
 import pro.hexa.backend.main.api.domain.login.dto.UserFindPasswordRequestDto1;
 import pro.hexa.backend.main.api.domain.login.dto.UserFindPasswordRequestDto2;
 import pro.hexa.backend.main.api.domain.login.dto.UserFindPasswordRequestDto3;
+import pro.hexa.backend.main.api.domain.login.dto.UserFindVerificationRequestDto;
 import pro.hexa.backend.main.api.domain.login.service.UserService;
 
 
@@ -26,7 +27,7 @@ public class UserController {
     @Operation(description = "회원가입")
     @PostMapping("/create")
     public ResponseEntity<String> userSignup(@RequestBody UserCreateRequestDto request) {
-        return new ResponseEntity<>(userService.userSignup(request), HttpStatus.OK);
+        return new ResponseEntity<>(userService.signupUser(request), HttpStatus.OK);
     }
 
     @Operation(description = "아이디 찾기(인증번호 전송)")
@@ -45,7 +46,7 @@ public class UserController {
 
     @Operation(description = "비밀번호 찾기(id 입력)")
     @PostMapping("/find_passwordbyId")
-    public ResponseEntity<String> findUserPasswordbyId(@RequestBody UserFindPasswordRequestDto1 request) {
+    public ResponseEntity<String> findUserPasswordById(@RequestBody UserFindPasswordRequestDto1 request) {
         String newPassword = userService.findUserPasswordById(request);
         return ResponseEntity.ok(newPassword);
     }
@@ -59,7 +60,7 @@ public class UserController {
 
     @Operation(description = "비밀번호 찾기(인증번호 확인)")
     @PostMapping("/find_password_verifyVerificiationCode")
-    public ResponseEntity<String> PasswordverifyVerificationCode(@RequestBody UserFindPasswordRequestDto2 request) {
+    public ResponseEntity<String> PasswordVerifyVerificationCode(@RequestBody UserFindPasswordRequestDto2 request) {
         String generatePassword = userService.verifyPassword(request);
         return ResponseEntity.ok(generatePassword);
     }

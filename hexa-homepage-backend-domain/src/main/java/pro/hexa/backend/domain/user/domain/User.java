@@ -15,7 +15,6 @@ import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.attachment.domain.Attachment;
 import pro.hexa.backend.domain.major.domain.Major;
@@ -111,7 +110,7 @@ public class User extends AbstractEntity {
 
     @Comment("인증번호")
     @Column(length = 6)
-    private String verificationCode;
+    private String verificationCode; // 언젠가 Redis 적용해보면 좋을 것.
 
     public static User create(
         String id,
@@ -136,8 +135,8 @@ public class User extends AbstractEntity {
 
     }
 
-    public void setPassword(String newPassword) {
-        this.password=newPassword;
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
     }
 
     public void setVerificationCode(String verificationCode) {

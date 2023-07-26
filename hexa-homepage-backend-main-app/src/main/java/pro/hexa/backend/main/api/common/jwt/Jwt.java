@@ -23,6 +23,7 @@ public class Jwt {
     public static final int REFRESH_TOKEN_EXPIRE_DAY = 1;
 
     private static final String BEARER_PREFIX = "Bearer ";
+    public static final String JWT_TOKEN_TYPE = "TOKEN_TYPE";
     public static final String JWT_USER_ID = "userId";
     public static final String JWT_ISSUED_AT = "issuedAt";
 
@@ -38,6 +39,7 @@ public class Jwt {
         return Jwts.builder()
             .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
             .setExpiration(expiration)
+            .claim(JWT_TOKEN_TYPE, JwtTokenType.ACCESS_TOKEN.getValue())
             .claim(JWT_USER_ID, userId)
             .claim(JWT_ISSUED_AT, new Date().getTime())
             .signWith(SignatureAlgorithm.HS256, Jwt.jwtSecretKey)
@@ -49,6 +51,7 @@ public class Jwt {
         return Jwts.builder()
             .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
             .setExpiration(expiration)
+            .claim(JWT_TOKEN_TYPE, JwtTokenType.REFRESH_TOKEN.getValue())
             .claim(JWT_ISSUED_AT, new Date().getTime())
             .signWith(SignatureAlgorithm.HS256, Jwt.jwtSecretKey)
             .compact();

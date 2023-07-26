@@ -1,12 +1,12 @@
 package pro.hexa.backend.main.api.domain.login.service;
 
 import io.jsonwebtoken.Claims;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,18 +18,13 @@ import pro.hexa.backend.dto.EmailRequestDto;
 import pro.hexa.backend.main.api.common.exception.BadRequestException;
 import pro.hexa.backend.main.api.common.exception.BadRequestType;
 import pro.hexa.backend.main.api.common.jwt.Jwt;
-import pro.hexa.backend.main.api.domain.login.dto.UserFindPasswordRequestDto2;
 import pro.hexa.backend.main.api.domain.login.dto.UserCreateRequestDto;
 import pro.hexa.backend.main.api.domain.login.dto.UserFindIdRequestDto;
 import pro.hexa.backend.main.api.domain.login.dto.UserFindPasswordRequestDto1;
+import pro.hexa.backend.main.api.domain.login.dto.UserFindPasswordRequestDto2;
 import pro.hexa.backend.main.api.domain.login.dto.UserFindPasswordRequestDto3;
+import pro.hexa.backend.main.api.domain.login.dto.UserFindVerificationRequestDto;
 import pro.hexa.backend.service.EmailService;
-
-import java.security.SecureRandom;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -39,12 +34,10 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
     
     @Transactional
-    public String userSignup(UserCreateRequestDto request) {
+    public String signupUser(UserCreateRequestDto request) {
         boolean userExists = userRepository.existsById(request.getId());
 
         if (userExists) {
@@ -81,12 +74,13 @@ public class UserService {
 
         // Generate verification code
         String verificationCode = generateVerificationCode();
+
         // Send verification code to the user's email
         EmailRequestDto emailRequestDto = EmailRequestDto.builder()
-                .sendTo(email)
-                .Subject("Verification Code")
-                .Text("Your verification code is: " + verificationCode)
-                .build();
+            .sendTo(email)
+            .Subject("Verification Code")
+            .Text("Your verification code is: " + verificationCode)
+            .build();
         emailService.send(emailRequestDto);
 
         // Store the verification code in the user's record
@@ -94,16 +88,13 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public String verifyId(UserFindIdRequestDto request) {
+    public String verifyId(UserFindVerificationRequestDto request) {
         String name = request.getName();
+        String email = request.getEmail();
         String userVerificationCode = request.getVerificationCode();
 
-        Optional<User> userOptional = userRepository.findByName(name);
-        if (userOptional.isEmpty()) {
-            throw new BadRequestException(BadRequestType.CANNOT_FIND_USER);
-        }
-
-        User user = userOptional.get();
+        User user = userRepository.findByNameAndEmail(name, email)
+            .orElseThrow(() -> new BadRequestException(BadRequestType.CANNOT_FIND_USER));
 
         if (!userVerificationCode.equals(user.getVerificationCode())) {
             throw new BadRequestException(BadRequestType.INCORRECT_VERIFICATION_CODE);
@@ -112,8 +103,19 @@ public class UserService {
         return userId;
     }
 
+    private String maskingId(@NonNull String id) {
+        return Arrays.stream(id.split(""))
+            .map(ch -> {
+                if (ch.charAt(0) % 4 == 0) {
+                    return "*";
+                } else {
+                    return ch;
+                }
+            }).collect(Collectors.joining());
+    }
+
     public String findUserPasswordById(UserFindPasswordRequestDto1 request) {
-        String userid=request.getId();
+        String userid = request.getId();
 
         Optional<User> userOptional = userRepository.findById(userid);
         if (userOptional.isEmpty()) {
@@ -125,32 +127,17 @@ public class UserService {
         return user.getId();
     }
 
-    public void findUserPasswordSendVerificationCode(UserFindPasswordRequestDto2 request) {
-        String name = request.getName();
-        String email = request.getEmail();
-
-        User user = userRepository.findByName(name)
-                .orElseThrow(() -> new BadRequestException(BadRequestType.CANNOT_FIND_USER));
-        //인증번호 생성
-        String verificationCode = generateVerificationCode();
-        // 이메일로 인증번호 전송
-        EmailRequestDto emailRequestDto = EmailRequestDto.builder()
-                .sendTo(email)
-                .Subject("Verification Code")
-                .Text("Your verification code is: " + verificationCode)
-                .build();
-        emailService.send(emailRequestDto);
-        // 인증번호 user에 저장
-        user.setVerificationCode(verificationCode);
-        userRepository.save(user);
-    }
 
     public String verifyPassword(UserFindPasswordRequestDto2 request) {
-        String name = request.getName();
+        String id = request.getId();
         String userVerificationCode = request.getVerificationCode();
 
-        User user = userRepository.findByName(name)
-                .orElseThrow(() -> new BadRequestException(BadRequestType.CANNOT_FIND_USER));
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new BadRequestException(BadRequestType.CANNOT_FIND_USER));
+
+        if (user.getVerificationCode().isEmpty()) {
+            throw new BadRequestException(BadRequestType.NULL_VERIFICATION_CODE);
+        }
 
         if (!userVerificationCode.equals(user.getVerificationCode())) {
             throw new BadRequestException(BadRequestType.INCORRECT_VERIFICATION_CODE);
