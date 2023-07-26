@@ -46,7 +46,7 @@ public class UserController {
     @Operation(description = "비밀번호 찾기(id 입력)")
     @PostMapping("/find_passwordbyId")
     public ResponseEntity<String> findUserPasswordbyId(@RequestBody UserFindPasswordRequestDto1 request) {
-        String newPassword = userService.findUserPasswordbyId(request);
+        String newPassword = userService.findUserPasswordById(request);
         return ResponseEntity.ok(newPassword);
     }
 

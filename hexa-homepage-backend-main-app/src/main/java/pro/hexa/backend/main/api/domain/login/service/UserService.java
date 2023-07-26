@@ -42,6 +42,7 @@ public class UserService {
 
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
+    
     @Transactional
     public String userSignup(UserCreateRequestDto request) {
         boolean userExists = userRepository.existsById(request.getId());
@@ -120,7 +121,7 @@ public class UserService {
         return accessToken;
     }
 
-    public String findUserPasswordbyId(UserFindPasswordRequestDto1 request) {
+    public String findUserPasswordById(UserFindPasswordRequestDto1 request) {
         String userid=request.getId();
 
         Optional<User> userOptional = userRepository.findById(userid);
