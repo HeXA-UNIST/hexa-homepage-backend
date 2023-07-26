@@ -33,13 +33,13 @@ public class UserController {
     @Operation(description = "아이디 찾기(인증번호 전송)")
     @PostMapping("/find_id(SendVerificationCode)")
     public ResponseEntity<String> findUserIdSendVerificationCode(@RequestBody UserFindIdRequestDto request) {
-        userService.findUserIdSendVerificationCode(request);
-        return ResponseEntity.ok("Verification code sent successfully!");
+        userService.findUserSendVerificationCode(request);
+        return ResponseEntity.ok("Verification code is sent successfully!");
     }
 
     @Operation(description = "아이디 찾기(인증번호 확인)")
     @PostMapping("/find_id(verifyVerificationCode)")
-    public ResponseEntity<String> IdverifyVerificationCode(@RequestBody UserFindIdRequestDto request) {
+    public ResponseEntity<String> IdverifyVerificationCode(@RequestBody UserFindVerificationRequestDto request) {
         String userid = userService.verifyId(request);
         return ResponseEntity.ok(userid);
     }
@@ -53,9 +53,9 @@ public class UserController {
 
     @Operation(description = "비밀번호 찾기(인증번호 전송)")
     @PostMapping("/find_password_SendVerificationCode")
-    public ResponseEntity<String> findUserPasswordSendVerificationCode(@RequestBody UserFindPasswordRequestDto2 request) {
-        userService.findUserPasswordSendVerificationCode(request);
-        return ResponseEntity.ok("Verification code sent successfully!");
+    public ResponseEntity<String> findUserPasswordSendVerificationCode(@RequestBody UserFindIdRequestDto request) {
+        userService.findUserSendVerificationCode(request);
+        return ResponseEntity.ok("Verification code is sent successfully!");
     }
 
     @Operation(description = "비밀번호 찾기(인증번호 확인)")
@@ -67,8 +67,8 @@ public class UserController {
 
     @Operation(description = "비밀번호 찾기(비밀번호 변경)")
     @PostMapping("/password_change")
-    public ResponseEntity<String> changingUserPassword(@RequestBody UserFindPasswordRequestDto3 request, String Id) {
-        String newPassword = userService.changingUserPassword(request, Id);
-        return ResponseEntity.ok(newPassword);
+    public ResponseEntity<Boolean> changingUserPassword(@RequestBody UserFindPasswordRequestDto3 request, String Id) {
+        userService.changeUserPassword(request, Id);
+        return ResponseEntity.ok(true);
     }
 }

@@ -12,7 +12,4 @@ public class UserFindIdRequestDto {
 
     @Schema(description = "e-mail")
     private String email;
-
-    @Schema(description = "인증번호")
-    private String verificationCode;
 }
