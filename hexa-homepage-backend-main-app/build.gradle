@@ -50,6 +50,17 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+
+
+    // Mockito
+    testImplementation 'org.mockito:mockito-core:3.12.4'
+
+    // MockMvc를 위한 JSON 지원
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.12.5'
+    // Spring Boot Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.4'
+
+
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
