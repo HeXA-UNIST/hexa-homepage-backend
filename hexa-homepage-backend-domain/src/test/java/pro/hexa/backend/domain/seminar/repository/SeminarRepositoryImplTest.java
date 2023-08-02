@@ -1,27 +1,20 @@
 package pro.hexa.backend.domain.seminar.repository;
 
-import com.querydsl.core.types.Predicate;
-import com.querydsl.jpa.impl.JPAQuery;
+
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import pro.hexa.backend.domain.attachment.domain.Attachment;
 import pro.hexa.backend.domain.attachment.domain.QAttachment;
 import pro.hexa.backend.domain.seminar.domain.QSeminar;
 import pro.hexa.backend.domain.seminar.domain.Seminar;
-import pro.hexa.backend.domain.user.domain.User;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+
 
 class SeminarRepositoryImplTest {
 
@@ -31,36 +24,30 @@ class SeminarRepositoryImplTest {
     @InjectMocks
     private SeminarRepositoryImpl seminarRepository;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     @Test
     void findAllByQuery() {
         // 가상의 데이터 생성
         String searchText = "test";
         Integer year = 2023;
-        Integer pageNum = 0;
-        Integer pageSize = 10;
+        int pageNum = 0;
+        int page = 10;
 
         // 가상의 세미나 목록 생성
         List<Seminar> mockSeminarList = createMockSeminarList();
 
         // QueryDSL에서 사용할 가상의 QSeminar 객체 생성
-        QSeminar qSeminar = QSeminar.seminar;
+        QSeminar seminar = QSeminar.seminar;
+        QAttachment attatchment = QAttachment.attachment;
 
         // QueryDSL가 findAllByQuery 메서드 호출 시 예상되는 결과를 설정
-        JPAQuery<Seminar> jpaQuery = mock(JPAQuery.class);
-        when(queryFactory.selectFrom(qSeminar)).thenReturn(jpaQuery);
-        when(jpaQuery.leftJoin(qSeminar.attachments, QAttachment.attachment)).thenReturn(jpaQuery);
-        when(jpaQuery.where(any(Predicate.class))).thenReturn(jpaQuery);
-        when(jpaQuery.offset(anyInt())).thenReturn(jpaQuery);
-        when(jpaQuery.limit(anyInt())).thenReturn(jpaQuery);
-        when(jpaQuery.fetch()).thenReturn(mockSeminarList);
+        when(queryFactory.selectFrom(seminar)
+                .leftJoin(seminar.attachments, attatchment).fetchJoin()
+                .where(seminar.title.contains(searchText)).offset(pageNum)
+                .limit(page)
+                .fetch()).thenReturn(mockSeminarList);
 
         // findAllByQuery 메서드 호출
-        List<Seminar> result = seminarRepository.findAllByQuery(searchText, year, pageNum, pageSize);
+        List<Seminar> result = seminarRepository.findAllByQuery(searchText, year, pageNum, page);
 
         // 결과 검증
         assertNotNull(result);
