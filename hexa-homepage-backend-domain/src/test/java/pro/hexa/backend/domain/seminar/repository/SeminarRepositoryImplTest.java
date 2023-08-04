@@ -2,9 +2,11 @@ package pro.hexa.backend.domain.seminar.repository;
 
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import pro.hexa.backend.domain.attachment.domain.QAttachment;
 import pro.hexa.backend.domain.seminar.domain.QSeminar;
 import pro.hexa.backend.domain.seminar.domain.Seminar;
@@ -23,6 +25,11 @@ class SeminarRepositoryImplTest {
 
     @InjectMocks
     private SeminarRepositoryImpl seminarRepository;
+
+    @BeforeEach
+    void setup() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     void findAllByQuery() {
@@ -49,8 +56,6 @@ class SeminarRepositoryImplTest {
         // findAllByQuery 메서드 호출
         List<Seminar> result = seminarRepository.findAllByQuery(searchText, year, pageNum, page);
 
-        // 결과 검증
-        assertNotNull(result);
         assertEquals(2, result.size()); // 예상되는 페이지 크기와 일치하는지 확인
     }
 
