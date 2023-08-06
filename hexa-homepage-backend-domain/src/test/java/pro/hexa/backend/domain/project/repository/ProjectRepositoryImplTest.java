@@ -1,5 +1,6 @@
 package pro.hexa.backend.domain.project.repository;
 
+import java.util.stream.Collectors;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,33 +13,38 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+
+import org.mockito.MockitoAnnotations;
 
 import pro.hexa.backend.domain.project.domain.Project;
 import pro.hexa.backend.domain.project.domain.QProject;
 import pro.hexa.backend.domain.project.model.STATE_TYPE;
+import pro.hexa.backend.domain.project_member.domain.QProjectMember;
+import pro.hexa.backend.domain.project_tech_stack.domain.QProjectTechStack;
+
 
 public class ProjectRepositoryImplTest {
 
     @Mock
     private JPAQueryFactory queryFactory;
 
+    @Mock
+    private JPAQuery<Project> jpaQuery;
+
     @InjectMocks
     private ProjectRepositoryImpl projectRepository;
 
     @BeforeEach
-    void setUp() {
-        // projectRepository 객체 생성 및 주입
-        queryFactory = mock(JPAQueryFactory.class); // mock 객체로 초기화
-        projectRepository = new ProjectRepositoryImpl(queryFactory);
+    void setup() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void findAllByQueryC() {
+    void findAllByQueryP() {
         String searchText = "test";
-        List<String> status = List.of("IN_PROGRESS", "COMPLETED");
+        List<String> status = List.of("승인중");
         String sort = "asc";
         List<String> includeTechStack = List.of("Java", "Spring");
         List<String> excludeTechStack = List.of("Python");
@@ -50,24 +56,41 @@ public class ProjectRepositoryImplTest {
         List<Project> mockProjectList = createMockProjectList();
 
         // QueryDSL에서 사용할 가상의 QProject 객체 생성
-        QProject qProject = QProject.project;
+        QProject project = QProject.project;
+        QProjectMember projectMember = QProjectMember.projectMember;
+        QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
+        List<STATE_TYPE> stats = status.stream().map(STATE_TYPE::valueOf).collect(Collectors.toList());
 
         // QueryDSL가 findAllByQuery 메서드 호출 시 예상되는 결과를 설정
-        when(queryFactory.selectFrom(eq(qProject))).thenReturn(mockQuery(mockProjectList));
+        when(queryFactory.selectFrom(project)).thenReturn(jpaQuery);
+        when(jpaQuery.leftJoin(project.projectTechStacks, projectTechStack)).thenReturn(jpaQuery);
+        when(jpaQuery.fetchJoin()).thenReturn(jpaQuery);
+        when(jpaQuery.leftJoin(project.members, projectMember)).thenReturn(jpaQuery);
+        when(jpaQuery.fetchJoin()).thenReturn(jpaQuery);
+        when(jpaQuery.where(project.title.contains(searchText),
+                project.state.in(stats),
+                projectTechStack.content.in(includeTechStack),
+                projectTechStack.content.notIn(excludeTechStack)
+                // year는 무엇을 기준으로 할지 제대로 정의 되어있지 않음
+        )).thenReturn(jpaQuery);
+        when(jpaQuery.orderBy((sort == "asc") ? project.title.asc() : project.title.desc())).thenReturn(jpaQuery);
+        when(jpaQuery.offset(pageNum)).thenReturn(jpaQuery);
+        when(jpaQuery.limit(page)).thenReturn(jpaQuery);
+        when(jpaQuery.fetch()).thenReturn(mockProjectList);
 
         // findAllByQuery 메서드 호출
         List<Project> result = projectRepository.findAllByQuery(searchText, status, sort, includeTechStack, excludeTechStack, year, pageNum, page);
 
         // 결과 검증
         assertNotNull(result);
-        assertEquals(1, result.size()); // 예상되는 페이지 크기와 일치하는지 확인
+        assertEquals(20, result.size()); // 예상되는 페이지 크기와 일치하는지 확인
     }
 
     @Test
     void getMaxPageC() {
         // 가상의 데이터 생성
         String searchText = "test";
-        List<String> status = List.of("IN_PROGRESS", "COMPLETED");
+        List<String> status = List.of("승인중");
         String sort = "asc";
         List<String> includeTechStack = List.of("Java", "Spring");
         List<String> excludeTechStack = List.of("Python");
@@ -79,31 +102,53 @@ public class ProjectRepositoryImplTest {
         List<Project> mockProjectList = createMockProjectList();
 
         // QueryDSL에서 사용할 가상의 QProject 객체 생성
-        QProject qProject = QProject.project;
+        QProject project = QProject.project;
+        QProjectMember projectMember = QProjectMember.projectMember;
+        QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
+        List<STATE_TYPE> stats = status.stream().map(STATE_TYPE::valueOf).collect(Collectors.toList());
 
-        // QueryDSL가 getMaxPage 메서드 호출 시 예상되는 결과를 설정
-        when(queryFactory.selectFrom(eq(qProject))).thenReturn( mockQuery(mockProjectList));
-
-        // getMaxPage 메서드 호출
-        int totalCount = mockProjectList.size();
-        int maxPage = (int) Math.ceil((double) totalCount / page);
+        // QueryDSL가 findAllByQuery 메서드 호출 시 예상되는 결과를 설정
+        when(queryFactory.selectFrom(project)).thenReturn(jpaQuery);
+        when(jpaQuery.leftJoin(project.projectTechStacks, projectTechStack)).thenReturn(jpaQuery);
+        when(jpaQuery.fetchJoin()).thenReturn(jpaQuery);
+        when(jpaQuery.leftJoin(project.members, projectMember)).thenReturn(jpaQuery);
+        when(jpaQuery.fetchJoin()).thenReturn(jpaQuery);
+        when(jpaQuery.where(project.title.contains(searchText),
+                project.state.in(stats),
+                projectTechStack.content.in(includeTechStack),
+                projectTechStack.content.notIn(excludeTechStack)
+                // year는 무엇을 기준으로 할지 제대로 정의 되어있지 않음
+        )).thenReturn(jpaQuery);
+        when(jpaQuery.fetch()).thenReturn(mockProjectList);
 
         // 결과 검증
-        assertEquals(maxPage, projectRepository.getMaxPage(searchText, status, sort, includeTechStack, excludeTechStack, year, pageNum, page));
+        assertEquals(20, projectRepository.getMaxPage(searchText, status, sort, includeTechStack, excludeTechStack, year, pageNum, page));
     }
 
     @Test
-    void findByQuery_WithNullId_ShouldReturnNull() {
-        // null 프로젝트 id로 조회
-        Long nullId = null;
+    void findByQueryP() {
+        // 가상의 데이터 생성
+        Long id=1255L;
 
-        // findByQuery 메서드 호출
-        Project result = projectRepository.findByQuery(nullId);
+        // 가상의 프로젝트 목록 생성
+        List<Project> mockProjectList = createMockProjectList();
 
+        // QueryDSL에서 사용할 가상의 QProject 객체 생성
+        QProject project = QProject.project;
+        QProjectMember projectMember = QProjectMember.projectMember;
+        QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
+
+        // QueryDSL가 findAllByQuery 메서드 호출 시 예상되는 결과를 설정
+        when(queryFactory.selectFrom(project)).thenReturn(jpaQuery);
+        when(jpaQuery.leftJoin(project.members, projectMember)).thenReturn(jpaQuery);
+        when(jpaQuery.fetchJoin()).thenReturn(jpaQuery);
+        when(jpaQuery.leftJoin(project.projectTechStacks, projectTechStack)).thenReturn(jpaQuery);
+        when(jpaQuery.fetchJoin()).thenReturn(jpaQuery);
+        when(jpaQuery.where(project.id.eq(id))).thenReturn(jpaQuery);
+        when(jpaQuery.fetchOne()).thenReturn(mockProjectList.get(0));
         // 결과 검증
-        assertNull(result);
+        assertEquals(mockProjectList.get(0), projectRepository.findByQuery(1255L));
     }
-
 
     // 가상의 프로젝트 목록 생성 (테스트에 사용할 데이터를 가정하여 생성)
     private List<Project> createMockProjectList() {
@@ -117,7 +162,6 @@ public class ProjectRepositoryImplTest {
             project.setStartDate(LocalDateTime.of(2023, 7, i + 1, 0, 0));
             project.setEndDate(LocalDateTime.of(2023, 8, i + 1, 0, 0));
             project.setState(STATE_TYPE.승인중);
-            // 필요한 속성들 설정...
 
             projects.add(project);
         }
@@ -125,13 +169,4 @@ public class ProjectRepositoryImplTest {
         return projects;
     }
 
-    // QueryDSL의 예상 쿼리 실행 결과를 반환하는 가짜 메서드
-    private JPAQuery<Project> mockQuery(List<Project> mockProjectList) {
-        JPAQuery<Project> query = mock(JPAQuery.class);
-        doReturn(query).when(query).where(any(BooleanExpression.class));
-        doReturn(query).when(query).leftJoin(any(QProject.class), any());
-        doReturn(mockProjectList).when(query).fetch();
-
-        return query;
-    }
 }

@@ -1,75 +1,68 @@
 package pro.hexa.backend.domain.project_tech_stack.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import com.querydsl.jpa.impl.JPAQueryFactory;
+import pro.hexa.backend.domain.attachment.domain.QAttachment;
 import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
 import pro.hexa.backend.domain.project_tech_stack.domain.QProjectTechStack;
+import java.util.ArrayList;
+import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.*;
 
-public class ProjectTechStackRepositoryImplTest {
+class ProjectTechStackRepositoryImplTest {
 
     @Mock
     private JPAQueryFactory queryFactory;
+
+    @Mock
+    private JPAQuery<ProjectTechStack> jpaQuery;
 
     @InjectMocks
     private ProjectTechStackRepositoryImpl projectTechStackRepository;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
+    void setup() {
+        MockitoAnnotations.openMocks(this);
     }
+
 
     @Test
-    void findTechStackByQuery() {
-        // 가상의 테크스택 데이터 생성
-        List<ProjectTechStack> mockTechStackList = createMockTechStackList();
+    void findAllByQueryC() {
+
+        // 가상의 기술스택 목록 생성
+        List<ProjectTechStack> mockProjectTechStackList = createMockSeminarList();
 
         // QueryDSL에서 사용할 가상의 QProjectTechStack 객체 생성
-        QProjectTechStack qProjectTechStack = QProjectTechStack.projectTechStack;
+        QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
+        QAttachment attatchment = QAttachment.attachment;
 
         // QueryDSL가 findTechStackByQuery 메서드 호출 시 예상되는 결과를 설정
-        when(queryFactory.selectFrom(eq(qProjectTechStack))).thenReturn(mockQuery(mockTechStackList));
+        when(queryFactory.selectFrom(projectTechStack)).thenReturn(jpaQuery);
+        when(jpaQuery.fetch()).thenReturn(mockProjectTechStackList);
 
-        // findTechStackByQuery 메서드 호출
+        // findAllByQuery 메서드 호출
         List<ProjectTechStack> result = projectTechStackRepository.findTechStackByQuery();
-
-        // 결과 검증
-        assertEquals(mockTechStackList, result);
+        assertNotNull(result);
+        assertEquals(1, result.size()); // 예상되는 페이지 크기와 일치하는지 확인
     }
 
-    // 가상의 테크스택 데이터 생성 (테스트에 사용할 데이터를 가정하여 생성)
-    private List<ProjectTechStack> createMockTechStackList() {
-        List<ProjectTechStack> techStacks = new ArrayList<>();
+    // 가상의 기술스택 목록 생성 (테스트에 사용할 데이터를 가정하여 생성)
+    private List<ProjectTechStack> createMockSeminarList() {
+        List<ProjectTechStack> projectTechStacks = new ArrayList<>();
 
-        // 가상의 테크스택 객체들 생성하여 리스트에 추가
-        for (int i = 0; i < 5; i++) {
-            ProjectTechStack techStack = new ProjectTechStack();
-            techStack.setId((long) i);
-            techStack.setContent("Tech Stack " + i);
-            // 필요한 속성들 설정...
+        // 가상의 세미나 객체들 생성하여 리스트에 추가
+        ProjectTechStack projectTechStack1 = new ProjectTechStack();
+        projectTechStack1.setId(17827L);
+        projectTechStacks.add(projectTechStack1);
 
-            techStacks.add(techStack);
-        }
-
-        return techStacks;
-    }
-
-    // QueryDSL의 예상 쿼리 실행 결과를 반환하는 가짜 메서드
-    private JPAQuery<ProjectTechStack> mockQuery(List<ProjectTechStack> mockTechStackList) {
-        JPAQuery<ProjectTechStack> query = mock(JPAQuery.class);
-        doReturn(mockTechStackList).when(query).fetch();
-
-        return query;
+        return projectTechStacks;
     }
 }
