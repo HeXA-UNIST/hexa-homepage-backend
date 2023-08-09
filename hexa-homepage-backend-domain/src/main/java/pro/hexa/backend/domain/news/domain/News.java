@@ -8,13 +8,18 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.model.model.AbstractEntity;
 import pro.hexa.backend.domain.news.model.NEWS_TYPE;
 
 @Entity(name = "news")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class News extends AbstractEntity {
 
     @Id
@@ -38,4 +43,13 @@ public class News extends AbstractEntity {
     @Comment(value = "게시글")
     @Column(length = 3000)
     private String content;
+
+    public static News create(NEWS_TYPE newsType, String title, LocalDate date, String content){
+        News news = new News();
+        news.newsType = newsType;
+        news.title = title;
+        news.content = content;
+        news.date = date;
+        return news;
+    }
 }
