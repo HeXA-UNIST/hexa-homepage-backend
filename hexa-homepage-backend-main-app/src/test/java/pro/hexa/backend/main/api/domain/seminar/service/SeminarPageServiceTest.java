@@ -12,6 +12,8 @@ import pro.hexa.backend.domain.seminar.domain.Seminar;
 import pro.hexa.backend.domain.seminar.repository.SeminarRepository;
 import pro.hexa.backend.domain.user.domain.User;
 import pro.hexa.backend.main.api.domain.seminar.dto.SeminarListResponse;
+import pro.hexa.backend.domain.user.model.GENDER_TYPE;
+import pro.hexa.backend.domain.user.model.STATE_TYPE;
 
 import java.util.Collections;
 import java.util.List;
@@ -58,8 +60,23 @@ public class SeminarPageServiceTest {
         for (int i = 0; i < count; i++) {
             Seminar seminar = new Seminar();
             seminar.setDate(LocalDateTime.of(2023, 1, 1, 0, 0).plusDays(i)); // Setting date values for testing purposes
+            User user = createUser(i);
+            seminar.setUser(user);
             seminars.add(seminar);
         }
         return seminars;
+    }
+
+    private User createUser(int index) {
+        return User.create(
+                "user" + index, // ID
+                "user" + index + "@example.com", // Email
+                GENDER_TYPE.남, // Gender
+                STATE_TYPE.재학, // State
+                (short) 2020, // Registration Year
+                "20202020" + index, // Registration Number
+                "User " + index, // Name
+                "password" + index // Password
+        );
     }
 }

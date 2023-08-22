@@ -8,12 +8,14 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.model.model.AbstractEntity;
 
 @Entity(name = "attachment")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Getter
+@Setter
 public class Attachment extends AbstractEntity {
 
     @Id
