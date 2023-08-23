@@ -23,8 +23,10 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testRuntimeOnly 'com.h2database:h2'
 
     testImplementation 'org.mockito:mockito-core:3.12.4'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
