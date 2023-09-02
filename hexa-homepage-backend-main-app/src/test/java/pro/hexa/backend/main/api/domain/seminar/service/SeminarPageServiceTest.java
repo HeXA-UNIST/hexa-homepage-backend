@@ -3,11 +3,9 @@ package pro.hexa.backend.main.api.domain.seminar.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import pro.hexa.backend.domain.seminar.domain.Seminar;
 import pro.hexa.backend.domain.seminar.repository.SeminarRepository;
 import pro.hexa.backend.domain.user.domain.User;
@@ -15,11 +13,11 @@ import pro.hexa.backend.main.api.domain.seminar.dto.SeminarListResponse;
 import pro.hexa.backend.domain.user.model.GENDER_TYPE;
 import pro.hexa.backend.domain.user.model.STATE_TYPE;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+
 
 public class SeminarPageServiceTest {
 
@@ -28,11 +26,6 @@ public class SeminarPageServiceTest {
 
     @InjectMocks
     private SeminarPageService seminarPageService;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void testGetSeminarListResponse() {
