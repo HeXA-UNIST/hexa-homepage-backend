@@ -1,33 +1,29 @@
 package pro.hexa.backend.main.api.domain.login.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
-
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import org.mockito.exceptions.base.MockitoException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pro.hexa.backend.domain.user.domain.User;
 import pro.hexa.backend.domain.user.model.GENDER_TYPE;
 import pro.hexa.backend.domain.user.model.STATE_TYPE;
 import pro.hexa.backend.domain.user.repository.UserRepository;
-import pro.hexa.backend.dto.EmailRequestDto;
 import pro.hexa.backend.main.api.common.exception.BadRequestException;
 import pro.hexa.backend.main.api.domain.login.dto.UserCreateRequestDto;
-import pro.hexa.backend.main.api.domain.login.dto.UserFindIdRequestDto;
 import pro.hexa.backend.main.api.domain.login.dto.UserFindPasswordRequestDto1;
 import pro.hexa.backend.service.EmailService;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 
 class UserServiceTest {

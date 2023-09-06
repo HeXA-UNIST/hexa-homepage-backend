@@ -1,6 +1,5 @@
 package pro.hexa.backend.main.api.domain.login.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 

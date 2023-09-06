@@ -30,7 +30,6 @@ dependencies {
     implementation project(path: ':hexa-homepage-backend-email')
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
-    testImplementation 'junit:junit:4.13.1'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
 

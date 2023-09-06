@@ -2,21 +2,20 @@ package pro.hexa.backend.main.api.domain.seminar.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import pro.hexa.backend.domain.seminar.domain.Seminar;
 import pro.hexa.backend.domain.seminar.repository.SeminarRepository;
 import pro.hexa.backend.domain.user.domain.User;
-import pro.hexa.backend.main.api.domain.seminar.dto.SeminarListResponse;
 import pro.hexa.backend.domain.user.model.GENDER_TYPE;
 import pro.hexa.backend.domain.user.model.STATE_TYPE;
-
-import java.util.List;
+import pro.hexa.backend.main.api.domain.seminar.dto.SeminarListResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 
 
 public class SeminarPageServiceTest {

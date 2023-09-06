@@ -2,30 +2,25 @@ package pro.hexa.backend.main.api.domain.project.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
-
 import pro.hexa.backend.domain.attachment.domain.Attachment;
 import pro.hexa.backend.domain.project.domain.Project;
-import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
 import pro.hexa.backend.domain.project.repository.ProjectRepository;
+import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
 import pro.hexa.backend.domain.project_tech_stack.repository.ProjectTechStackRepository;
-import pro.hexa.backend.domain.seminar.domain.Seminar;
-import pro.hexa.backend.domain.user.domain.User;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectListResponse;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectResponse;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectTechStackResponse;
 
-import java.util.Collections;
-import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.when;
 
 
 class ProjectPageServiceTest {
