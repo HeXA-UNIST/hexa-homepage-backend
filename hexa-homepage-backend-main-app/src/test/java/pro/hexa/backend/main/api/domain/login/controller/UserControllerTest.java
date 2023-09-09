@@ -15,7 +15,7 @@ class UserControllerTest {
     }
 
     @Test
-    void idverifyVerificationCode() {
+    void idVerifyVerificationCode() {
     }
 
     @Test

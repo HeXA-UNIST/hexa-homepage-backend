@@ -39,7 +39,7 @@ public class UserController {
 
     @Operation(description = "아이디 찾기(인증번호 확인)")
     @PostMapping("/find_id(verifyVerificationCode)")
-    public ResponseEntity<String> IdverifyVerificationCode(@RequestBody UserFindVerificationRequestDto request) {
+    public ResponseEntity<String> idVerifyVerificationCode(@RequestBody UserFindVerificationRequestDto request) {
         String userid = userService.verifyId(request);
         return ResponseEntity.ok(userid);
     }
@@ -60,7 +60,7 @@ public class UserController {
 
     @Operation(description = "비밀번호 찾기(인증번호 확인)")
     @PostMapping("/find_password_verifyVerificiationCode")
-    public ResponseEntity<String> PasswordVerifyVerificationCode(@RequestBody UserFindPasswordRequestDto2 request) {
+    public ResponseEntity<String> passwordVerifyVerificationCode(@RequestBody UserFindPasswordRequestDto2 request) {
         String generatePassword = userService.verifyPassword(request);
         return ResponseEntity.ok(generatePassword);
     }
