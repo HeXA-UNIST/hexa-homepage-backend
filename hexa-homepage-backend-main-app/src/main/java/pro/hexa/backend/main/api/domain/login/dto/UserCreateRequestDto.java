@@ -1,11 +1,15 @@
 package pro.hexa.backend.main.api.domain.login.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserCreateRequestDto {
     @Schema(description = "유저 이름")
     private String id;
@@ -28,9 +32,9 @@ public class UserCreateRequestDto {
     @Schema(description = "이름", example = "김선욱")
     private String name;
 
-    @Schema(description = "비번1")
+    @Schema(description = "비밀 번호")
     private String password1;
 
-    @Schema(description = "비번2")
+    @Schema(description = "비밀 번호 확인")
     private String password2;
 }
