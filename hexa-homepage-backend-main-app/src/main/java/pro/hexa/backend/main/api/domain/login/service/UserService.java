@@ -81,7 +81,7 @@ public class UserService {
             .Subject("Verification Code")
             .Text("Your verification code is: " + verificationCode)
             .build();
-        emailService.send(emailRequestDto);
+        //emailService.send(emailRequestDto);
 
         // Store the verification code in the user's record
         user.setVerificationCode(verificationCode);

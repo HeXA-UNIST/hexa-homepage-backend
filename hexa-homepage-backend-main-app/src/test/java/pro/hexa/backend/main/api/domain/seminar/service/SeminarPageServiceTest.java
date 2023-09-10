@@ -3,9 +3,11 @@ package pro.hexa.backend.main.api.domain.seminar.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import pro.hexa.backend.domain.seminar.domain.Seminar;
 import pro.hexa.backend.domain.seminar.repository.SeminarRepository;
 import pro.hexa.backend.domain.user.domain.User;
@@ -25,6 +27,12 @@ public class SeminarPageServiceTest {
 
     @InjectMocks
     private SeminarPageService seminarPageService;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
 
     @Test
     public void testGetSeminarListResponse() {
