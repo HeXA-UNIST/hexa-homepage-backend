@@ -14,6 +14,16 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    protocol: smtp
+    username: hexa.admin@gmail.com
+    password: 1111111
+    default-encoding: UTF-8
+    smtp:
+      start-tls-enable: true
+      auth: true
 logging:
   level:
     org.hibernate.SQL: debug
