@@ -14,12 +14,11 @@ import org.springframework.stereotype.Component;
 
 @Converter
 @Component
-@SuppressWarnings({"java:S3329"})
 public class StringCryptoConverter implements AttributeConverter<String, String> {
 
     private static final String ALGORITHM = "AES/CBC/PKCS5Padding";
 
-    @Value("")
+    @Value("${hexa-page-jwt-secret-key}")
     private byte[] secretKey;
 
     @Value("#{new javax.crypto.spec.IvParameterSpec('${secretIv}'.getBytes())}")

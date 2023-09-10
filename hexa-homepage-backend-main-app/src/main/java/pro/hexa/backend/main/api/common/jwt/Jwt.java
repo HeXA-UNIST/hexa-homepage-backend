@@ -28,8 +28,6 @@ public class Jwt {
     public static final String JWT_USER_ID = "userId";
     public static final String JWT_ISSUED_AT = "issuedAt";
 
-
-
     @Value("${hexa-page-jwt-secret-key}")
     public void setJwtSecretKey(String jwtSecretKey) {
         Jwt.jwtSecretKey = jwtSecretKey;
