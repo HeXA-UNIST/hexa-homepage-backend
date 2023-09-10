@@ -1,12 +1,11 @@
 spring:
   mail:
     host: smtp.gmail.com
-    username: najeyeong@gmail.com
-    password: 1111111
     port: 587
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
+    protocol: smtp
+    username: hexa.admin@gmail.com
+    password: 1111111
+    default-encoding: UTF-8
+    smtp:
+      start-tls-enable: true
+      auth: true

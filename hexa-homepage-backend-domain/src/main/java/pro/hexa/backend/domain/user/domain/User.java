@@ -120,7 +120,8 @@ public class User extends AbstractEntity {
         Short regYear,
         String regNum,
         String name,
-        String password
+        String password,
+        AUTHORIZATION_TYPE authType
     ) {
         User user = new User();
         user.id = id;
@@ -131,8 +132,8 @@ public class User extends AbstractEntity {
         user.regNum = regNum;
         user.name = name;
         user.password = password;
+        user.authorization = authType;
         return user;
-
     }
 
     public void changePassword(String newPassword) {

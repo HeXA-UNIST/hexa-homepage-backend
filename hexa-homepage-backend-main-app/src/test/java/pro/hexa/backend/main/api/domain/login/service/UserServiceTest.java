@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pro.hexa.backend.domain.user.domain.User;
+import pro.hexa.backend.domain.user.model.AUTHORIZATION_TYPE;
 import pro.hexa.backend.domain.user.model.GENDER_TYPE;
 import pro.hexa.backend.domain.user.model.STATE_TYPE;
 import pro.hexa.backend.domain.user.repository.UserRepository;
@@ -51,10 +52,10 @@ class UserServiceTest {
         UserCreateRequestDto userCreateRequestDto = createDefaultUserCreateRequestDtoForTest();
 
         Mockito.when(userRepository.existsById(userCreateRequestDto.getId()))
-                .thenReturn(false);
+            .thenReturn(false);
         User user = makeUserForTest();
         Mockito.when(userRepository.save(any()))
-                .thenReturn(user);
+            .thenReturn(user);
 
         String result = userService.signupUser(userCreateRequestDto);
 
@@ -113,16 +114,16 @@ class UserServiceTest {
     }
 
     private User makeUserForTest() {
-        User user = User.create(
-                "seonuk",
-                "asd@example.com",
-                GENDER_TYPE.여,
-                STATE_TYPE.휴학,
-                (short) 2020,
-                "20202020",
-                "김선욱",
-                "encodedPassword"
+        return User.create(
+            "seonuk",
+            "asd@example.com",
+            GENDER_TYPE.여,
+            STATE_TYPE.휴학,
+            (short) 2020,
+            "20202020",
+            "김선욱",
+            "encodedPassword",
+            AUTHORIZATION_TYPE.Member
         );
-        return user;
     }
 }

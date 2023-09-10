@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pro.hexa.backend.domain.user.domain.User;
+import pro.hexa.backend.domain.user.model.AUTHORIZATION_TYPE;
 import pro.hexa.backend.domain.user.model.GENDER_TYPE;
 import pro.hexa.backend.domain.user.model.STATE_TYPE;
 import pro.hexa.backend.domain.user.repository.UserRepository;
@@ -52,8 +53,8 @@ public class UserService {
         STATE_TYPE stateType = STATE_TYPE.findKeyBYApiValue(request.getState());
         short regYear = Short.parseShort(request.getRegYear());
 
-        User user = User.create(request.getId(), request.getEmail(), genderType, stateType,
-            regYear, request.getRegNum(), request.getName(), passwordEncoder.encode(request.getPassword1()));
+        User user = User.create(request.getId(), request.getEmail(), genderType, stateType, regYear,
+            request.getRegNum(), request.getName(), passwordEncoder.encode(request.getPassword1()), AUTHORIZATION_TYPE.Member);
 
         userRepository.save(user);
 

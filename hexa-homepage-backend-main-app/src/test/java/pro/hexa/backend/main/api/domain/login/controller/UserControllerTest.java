@@ -38,7 +38,7 @@ class UserControllerTest {
 
         //then
         User user = userRepository.findByNameAndEmail("test", "test@hexa.pro")
-            .orElseGet(() -> User.create(null, null, null, null, null, null, null, null));
+            .orElseGet(() -> User.create(null, null, null, null, null, null, null, null, null));
         assertThat(request.getId()).isEqualTo(user.getId());
         assertThat(request.getGender()).isEqualTo(user.getGender().getApiValue());
         assertThat(request.getState()).isEqualTo(user.getState().getApiValue());
