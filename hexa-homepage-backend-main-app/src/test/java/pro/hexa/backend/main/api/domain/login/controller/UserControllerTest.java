@@ -85,7 +85,7 @@ class UserControllerTest {
 
         // then
         User user = userRepository.findByNameAndEmail("test", "test@hexa.pro")
-                .orElseGet(() -> User.create(null, null, null, null, null, null, null, null));
+                .orElseGet(() -> User.create(null, null, null, null, null, null, null, null, null));
         assertNotNull(user);
         assertNotNull(user.getVerificationCode());
 
@@ -117,7 +117,7 @@ class UserControllerTest {
         userController.findUserIdSendVerificationCode(request2);
 
         User user = userRepository.findByNameAndEmail("test", "test@hexa.pro")
-                .orElseGet(() -> User.create(null, null, null, null, null, null, null, null));
+                .orElseGet(() -> User.create(null, null, null, null, null, null, null, null, null));
 
 
         UserFindVerificationRequestDto request3 = new UserFindVerificationRequestDto(
@@ -153,7 +153,7 @@ class UserControllerTest {
         userController.userSignup(request1);
 
         User user = userRepository.findByNameAndEmail("test", "test@hexa.pro")
-                .orElseGet(() -> User.create(null, null, null, null, null, null, null, null));
+                .orElseGet(() -> User.create(null, null, null, null, null, null, null, null, null));
 
 
         UserFindPasswordRequestDto1 request = new UserFindPasswordRequestDto1("testId");
@@ -189,7 +189,7 @@ class UserControllerTest {
         userController.findUserPasswordSendVerificationCode(request2);
 
         User user = userRepository.findByNameAndEmail("test", "test@hexa.pro")
-                .orElseGet(() -> User.create(null, null, null, null, null, null, null, null));
+                .orElseGet(() -> User.create(null, null, null, null, null, null, null, null, null));
 
         UserFindPasswordRequestDto2 request3 = new UserFindPasswordRequestDto2(
                 "testId",
@@ -226,7 +226,7 @@ class UserControllerTest {
         userController.findUserPasswordSendVerificationCode(request2);
 
         User user = userRepository.findByNameAndEmail("test", "test@hexa.pro")
-                .orElseGet(() -> User.create(null, null, null, null, null, null, null, null));
+                .orElseGet(() -> User.create(null, null, null, null, null, null, null, null, null));
 
         UserFindPasswordRequestDto2 request3 = new UserFindPasswordRequestDto2(
                 "testId",
