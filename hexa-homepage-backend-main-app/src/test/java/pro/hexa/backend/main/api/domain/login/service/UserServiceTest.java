@@ -66,10 +66,6 @@ class UserServiceTest {
 
 
     @Test
-    void verifyId() {
-    }
-
-    @Test
     void findUserPasswordById() {
         //given
         Optional<User> user = Optional.of(makeUserForTest());
@@ -89,14 +85,7 @@ class UserServiceTest {
 
     }
 
-    @Test
-    void verifyPassword() {
 
-    }
-
-    @Test
-    void changeUserPassword() {
-    }
 
     private UserCreateRequestDto createDefaultUserCreateRequestDtoForTest() {
         UserCreateRequestDto userCreateRequestDto = new UserCreateRequestDto();

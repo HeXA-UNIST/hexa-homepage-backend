@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import pro.hexa.backend.config.StringCryptoConverter;
 import pro.hexa.backend.domain.user.domain.User;
 import pro.hexa.backend.domain.user.repository.UserRepository;
@@ -31,6 +32,7 @@ class UserControllerTest {
     private StringCryptoConverter stringCryptoConverter;
 
     @Test
+    @Transactional
     void userSignup() {
         //given
         UserCreateRequestDto request = new UserCreateRequestDto(
@@ -59,6 +61,7 @@ class UserControllerTest {
     }
 
     @Test
+    @Transactional
     void findUserIdSendVerificationCode() {
         //given
         UserCreateRequestDto request1 = new UserCreateRequestDto(
@@ -92,6 +95,7 @@ class UserControllerTest {
     }
 
     @Test
+    @Transactional
     void idVerifyVerificationCode() {
 
         UserCreateRequestDto request1 = new UserCreateRequestDto(
@@ -133,6 +137,7 @@ class UserControllerTest {
     }
 
     @Test
+    @Transactional
     void findUserPasswordById() {
 
         UserCreateRequestDto request1 = new UserCreateRequestDto(
@@ -163,6 +168,7 @@ class UserControllerTest {
     }
 
     @Test
+    @Transactional
     void passwordVerifyVerificationCode() {
         UserCreateRequestDto request1 = new UserCreateRequestDto(
                 "testId",
@@ -198,6 +204,7 @@ class UserControllerTest {
     }
 
     @Test
+    @Transactional
     void changingUserPassword() {
 
         UserCreateRequestDto request1 = new UserCreateRequestDto(
@@ -232,7 +239,7 @@ class UserControllerTest {
         ResponseEntity<String> k = userController.passwordVerifyVerificationCode(request3);
         String token = k.getBody();
 
-        String newPassword = "password1";
+        String newPassword = "password1asfdkjsfkdjlfsdahla";
         UserFindPasswordRequestDto3 request4 = new UserFindPasswordRequestDto3(newPassword, newPassword);
 
         userController.changingUserPassword(request4, token);

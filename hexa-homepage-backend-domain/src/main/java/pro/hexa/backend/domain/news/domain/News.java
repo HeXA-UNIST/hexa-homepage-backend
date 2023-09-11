@@ -38,4 +38,21 @@ public class News extends AbstractEntity {
     @Comment(value = "게시글")
     @Column(length = 3000)
     private String content;
+
+    public static News create(
+            Long id,
+            NEWS_TYPE newsType,
+            String title,
+            LocalDate date,
+            String content
+    ) {
+        News news = new News();
+        news.id = id;
+        news.newsType = newsType;
+        news.title = title;
+        news.date = date;
+        news.content = content;
+
+        return news;
+    }
 }

@@ -9,7 +9,7 @@ import pro.hexa.backend.domain.news.domain.QNews;
 @RequiredArgsConstructor
 public class NewsRepositoryImpl implements NewsRepositoryCustom {
 
-    private JPAQueryFactory queryFactory;
+    private final JPAQueryFactory queryFactory;
 
     @Override
     public List<News> findForMainPageByQuery() {
