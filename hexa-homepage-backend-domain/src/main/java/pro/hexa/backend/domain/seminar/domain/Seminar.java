@@ -32,4 +32,16 @@ public class Seminar extends AbstractActivity {
     @Comment("첨부파일")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Attachment> attachments = new ArrayList<>();
+
+    public static Seminar create(
+            LocalDateTime date,
+            User user,
+            List<Attachment> attachments
+    ) {
+        Seminar seminar = new Seminar();
+        seminar.date = date;
+        seminar.user = user;
+        seminar.attachments=attachments;
+        return seminar;
+    }
 }
