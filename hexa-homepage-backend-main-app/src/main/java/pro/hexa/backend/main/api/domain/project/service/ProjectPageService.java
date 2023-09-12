@@ -24,7 +24,6 @@ public class ProjectPageService {
 
     private final ProjectRepository projectRepository;
     private final ProjectTechStackRepository projectTechStackRepository;
-
     public ProjectListResponse getProjectListResponse(
         String searchText, List<String> status, String sort, List<String> includeTechStack, List<String> excludeTechStack, Integer year,
         Integer pageNum, Integer page
