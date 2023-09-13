@@ -1,5 +1,7 @@
 package pro.hexa.backend.domain.project_member.domain;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -13,6 +15,8 @@ import lombok.Getter;
 import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.model.model.AbstractEntity;
 import pro.hexa.backend.domain.project.domain.Project;
+import pro.hexa.backend.domain.project.model.STATE_TYPE;
+import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
 import pro.hexa.backend.domain.user.domain.User;
 import pro.hexa.backend.domain.project_member.model.AUTHORIZATION_TYPE;
 
@@ -36,4 +40,13 @@ public class ProjectMember extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     @Column(length = 8)
     private AUTHORIZATION_TYPE authorization;
+
+    public static ProjectMember create(
+            String id
+
+    ) {
+        ProjectMember projectmember = new ProjectMember();
+        projectmember.id = id;
+        return projectmember;
+    }
 }

@@ -12,6 +12,8 @@ import lombok.Setter;
 import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.model.model.AbstractEntity;
 import pro.hexa.backend.domain.project.domain.Project;
+import pro.hexa.backend.domain.project_member.domain.ProjectMember;
+import pro.hexa.backend.domain.project_tech_stack.repository.ProjectTechStackRepository;
 
 @Entity(name = "project_tech_stack")
 @Getter
@@ -29,5 +31,15 @@ public class ProjectTechStack extends AbstractEntity {
     @Comment("프로젝트")
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
+
+    public static ProjectTechStack create(
+            Long id,
+            String content
+    ) {
+        ProjectTechStack projectTechStack = new ProjectTechStack();
+        projectTechStack.id = id;
+        projectTechStack.content = content;
+        return projectTechStack;
+    }
 }
 

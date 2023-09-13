@@ -23,6 +23,8 @@ import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
 import pro.hexa.backend.domain.project_member.domain.ProjectMember;
 import pro.hexa.backend.domain.project_member.model.AUTHORIZATION_TYPE;
 import pro.hexa.backend.domain.project.model.STATE_TYPE;
+import pro.hexa.backend.domain.seminar.domain.Seminar;
+import pro.hexa.backend.domain.user.domain.User;
 
 @Entity(name = "project")
 @Getter
@@ -70,4 +72,29 @@ public class Project extends AbstractEntity{
     @Comment("썸네일")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Attachment thumbnail;
+
+    public static Project create(
+             Long id,
+             String title,
+             LocalDateTime startDate,
+             LocalDateTime endDate,
+             List<ProjectTechStack> projectTechStacks,
+             List<ProjectMember> members,
+             AUTHORIZATION_TYPE authorization,
+             STATE_TYPE state,
+             String content
+
+    ) {
+        Project project = new Project();
+        project.id = id;
+        project.title = title;
+        project.startDate = startDate;
+        project.endDate = endDate;
+        project.projectTechStacks = projectTechStacks;
+        project.members = members;
+        project.authorization = authorization;
+        project.state = state;
+        project.content = content;
+        return project;
+    }
 }
