@@ -24,7 +24,7 @@ public class SeminarRepositoryImpl implements SeminarRepositoryCustom {
         return queryFactory.selectFrom(seminar)
             .leftJoin(seminar.attachments, attachment).fetchJoin()
             .where(seminar.title.contains(searchText))
-            .offset(pageNum)
+            .offset((long) pageNum * perPage)
             .limit(perPage)
             .fetch();
     }
@@ -43,9 +43,9 @@ public class SeminarRepositoryImpl implements SeminarRepositoryCustom {
             whereQuery = whereQuery.and(seminar.updatedAt.between(standardDateForYear, standardDateForYear.plusYears(1)));
         }
 
-        return Math.toIntExact(queryFactory.select(seminar.id.count().divide(perPage))
+        return Math.toIntExact(queryFactory.select(seminar.id.count())
             .from(seminar)
             .where(whereQuery)
-            .fetchFirst());
+            .fetchFirst()) / perPage;
     }
 }

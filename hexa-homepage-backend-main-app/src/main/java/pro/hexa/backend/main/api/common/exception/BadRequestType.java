@@ -8,7 +8,8 @@ public enum BadRequestType {
     CANNOT_FIND_USER("사용자를 찾을 수 없습니다."),
     INCORRECT_VERIFICATION_CODE("인증번호가 일치하지 않습니다."),
     NULL_VERIFICATION_CODE("인증번호를 발급받지 않은 유저입니다."),
-    NULL_VALUE("필요한 값이 주어지지 않았습니다.");
+    NULL_VALUE("필요한 값이 주어지지 않았습니다."),
+    INVALID_PAGE_NUM("조회 시 page는 반드시 1보다 커야합니다.");
     private final String message;
 
     BadRequestType(String message) {
