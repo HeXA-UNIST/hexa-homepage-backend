@@ -1,6 +1,7 @@
 package pro.hexa.backend.config;
 
 import java.security.Key;
+import java.security.SecureRandom;
 import java.util.Base64;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -21,9 +22,6 @@ public class StringCryptoConverter implements AttributeConverter<String, String>
     @Value("${hexa-page-jwt-secret-key}")
     private byte[] secretKey;
 
-    @Value("#{new javax.crypto.spec.IvParameterSpec('${secretIv}'.getBytes())}")
-    private IvParameterSpec secretIv;
-
     @Override
     public String convertToDatabaseColumn(String attribute) {
         if (attribute == null) {
@@ -31,11 +29,13 @@ public class StringCryptoConverter implements AttributeConverter<String, String>
         }
 
         Key key = new SecretKeySpec(secretKey, "AES");
+        IvParameterSpec secretIv = generateSecretIv();
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, key, secretIv);
+            byte[] encrypted = Base64.getEncoder().encode(cipher.doFinal(attribute.getBytes()));
 
-            return new String(Base64.getEncoder().encode(cipher.doFinal(attribute.getBytes())));
+            return new String(secretIv.getIV()) + new String(encrypted);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -50,7 +50,7 @@ public class StringCryptoConverter implements AttributeConverter<String, String>
         Key key = new SecretKeySpec(secretKey, "AES");
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM);
-            cipher.init(Cipher.DECRYPT_MODE, key, secretIv);
+            cipher.init(Cipher.DECRYPT_MODE, key, getSecretIv(dbData));
 
             return decodeFromData(dbData, cipher);
         } catch (Exception e) {
@@ -65,5 +65,15 @@ public class StringCryptoConverter implements AttributeConverter<String, String>
         } catch (IllegalArgumentException e) {
             return dbData;
         }
+    }
+
+    private IvParameterSpec generateSecretIv() {
+        byte[] iv = new byte[16];
+        new SecureRandom().nextBytes(iv);
+        return new IvParameterSpec(iv);
+    }
+
+    private IvParameterSpec getSecretIv(String cipherText) {
+        return new IvParameterSpec(cipherText.substring(0,15).getBytes());
     }
 }
