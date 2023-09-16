@@ -47,7 +47,7 @@ public class SeminarPageServiceTest {
         when(seminarRepository.findAllByQuery(searchText, year, pageNum, page)).thenReturn(mockedSeminars);
 
         // Mock getMaxPage
-        when(seminarRepository.getMaxPage(searchText, year, pageNum, page)).thenReturn(mockedSeminars.size());
+        when(seminarRepository.getMaxPage(searchText, year, page)).thenReturn(mockedSeminars.size());
 
         SeminarListResponse seminarListResponse = seminarPageService.getSeminarListResponse(searchText, year, pageNum, page);
 

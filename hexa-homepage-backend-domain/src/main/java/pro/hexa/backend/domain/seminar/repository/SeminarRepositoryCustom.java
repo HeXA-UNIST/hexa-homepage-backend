@@ -1,11 +1,11 @@
 package pro.hexa.backend.domain.seminar.repository;
 
-import pro.hexa.backend.domain.seminar.domain.Seminar;
 import java.util.List;
+import pro.hexa.backend.domain.seminar.domain.Seminar;
 
 public interface SeminarRepositoryCustom {
 
-    List<Seminar> findAllByQuery(String searchText, Integer year, Integer pageNum, Integer page);
+    List<Seminar> findAllByQuery(String searchText, Integer year, Integer pageNum, Integer perPage);
 
-    int getMaxPage(String searchText, Integer year, Integer pageNum, Integer page);
+    int getMaxPage(String searchText, Integer year, Integer perPage);
 }

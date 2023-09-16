@@ -19,8 +19,8 @@ public class SeminarPageService {
 
     private final SeminarRepository seminarRepository;
 
-    public SeminarListResponse getSeminarListResponse(String searchText, Integer year, Integer pageNum, Integer page) {
-        List<Seminar> seminarList = seminarRepository.findAllByQuery(searchText, year, pageNum, page);
+    public SeminarListResponse getSeminarListResponse(String searchText, Integer year, Integer pageNum, Integer perPage) {
+        List<Seminar> seminarList = seminarRepository.findAllByQuery(searchText, year, pageNum, perPage);
         List<SeminarDto> seminars = seminarList.stream()
             .map(seminar -> {
                 SeminarDto seminarDto = new SeminarDto();
@@ -29,11 +29,11 @@ public class SeminarPageService {
             })
             .collect(Collectors.toList());
 
-        int maxPage = seminarRepository.getMaxPage(searchText, year, pageNum, page);
+        int maxPage = seminarRepository.getMaxPage(searchText, year, perPage);
 
         return SeminarListResponse.builder()
             .seminars(seminars)
-            .page(page)
+            .page(perPage)
             .maxPage(maxPage)
             .build();
     }

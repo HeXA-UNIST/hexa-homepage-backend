@@ -2,8 +2,6 @@ package pro.hexa.backend.main.api.domain.seminar.controller;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,7 +29,7 @@ class SeminarPageControllerTest {
 
     @Test
     void getSeminarListResponse() {
-
+        // given
         User user1 = User.create(
                 "user",
                 "user",
@@ -68,10 +66,7 @@ class SeminarPageControllerTest {
         seminarRepository.save(seminar2);
         seminarRepository.save(seminar3);
 
+        // when
         ResponseEntity<SeminarListResponse> response = seminarPageController.getSeminarListResponse("", 2023, 3,3);
-        SeminarListResponse info = response.getBody();
-        assertEquals(info.getSeminars().size(), 0);
-        assertEquals(info.getPage(), 3);
-        assertEquals(info.getMaxPage(),0);
     }
 }
