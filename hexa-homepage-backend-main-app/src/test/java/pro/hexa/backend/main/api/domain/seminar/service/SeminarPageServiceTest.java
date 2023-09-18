@@ -59,10 +59,8 @@ public class SeminarPageServiceTest {
     private List<Seminar> createMockedSeminars(int count) {
         List<Seminar> seminars = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            Seminar seminar = new Seminar();
-            seminar.setDate(LocalDateTime.of(2023, 1, 1, 0, 0).plusDays(i)); // Setting date values for testing purposes
             User user = createUser(i);
-            seminar.setUser(user);
+            Seminar seminar = Seminar.create(LocalDateTime.of(2023, 1, 1, 0, 0), user,new ArrayList<>());
             seminars.add(seminar);
         }
         return seminars;

@@ -26,10 +26,10 @@ public class ProjectPageService {
     private final ProjectTechStackRepository projectTechStackRepository;
     public ProjectListResponse getProjectListResponse(
         String searchText, List<String> status, String sort, List<String> includeTechStack, List<String> excludeTechStack, Integer year,
-        Integer pageNum, Integer page
+        Integer pageNum, Integer perPage
     ) {
         List<Project> projectList = projectRepository.findAllByQuery(
-            searchText, status, sort, includeTechStack, excludeTechStack, year, pageNum, page
+            searchText, status, sort, includeTechStack, excludeTechStack, year, pageNum, perPage
         );
         List<ProjectDto> projects = projectList.stream()
             .map(project -> {
@@ -40,12 +40,12 @@ public class ProjectPageService {
             .collect(Collectors.toList());
 
         int maxPage = projectRepository.getMaxPage(
-            searchText, status, sort, includeTechStack, excludeTechStack, year, pageNum, page
+            searchText, status, sort, includeTechStack, excludeTechStack, year, perPage
         );
 
         return ProjectListResponse.builder()
             .projects(projects)
-            .page(page)
+            .page(perPage)
             .maxPage(maxPage)
             .build();
     }

@@ -10,9 +10,14 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pro.hexa.backend.domain.attachment.domain.Attachment;
 import pro.hexa.backend.domain.project.domain.Project;
+import pro.hexa.backend.domain.project.model.STATE_TYPE;
 import pro.hexa.backend.domain.project.repository.ProjectRepository;
+import pro.hexa.backend.domain.project_member.domain.ProjectMember;
+import pro.hexa.backend.domain.project_member.model.AUTHORIZATION_TYPE;
 import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
 import pro.hexa.backend.domain.project_tech_stack.repository.ProjectTechStackRepository;
+import pro.hexa.backend.domain.user.domain.User;
+import pro.hexa.backend.domain.user.model.GENDER_TYPE;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectListResponse;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectResponse;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectTechStackResponse;
@@ -49,44 +54,63 @@ class ProjectPageServiceTest {
         List<String> excludeTechStack = List.of("Python");
         Integer year = 2023;
         Integer pageNum = 110;
-        int page = 10;
+        int perPage = 10;
 
         List<Project> mockedProjects = createMockedProjects(pageNum);
 
         // Mock repository
         when(projectRepository.findAllByQuery(
-                searchText, status, sort, includeTechStack, excludeTechStack, year, pageNum, page
+                searchText, status, sort, includeTechStack, excludeTechStack, year, pageNum, perPage
         ))
                 .thenReturn(mockedProjects);
 
-        when(projectRepository.getMaxPage(searchText, status, sort, includeTechStack, excludeTechStack, year, pageNum, page))
+        when(projectRepository.getMaxPage(searchText, status, sort, includeTechStack, excludeTechStack, year, perPage))
                 .thenReturn(1);
 
         // When
         ProjectListResponse response = projectPageService.getProjectListResponse(
-                searchText, status, sort,  includeTechStack, excludeTechStack, year, pageNum, page
+                searchText, status, sort,  includeTechStack, excludeTechStack, year, pageNum, perPage
         );
 
         // Then
         assertNotNull(response);
-        assertEquals(page, response.getPage());
+        assertEquals(perPage, response.getPage());
         assertEquals(1, response.getMaxPage());
     }
 
 
     private List<Project> createMockedProjects(int count) {
         List<Project> projects = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            Project project = new Project();
-            project.setId((long) i);
-            Attachment attachment = new Attachment();
-            attachment.setLocation("path/to/thumbnail" + i);
-            attachment.setName("thumbnail" + i + ".jpg");
-            attachment.setSize(100L); // 예시로 임의의 값 설정
+        ProjectTechStack projectTechStack1 = ProjectTechStack.create(128L, "Java");
+        ProjectTechStack projectTechStack3 = ProjectTechStack.create(1L, "Python");
 
-            project.setThumbnail(attachment);
-            project.setStartDate(LocalDateTime.of(2023,3,3,3,3));
-            project.setEndDate(LocalDateTime.of(2023,4,3,3,3));
+        User user1 = User.create("testId",
+                "test@hexa.pro",
+                GENDER_TYPE.여,
+               pro.hexa.backend.domain.user.model.STATE_TYPE.휴학,
+                (short) 2020,
+                "20202020",
+                "test",
+                "qwer1234",
+                pro.hexa.backend.domain.user.model.AUTHORIZATION_TYPE.Member);
+        ProjectMember projectMember1 = ProjectMember.create("k", user1, AUTHORIZATION_TYPE.Member);
+
+        Attachment attachment = new Attachment();
+        attachment.setLocation("path/to/thumbnail");
+        attachment.setName("thumbnail.jpg");
+        attachment.setSize(100L);
+
+        for (int i = 0; i < count; i++) {
+
+            Project project = Project.create((long)i,
+                    "title",
+                    LocalDateTime.of(2023,3,3,3,3),
+                    LocalDateTime.of(2023,4,3,3,3),
+                    List.of(projectTechStack1, projectTechStack3), List.of(projectMember1),
+                    AUTHORIZATION_TYPE.Member,
+                    STATE_TYPE.승인중,
+                    "This is a project about web development",
+                    attachment);
 
             projects.add(project);
         }
@@ -98,7 +122,7 @@ class ProjectPageServiceTest {
     void testGetProjectResponse1() {
         // Given
         Long projectId = 1L;
-        Project mockedProject = createMockedProject(projectId); // Create a mocked Project instance
+        Project mockedProject = createMockedProject(projectId);
 
         // Mock repository
         when(projectRepository.findByQuery(projectId)).thenReturn(mockedProject);
@@ -114,7 +138,6 @@ class ProjectPageServiceTest {
     void testGetProjectResponse2() {
         // Given
         Long projectId = 1L;
-         // Create a mocked Project instance
 
         // Mock repository
         when(projectRepository.findByQuery(projectId)).thenReturn(null);
@@ -129,17 +152,32 @@ class ProjectPageServiceTest {
 
     private Project createMockedProject(Long projectId) {
 
-        Project project = new Project();
-        project.setId(projectId);
+        ProjectTechStack projectTechStack1 = ProjectTechStack.create(128L, "Java");
+        User user1 = User.create("testId",
+                "test@hexa.pro",
+                GENDER_TYPE.여,
+                pro.hexa.backend.domain.user.model.STATE_TYPE.휴학,
+                (short) 2020,
+                "20202020",
+                "test",
+                "qwer1234",
+                pro.hexa.backend.domain.user.model.AUTHORIZATION_TYPE.Member);
+        ProjectMember projectMember1 = ProjectMember.create("k", user1, AUTHORIZATION_TYPE.Member);
 
         Attachment attachment = new Attachment();
         attachment.setLocation("path/to/thumbnail");
         attachment.setName("thumbnail.jpg");
-        attachment.setSize(100L); // 예시로 임의의 값 설정
+        attachment.setSize(100L);
 
-        project.setThumbnail(attachment);
-        project.setStartDate(LocalDateTime.of(2023,3,3,3,3));
-        project.setEndDate(LocalDateTime.of(2023,4,3,3,3));
+        Project project = Project.create(projectId,
+                "title",
+                LocalDateTime.of(2023,3,3,3,3),
+                LocalDateTime.of(2023,4,3,3,3),
+                List.of(projectTechStack1), List.of(projectMember1),
+                AUTHORIZATION_TYPE.Member,
+                STATE_TYPE.승인중,
+                "This is a project about web development",
+                attachment);
 
         return project;
     }
@@ -159,28 +197,11 @@ class ProjectPageServiceTest {
 
     }
 
-    // Helper method to create mocked tech stack list
     private List<ProjectTechStack> createMockedProjectTechStacks(int count) {
         List<ProjectTechStack> projectTechStacks = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            ProjectTechStack projecttechstack = new ProjectTechStack();
-            projecttechstack.setId((long) (127+i));
-            projecttechstack.setContent("내용" + Integer.toString(i));
+            ProjectTechStack projecttechstack = ProjectTechStack.create((long) (127+i), "내용" + Integer.toString(i));
 
-            Project project = new Project();
-            project.setId(127L);
-
-            Attachment attachment = new Attachment();
-            attachment.setLocation("path/to/thumbnail");
-            attachment.setName("thumbnail.jpg");
-            attachment.setSize(100L); // 예시로 임의의 값 설정
-
-            project.setThumbnail(attachment);
-            project.setStartDate(LocalDateTime.of(2023,3,3,3,3));
-            project.setEndDate(LocalDateTime.of(2023,4,3,3,3));
-
-
-            projecttechstack.setProject(project);
             projectTechStacks.add(projecttechstack);
         }
 

@@ -1,6 +1,8 @@
 package pro.hexa.backend.main.api.domain.project.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +33,10 @@ public class ProjectPageController {
         @RequestParam(required = false) List<String> excludeTechStack,
         @RequestParam(required = false) Integer year,
         @RequestParam(required = false) Integer pageNum,
-        @RequestParam(required = false) Integer page
+        @RequestParam(required = false) @Valid @Min(value = 1) Integer perPage
     ) {
         return new ResponseEntity<>(projectPageService.getProjectListResponse(searchText, status, sort,
-            includeTechStack, excludeTechStack, year, pageNum, page), HttpStatus.OK);
+            includeTechStack, excludeTechStack, year, pageNum, perPage), HttpStatus.OK);
     }
 
     @Operation(description = "project를 조회")

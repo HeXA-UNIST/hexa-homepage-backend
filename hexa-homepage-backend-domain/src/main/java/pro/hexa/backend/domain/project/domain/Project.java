@@ -28,7 +28,6 @@ import pro.hexa.backend.domain.user.domain.User;
 
 @Entity(name = "project")
 @Getter
-@Setter
 public class Project extends AbstractEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -82,7 +81,8 @@ public class Project extends AbstractEntity{
              List<ProjectMember> members,
              AUTHORIZATION_TYPE authorization,
              STATE_TYPE state,
-             String content
+             String content,
+             Attachment thumbnail
 
     ) {
         Project project = new Project();
@@ -95,6 +95,7 @@ public class Project extends AbstractEntity{
         project.authorization = authorization;
         project.state = state;
         project.content = content;
+        project.thumbnail = thumbnail;
         return project;
     }
 }

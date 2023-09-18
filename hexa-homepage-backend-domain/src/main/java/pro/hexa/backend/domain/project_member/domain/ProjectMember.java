@@ -42,11 +42,15 @@ public class ProjectMember extends AbstractEntity {
     private AUTHORIZATION_TYPE authorization;
 
     public static ProjectMember create(
-            String id
+            String id,
+            User user,
+            AUTHORIZATION_TYPE authorization
 
     ) {
         ProjectMember projectmember = new ProjectMember();
         projectmember.id = id;
+        projectmember.user = user;
+        projectmember.authorization = authorization;
         return projectmember;
     }
 }
