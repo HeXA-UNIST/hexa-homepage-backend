@@ -136,6 +136,18 @@ public class User extends AbstractEntity {
         return user;
     }
 
+    public static User testcreate(
+            String id,
+            String name,
+            Attachment profileImage
+    ) {
+        User user = new User();
+        user.id = id;
+        user.name = name;
+        user.profileImage = profileImage;
+        return user;
+    }
+
     public void changePassword(String newPassword) {
         this.password = newPassword;
     }

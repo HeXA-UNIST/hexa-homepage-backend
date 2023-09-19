@@ -17,7 +17,6 @@ import pro.hexa.backend.domain.project_member.model.AUTHORIZATION_TYPE;
 import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
 import pro.hexa.backend.domain.project_tech_stack.repository.ProjectTechStackRepository;
 import pro.hexa.backend.domain.user.domain.User;
-import pro.hexa.backend.domain.user.model.GENDER_TYPE;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectListResponse;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectResponse;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectTechStackResponse;
@@ -84,18 +83,18 @@ class ProjectPageServiceTest {
         ProjectTechStack projectTechStack1 = ProjectTechStack.create(128L, "Java");
         ProjectTechStack projectTechStack3 = ProjectTechStack.create(1L, "Python");
 
-        User user1 = User.create("testId",
-                "test@hexa.pro",
-                GENDER_TYPE.여,
-               pro.hexa.backend.domain.user.model.STATE_TYPE.휴학,
-                (short) 2020,
-                "20202020",
-                "test",
-                "qwer1234",
-                pro.hexa.backend.domain.user.model.AUTHORIZATION_TYPE.Member);
+        Attachment attachment = new Attachment();
+        attachment.setLocation("/path/to/file.jpg");
+        attachment.setName("file.jpg");
+        attachment.setSize(2048L);
+
+        User user1 = User.testcreate("testId",
+                "hexapro",
+                attachment
+                );
         ProjectMember projectMember1 = ProjectMember.create("k", user1, AUTHORIZATION_TYPE.Member);
 
-        Attachment attachment = new Attachment();
+        Attachment attachment2 = new Attachment();
         attachment.setLocation("path/to/thumbnail");
         attachment.setName("thumbnail.jpg");
         attachment.setSize(100L);
@@ -110,7 +109,7 @@ class ProjectPageServiceTest {
                     AUTHORIZATION_TYPE.Member,
                     STATE_TYPE.승인중,
                     "This is a project about web development",
-                    attachment);
+                    attachment2);
 
             projects.add(project);
         }
@@ -153,15 +152,16 @@ class ProjectPageServiceTest {
     private Project createMockedProject(Long projectId) {
 
         ProjectTechStack projectTechStack1 = ProjectTechStack.create(128L, "Java");
-        User user1 = User.create("testId",
-                "test@hexa.pro",
-                GENDER_TYPE.여,
-                pro.hexa.backend.domain.user.model.STATE_TYPE.휴학,
-                (short) 2020,
-                "20202020",
-                "test",
-                "qwer1234",
-                pro.hexa.backend.domain.user.model.AUTHORIZATION_TYPE.Member);
+        Attachment attachment1 = new Attachment();
+        attachment1.setLocation("/path/to/file.jpg");
+        attachment1.setName("file.jpg");
+        attachment1.setSize(2048L);
+
+        User user1 = User.testcreate("testId",
+                "hexapro",
+                attachment1
+        );
+
         ProjectMember projectMember1 = ProjectMember.create("k", user1, AUTHORIZATION_TYPE.Member);
 
         Attachment attachment = new Attachment();
