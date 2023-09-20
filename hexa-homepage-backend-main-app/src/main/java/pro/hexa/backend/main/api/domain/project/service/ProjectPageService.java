@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pro.hexa.backend.domain.project.domain.Project;
+import pro.hexa.backend.domain.project.model.STATE_TYPE;
 import pro.hexa.backend.domain.project.repository.ProjectRepository;
 import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
 import pro.hexa.backend.domain.project_tech_stack.repository.ProjectTechStackRepository;
@@ -25,7 +26,7 @@ public class ProjectPageService {
     private final ProjectRepository projectRepository;
     private final ProjectTechStackRepository projectTechStackRepository;
     public ProjectListResponse getProjectListResponse(
-        String searchText, List<String> status, String sort, List<String> includeTechStack, List<String> excludeTechStack, Integer year,
+        String searchText, List<STATE_TYPE> status, String sort, List<String> includeTechStack, List<String> excludeTechStack, Integer year,
         Integer pageNum, Integer perPage
     ) {
         List<Project> projectList = projectRepository.findAllByQuery(

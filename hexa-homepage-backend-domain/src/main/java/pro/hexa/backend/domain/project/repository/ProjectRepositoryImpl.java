@@ -4,7 +4,6 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import pro.hexa.backend.domain.project.domain.Project;
@@ -19,31 +18,29 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Project> findAllByQuery(String searchText, List<String> status, String sort, List<String> includeTechStack,
-        List<String> excludeTechStack, Integer year, Integer pageNum, Integer perPage) {
+    public List<Project> findAllByQuery(String searchText, List<STATE_TYPE> status, String sort, List<String> includeTechStack,
+                                        List<String> excludeTechStack, Integer year, Integer pageNum, Integer perPage) {
         QProject project = QProject.project;
         QProjectMember projectMember = QProjectMember.projectMember;
         QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
-        List<STATE_TYPE> stats = status.stream().map(STATE_TYPE::valueOf).collect(Collectors.toList());
 
         return queryFactory.selectFrom(project)
             .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
             .leftJoin(project.members, projectMember).fetchJoin()
             .where(project.title.contains(searchText),
-                project.state.in(stats),
+                project.state.in(status),
                 projectTechStack.content.in(includeTechStack),
                 projectTechStack.content.notIn(excludeTechStack)
             )
-            .orderBy((sort == "asc") ? project.title.asc() : project.title.desc())    // 임시로 title로 둠
-            .offset((long)pageNum * perPage)
+            .orderBy(sort.equals("asc") ? project.title.asc() : project.title.desc())    // 임시로 title로 둠
+            .offset((long) pageNum * perPage)
             .limit(perPage)
             .fetch();
     }
 
 
     @Override
-    public int getMaxPage(String searchText, List<String> status, String sort, List<String> includeTechStack,
-                          List<String> excludeTechStack, Integer year, Integer perPage) {
+    public int getMaxPage(String searchText, List<STATE_TYPE> status, String sort, List<String> includeTechStack, List<String> excludeTechStack, Integer year, Integer perPage) {
         QProject project = QProject.project;
         QProjectMember projectMember = QProjectMember.projectMember;
         QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
@@ -56,8 +53,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         }
 
         if (status != null && !status.isEmpty()) {
-            List<STATE_TYPE> stats = status.stream().map(STATE_TYPE::valueOf).collect(Collectors.toList());
-            whereQuery = whereQuery.and(project.state.in(stats));
+            whereQuery = whereQuery.and(project.state.in(status));
         }
 
         if (includeTechStack != null && !includeTechStack.isEmpty()) {
@@ -74,11 +70,11 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         }
 
         return Math.toIntExact(queryFactory.select(project.id.count().divide(perPage))
-                .from(project)
-                .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
-                .leftJoin(project.members, projectMember).fetchJoin()
-                .where(whereQuery)
-                .fetchFirst());
+            .from(project)
+            .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
+            .leftJoin(project.members, projectMember).fetchJoin()
+            .where(whereQuery)
+            .fetchFirst());
     }
 
 

@@ -47,7 +47,7 @@ class ProjectPageServiceTest {
     void getProjectListResponse() {
         // given
         String searchText = "test";
-        List<String> status = List.of("승인중");
+        List<STATE_TYPE> status = List.of(STATE_TYPE.승인중);
         String sort = "asc";
         List<String> includeTechStack = List.of("Java", "Spring");
         List<String> excludeTechStack = List.of("Python");
