@@ -47,7 +47,6 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         QProjectMember projectMember = QProjectMember.projectMember;
         QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
 
-
         BooleanExpression whereQuery = project.createdAt.isNotNull();
 
         if (StringUtils.isNotBlank(searchText)) {
