@@ -5,7 +5,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 import pro.hexa.backend.domain.project.domain.Project;
 import pro.hexa.backend.domain.project.domain.QProject;
 import pro.hexa.backend.domain.project.model.STATE_TYPE;
@@ -52,19 +54,19 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
             whereQuery = whereQuery.and(project.title.contains(searchText));
         }
 
-        if (status != null && !status.isEmpty()) {
+        if (ObjectUtils.isNotEmpty(status)) {
             whereQuery = whereQuery.and(project.state.in(status));
         }
 
-        if (includeTechStack != null && !includeTechStack.isEmpty()) {
+        if (!CollectionUtils.isEmpty(includeTechStack)) {
             whereQuery = whereQuery.and(project.projectTechStacks.any().content.in(includeTechStack));
         }
 
-        if (excludeTechStack != null && !excludeTechStack.isEmpty()) {
+        if (!CollectionUtils.isEmpty(excludeTechStack)) {
             whereQuery = whereQuery.and(project.projectTechStacks.any().content.notIn(excludeTechStack));
         }
 
-        if (year != null) {
+        if (ObjectUtils.isNotEmpty(year)) {
             LocalDateTime standardDateForYear = LocalDateTime.of(year, 1, 1, 0, 0);
             whereQuery = whereQuery.and(project.updatedAt.between(standardDateForYear, standardDateForYear.plusYears(1)));
         }
