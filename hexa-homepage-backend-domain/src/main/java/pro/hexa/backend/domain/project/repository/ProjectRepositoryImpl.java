@@ -26,19 +26,39 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         QProjectMember projectMember = QProjectMember.projectMember;
         QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
 
+        BooleanExpression whereQuery = project.createdAt.isNotNull();
+
+        if (StringUtils.isNotBlank(searchText)) {
+            whereQuery = whereQuery.and(project.title.contains(searchText));
+        }
+
+        if (ObjectUtils.isNotEmpty(status)) {
+            whereQuery = whereQuery.and(project.state.in(status));
+        }
+
+        if (!CollectionUtils.isEmpty(includeTechStack)) {
+            whereQuery = whereQuery.and(project.projectTechStacks.any().content.in(includeTechStack));
+        }
+
+        if (!CollectionUtils.isEmpty(excludeTechStack)) {
+            whereQuery = whereQuery.and(project.projectTechStacks.any().content.notIn(excludeTechStack));
+        }
+
+        if (ObjectUtils.isNotEmpty(year)) {
+            LocalDateTime standardDateForYear = LocalDateTime.of(year, 1, 1, 0, 0);
+            whereQuery = whereQuery.and(project.updatedAt.between(standardDateForYear, standardDateForYear.plusYears(1)));
+        }
+
         return queryFactory.selectFrom(project)
-            .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
-            .leftJoin(project.members, projectMember).fetchJoin()
-            .where(project.title.contains(searchText),
-                project.state.in(status),
-                projectTechStack.content.in(includeTechStack),
-                projectTechStack.content.notIn(excludeTechStack)
-            )
-            .orderBy(sort.equals("asc") ? project.title.asc() : project.title.desc())    // 임시로 title로 둠
-            .offset((long) pageNum * perPage)
-            .limit(perPage)
-            .fetch();
+                .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
+                .leftJoin(project.members, projectMember).fetchJoin()
+                .where(whereQuery)
+                .orderBy(sort.equals("asc") ? project.title.asc() : project.title.desc())
+                .offset((long) pageNum * perPage)
+                .limit(perPage)
+                .fetch();
     }
+
 
 
     @Override
