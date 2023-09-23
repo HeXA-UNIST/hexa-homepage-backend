@@ -21,9 +21,11 @@ public class SeminarRepositoryImpl implements SeminarRepositoryCustom {
         QSeminar seminar = QSeminar.seminar;
         QAttachment attachment = QAttachment.attachment;
 
+        BooleanExpression whereQuery = getWhereQuery(searchText, year, seminar);
+
         return queryFactory.selectFrom(seminar)
             .leftJoin(seminar.attachments, attachment).fetchJoin()
-            .where(seminar.title.contains(searchText))
+            .where(whereQuery)
             .offset((long) pageNum * perPage)
             .limit(perPage)
             .fetch();
@@ -33,6 +35,15 @@ public class SeminarRepositoryImpl implements SeminarRepositoryCustom {
     public int getMaxPage(String searchText, Integer year, Integer perPage) {
         QSeminar seminar = QSeminar.seminar;
 
+        BooleanExpression whereQuery = getWhereQuery(searchText, year, seminar);
+
+        return Math.toIntExact(queryFactory.select(seminar.id.count())
+            .from(seminar)
+            .where(whereQuery)
+            .fetchFirst()) / perPage;
+    }
+
+    private BooleanExpression getWhereQuery(String searchText, Integer year, QSeminar seminar) {
         BooleanExpression whereQuery = seminar.createdAt.isNotNull();
         if (StringUtils.isNotBlank(searchText)) {
             whereQuery = whereQuery.and(seminar.title.contains(searchText));
@@ -42,10 +53,6 @@ public class SeminarRepositoryImpl implements SeminarRepositoryCustom {
             LocalDateTime standardDateForYear = LocalDateTime.of(year, 1, 1, 0, 0);
             whereQuery = whereQuery.and(seminar.updatedAt.between(standardDateForYear, standardDateForYear.plusYears(1)));
         }
-
-        return Math.toIntExact(queryFactory.select(seminar.id.count())
-            .from(seminar)
-            .where(whereQuery)
-            .fetchFirst()) / perPage;
+        return whereQuery;
     }
 }

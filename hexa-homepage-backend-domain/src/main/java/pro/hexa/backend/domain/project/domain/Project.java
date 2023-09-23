@@ -1,34 +1,33 @@
 package pro.hexa.backend.domain.project.domain;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.FetchType;
-import javax.persistence.CascadeType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.Comment;
+import org.springframework.util.CollectionUtils;
 import pro.hexa.backend.domain.attachment.domain.Attachment;
 import pro.hexa.backend.domain.model.model.AbstractEntity;
-import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
+import pro.hexa.backend.domain.project.model.STATE_TYPE;
 import pro.hexa.backend.domain.project_member.domain.ProjectMember;
 import pro.hexa.backend.domain.project_member.model.AUTHORIZATION_TYPE;
-import pro.hexa.backend.domain.project.model.STATE_TYPE;
-import pro.hexa.backend.domain.seminar.domain.Seminar;
-import pro.hexa.backend.domain.user.domain.User;
+import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
 
 @Entity(name = "project")
 @Getter
-public class Project extends AbstractEntity{
+public class Project extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_id")
@@ -48,11 +47,11 @@ public class Project extends AbstractEntity{
 
     @Comment(value = "기술스택")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<ProjectTechStack> projectTechStacks = new ArrayList<>();
+    private Set<ProjectTechStack> projectTechStacks = new HashSet<>();
 
     @Comment(value = "멤버")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<ProjectMember> members = new ArrayList<>();
+    private Set<ProjectMember> members = new HashSet<>();
 
     @Comment(value = "노출")
     @Enumerated(EnumType.STRING)
@@ -73,16 +72,16 @@ public class Project extends AbstractEntity{
     private Attachment thumbnail;
 
     public static Project create(
-             Long id,
-             String title,
-             LocalDateTime startDate,
-             LocalDateTime endDate,
-             List<ProjectTechStack> projectTechStacks,
-             List<ProjectMember> members,
-             AUTHORIZATION_TYPE authorization,
-             STATE_TYPE state,
-             String content,
-             Attachment thumbnail
+        Long id,
+        String title,
+        LocalDateTime startDate,
+        LocalDateTime endDate,
+        List<ProjectTechStack> projectTechStacks,
+        List<ProjectMember> members,
+        AUTHORIZATION_TYPE authorization,
+        STATE_TYPE state,
+        String content,
+        Attachment thumbnail
 
     ) {
         Project project = new Project();
@@ -90,12 +89,56 @@ public class Project extends AbstractEntity{
         project.title = title;
         project.startDate = startDate;
         project.endDate = endDate;
-        project.projectTechStacks = projectTechStacks;
-        project.members = members;
+        project.addProjectTechStacksAll(projectTechStacks);
+        project.addMembersAll(members);
         project.authorization = authorization;
         project.state = state;
         project.content = content;
         project.thumbnail = thumbnail;
         return project;
+    }
+
+    public void addProjectTechStack(ProjectTechStack projectTechStack) {
+        if (projectTechStack == null) {
+            return;
+        }
+
+        projectTechStacks.add(projectTechStack);
+
+        if (projectTechStack.getProject() != this) {
+            projectTechStack.setProject(this);
+        }
+    }
+
+    public void addProjectTechStacksAll(List<ProjectTechStack> projectTechStacks) {
+        if (CollectionUtils.isEmpty(projectTechStacks)) {
+            return;
+        }
+
+        for (ProjectTechStack projectTechStack : projectTechStacks) {
+            addProjectTechStack(projectTechStack);
+        }
+    }
+
+    public void addMember(ProjectMember member) {
+        if (member == null) {
+            return;
+        }
+
+        members.add(member);
+
+        if (member.getProject() != this) {
+            member.setProject(this);
+        }
+    }
+
+    public void addMembersAll(List<ProjectMember> members) {
+        if (CollectionUtils.isEmpty(members)) {
+            return;
+        }
+
+        for (ProjectMember member : members) {
+            addMember(member);
+        }
     }
 }

@@ -19,13 +19,13 @@ import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.attachment.domain.Attachment;
 import pro.hexa.backend.domain.major.domain.Major;
 import pro.hexa.backend.domain.model.model.AbstractEntity;
+import pro.hexa.backend.domain.project_member.domain.ProjectMember;
 import pro.hexa.backend.domain.sns.domain.SNS;
 import pro.hexa.backend.domain.tech_stack.domain.TechStack;
 import pro.hexa.backend.domain.user.model.AUTHORIZATION_TYPE;
 import pro.hexa.backend.domain.user.model.GENDER_TYPE;
 import pro.hexa.backend.domain.user.model.POSITION_TYPE;
 import pro.hexa.backend.domain.user.model.STATE_TYPE;
-import pro.hexa.backend.domain.project_member.domain.ProjectMember;
 
 @Entity(name = "user")
 @Getter
@@ -136,7 +136,7 @@ public class User extends AbstractEntity {
         return user;
     }
 
-    public static User testcreate(
+    public static User createForTest(
             String id,
             String name,
             Attachment profileImage

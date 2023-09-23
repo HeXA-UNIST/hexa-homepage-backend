@@ -40,11 +40,11 @@ public class News extends AbstractEntity {
     private String content;
 
     public static News create(
-            Long id,
-            NEWS_TYPE newsType,
-            String title,
-            LocalDate date,
-            String content
+        Long id,
+        NEWS_TYPE newsType,
+        String title,
+        LocalDate date,
+        String content
     ) {
         News news = new News();
         news.id = id;

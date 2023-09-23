@@ -21,83 +21,68 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
     @Override
     public List<Project> findAllByQuery(String searchText, List<STATE_TYPE> status, String sort, List<String> includeTechStack,
-                                        List<String> excludeTechStack, Integer year, Integer pageNum, Integer perPage) {
+        List<String> excludeTechStack, Integer year, Integer pageNum, Integer perPage) {
         QProject project = QProject.project;
         QProjectMember projectMember = QProjectMember.projectMember;
         QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
 
-        BooleanExpression whereQuery = project.createdAt.isNotNull();
-
-        if (StringUtils.isNotBlank(searchText)) {
-            whereQuery = whereQuery.and(project.title.contains(searchText));
-        }
-
-        if (ObjectUtils.isNotEmpty(status)) {
-            whereQuery = whereQuery.and(project.state.in(status));
-        }
-
-        if (!CollectionUtils.isEmpty(includeTechStack)) {
-            whereQuery = whereQuery.and(project.projectTechStacks.any().content.in(includeTechStack));
-        }
-
-        if (!CollectionUtils.isEmpty(excludeTechStack)) {
-            whereQuery = whereQuery.and(project.projectTechStacks.any().content.notIn(excludeTechStack));
-        }
-
-        if (ObjectUtils.isNotEmpty(year)) {
-            LocalDateTime standardDateForYear = LocalDateTime.of(year, 1, 1, 0, 0);
-            whereQuery = whereQuery.and(project.updatedAt.between(standardDateForYear, standardDateForYear.plusYears(1)));
-        }
+        BooleanExpression whereQuery = getWhereQuery(searchText, status, includeTechStack, excludeTechStack, year, project, projectTechStack);
 
         return queryFactory.selectFrom(project)
-                .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
-                .leftJoin(project.members, projectMember).fetchJoin()
-                .where(whereQuery)
-                .orderBy(sort.equals("asc") ? project.title.asc() : project.title.desc())
-                .offset((long) pageNum * perPage)
-                .limit(perPage)
-                .fetch();
-    }
-
-
-
-    @Override
-    public int getMaxPage(String searchText, List<STATE_TYPE> status, String sort, List<String> includeTechStack, List<String> excludeTechStack, Integer year, Integer perPage) {
-        QProject project = QProject.project;
-        QProjectMember projectMember = QProjectMember.projectMember;
-        QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
-
-        BooleanExpression whereQuery = project.createdAt.isNotNull();
-
-        if (StringUtils.isNotBlank(searchText)) {
-            whereQuery = whereQuery.and(project.title.contains(searchText));
-        }
-
-        if (ObjectUtils.isNotEmpty(status)) {
-            whereQuery = whereQuery.and(project.state.in(status));
-        }
-
-        if (!CollectionUtils.isEmpty(includeTechStack)) {
-            whereQuery = whereQuery.and(project.projectTechStacks.any().content.in(includeTechStack));
-        }
-
-        if (!CollectionUtils.isEmpty(excludeTechStack)) {
-            whereQuery = whereQuery.and(project.projectTechStacks.any().content.notIn(excludeTechStack));
-        }
-
-        if (ObjectUtils.isNotEmpty(year)) {
-            LocalDateTime standardDateForYear = LocalDateTime.of(year, 1, 1, 0, 0);
-            whereQuery = whereQuery.and(project.updatedAt.between(standardDateForYear, standardDateForYear.plusYears(1)));
-        }
-
-        return Math.toIntExact(queryFactory.select(project.id.count().divide(perPage))
-            .from(project)
             .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
             .leftJoin(project.members, projectMember).fetchJoin()
             .where(whereQuery)
-            .fetchFirst());
+            .orderBy(sort.equals("asc") ? project.title.asc() : project.title.desc())
+            .offset((long) pageNum * perPage)
+            .distinct()
+            .limit(perPage)
+            .fetch();
     }
 
+    @Override
+    public int getTotalCount(String searchText, List<STATE_TYPE> status, String sort, List<String> includeTechStack,
+        List<String> excludeTechStack, Integer year) {
+        QProject project = QProject.project;
+        QProjectMember projectMember = QProjectMember.projectMember;
+        QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
+
+        BooleanExpression whereQuery = getWhereQuery(searchText, status, includeTechStack, excludeTechStack, year, project, projectTechStack);
+
+        return queryFactory.selectFrom(project)
+            .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
+            .leftJoin(project.members, projectMember).fetchJoin()
+            .where(whereQuery)
+            .orderBy(sort.equals("asc") ? project.title.asc() : project.title.desc())
+            .distinct()
+            .fetch()
+            .size();
+    }
+
+    private BooleanExpression getWhereQuery(String searchText, List<STATE_TYPE> status, List<String> includeTechStack, List<String> excludeTechStack, Integer year, QProject project, QProjectTechStack projectTechStack) {
+        BooleanExpression whereQuery = project.createdAt.isNotNull();
+
+        if (StringUtils.isNotBlank(searchText)) {
+            whereQuery = whereQuery.and(project.title.contains(searchText));
+        }
+
+        if (ObjectUtils.isNotEmpty(status)) {
+            whereQuery = whereQuery.and(project.state.in(status));
+        }
+
+        if (!CollectionUtils.isEmpty(includeTechStack)) {
+            whereQuery = whereQuery.and(projectTechStack.content.in(includeTechStack));
+        }
+
+        if (!CollectionUtils.isEmpty(excludeTechStack)) {
+            whereQuery = whereQuery.and(projectTechStack.content.notIn(excludeTechStack));
+        }
+
+        if (ObjectUtils.isNotEmpty(year)) {
+            LocalDateTime standardDateForYear = LocalDateTime.of(year, 1, 1, 0, 0);
+            whereQuery = whereQuery.and(project.updatedAt.between(standardDateForYear, standardDateForYear.plusYears(1)));
+        }
+        return whereQuery;
+    }
 
     @Override
     public Project findByQuery(Long id) {
