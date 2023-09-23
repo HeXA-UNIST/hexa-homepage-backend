@@ -64,8 +64,8 @@ class ProjectPageServiceTest {
             searchText, status, sort, includeTechStack, excludeTechStack, year, pageNum, perPage
         )).thenReturn(mockedProjects);
 
-        when(projectRepository.getMaxPage(searchText, status, sort, includeTechStack, excludeTechStack, year, perPage))
-            .thenReturn(1);
+        when(projectRepository.getTotalCount(searchText, status, sort, includeTechStack, excludeTechStack, year))
+            .thenReturn(1300);
 
         // When
         ProjectListResponse response = projectPageService.getProjectListResponse(

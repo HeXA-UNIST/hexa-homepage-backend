@@ -45,6 +45,7 @@ public class SeminarRepositoryImpl implements SeminarRepositoryCustom {
 
     private BooleanExpression getWhereQuery(String searchText, Integer year, QSeminar seminar) {
         BooleanExpression whereQuery = seminar.createdAt.isNotNull();
+
         if (StringUtils.isNotBlank(searchText)) {
             whereQuery = whereQuery.and(seminar.title.contains(searchText));
         }

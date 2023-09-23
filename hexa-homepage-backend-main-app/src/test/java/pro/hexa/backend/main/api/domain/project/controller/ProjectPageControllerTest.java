@@ -151,7 +151,7 @@ class ProjectPageControllerTest {
 
         // when
         ResponseEntity<ProjectListResponse> response = projectPageController.getProjectListResponse(
-            "This",
+            "",
             List.of(STATE_TYPE.valueOf("승인중")),
             "asc",
             List.of("Spring"),
@@ -169,9 +169,9 @@ class ProjectPageControllerTest {
             .orElse(null);
 
         assertNotNull(projects);
-        assertEquals(projects.size(), 3);
-        assertEquals(responseBody.getPage(), 10);
-        assertEquals(responseBody.getMaxPage(), 2);
+        assertEquals(3, projects.size());
+        assertEquals(10, responseBody.getPage());
+        assertEquals(2, responseBody.getMaxPage());
 
     }
 
