@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +30,7 @@ public class SeminarAdminPageController {
         @RequestParam(required = false) Integer pageNum,
         @RequestParam(required = false) @Valid @Min(value = 1) Integer perPage
     ) {
-
+        return ResponseEntity.ok(AdminSeminarListResponse.builder().build());
     }
 
     @Operation(description = "세미나 수정 창에서 보여줄 정보 조회")
@@ -37,19 +38,19 @@ public class SeminarAdminPageController {
     public ResponseEntity<AdminSeminarDetailResponse> getAdminSeminarDetail(
         @RequestParam() Long seminarId
     ) {
-
+        return ResponseEntity.ok(AdminSeminarDetailResponse.builder().build());
     }
 
     @Operation(description = "세미나 생성 요청")
     @PostMapping("/createSeminar")
     public ResponseEntity<Void> adminCreateSeminar(@RequestBody AdminCreateSeminarRequestDto adminCreateSeminarRequestDto) {
-
+        return ResponseEntity.ok(null);
     }
 
     @Operation(description = "세미나 수정 요청")
     @PostMapping("/modifySeminar")
     public ResponseEntity<Void> adminModifySeminar(@RequestBody AdminModifySeminarRequestDto adminModifySeminarRequestDto) {
-
+        return ResponseEntity.ok(null);
     }
 
     @Operation(description = "세미나 삭제")
@@ -57,6 +58,7 @@ public class SeminarAdminPageController {
     public ResponseEntity<Void> adminDeleteSeminar(
         @RequestParam() Long seminarId
     ) {
+        return ResponseEntity.ok(null);
     }
 
 
