@@ -30,6 +30,7 @@ public class ProjectAdminPageController {
         @RequestParam(required = false) @Valid @Min(value = 1) Integer perPage
     ) {
 
+        return ResponseEntity.ok(AdminProjectListResponse.builder().build());
     }
 
     @Operation(description = "프로젝트 수정 창에서 보여줄 정보 조회")
@@ -38,18 +39,21 @@ public class ProjectAdminPageController {
         @RequestParam() Long projectId
     ) {
 
+        return ResponseEntity.ok(AdminProjectDetailResponse.builder().build());
     }
 
     @Operation(description = "프로젝트 생성 요청")
     @PostMapping("/createProject")
     public ResponseEntity<Void> adminCreateProject(@RequestBody AdminCreateProjectRequestDto adminCreateProjectRequestDto) {
 
+        return ResponseEntity.ok(null);
     }
 
     @Operation(description = "프로젝트 수정 요청")
     @PostMapping("/modifyProject")
     public ResponseEntity<Void> adminModifyProject(@RequestBody AdminModifyProjectRequestDto adminModifyProjectRequestDto) {
 
+        return ResponseEntity.ok(null);
     }
 
     @Operation(description = "프로젝트 삭제")
@@ -57,6 +61,8 @@ public class ProjectAdminPageController {
     public ResponseEntity<Void> adminDeleteProject(
         @RequestParam() Long projectId
     ) {
+
+        return ResponseEntity.ok(null);
     }
 
 
