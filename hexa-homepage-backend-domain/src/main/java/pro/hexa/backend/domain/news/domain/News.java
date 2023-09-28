@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.model.model.AbstractEntity;
 import pro.hexa.backend.domain.news.model.NEWS_TYPE;
@@ -54,5 +56,20 @@ public class News extends AbstractEntity {
         news.content = content;
 
         return news;
+    }
+
+    public void setNewsType(NEWS_TYPE newsType) {
+        this.newsType = newsType;
+    }
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }
