@@ -1,34 +1,32 @@
 package pro.hexa.backend.domain.project.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDateTime;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.FetchType;
-import javax.persistence.CascadeType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.attachment.domain.Attachment;
 import pro.hexa.backend.domain.model.model.AbstractEntity;
-import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
+import pro.hexa.backend.domain.project.model.STATE_TYPE;
 import pro.hexa.backend.domain.project_member.domain.ProjectMember;
 import pro.hexa.backend.domain.project_member.model.AUTHORIZATION_TYPE;
-import pro.hexa.backend.domain.project.model.STATE_TYPE;
-import pro.hexa.backend.domain.seminar.domain.Seminar;
-import pro.hexa.backend.domain.user.domain.User;
+import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
 
 @Entity(name = "project")
 @Getter
-public class Project extends AbstractEntity{
+public class Project extends AbstractEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_id")
@@ -73,20 +71,18 @@ public class Project extends AbstractEntity{
     private Attachment thumbnail;
 
     public static Project create(
-             Long id,
-             String title,
-             LocalDateTime startDate,
-             LocalDateTime endDate,
-             List<ProjectTechStack> projectTechStacks,
-             List<ProjectMember> members,
-             AUTHORIZATION_TYPE authorization,
-             STATE_TYPE state,
-             String content,
-             Attachment thumbnail
+        String title,
+        LocalDateTime startDate,
+        LocalDateTime endDate,
+        List<ProjectTechStack> projectTechStacks,
+        List<ProjectMember> members,
+        AUTHORIZATION_TYPE authorization,
+        STATE_TYPE state,
+        String content,
+        Attachment thumbnail
 
     ) {
         Project project = new Project();
-        project.id = id;
         project.title = title;
         project.startDate = startDate;
         project.endDate = endDate;
@@ -98,4 +94,33 @@ public class Project extends AbstractEntity{
         project.thumbnail = thumbnail;
         return project;
     }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setProjectTechStacks(List<ProjectTechStack> projectTechStacks) {
+        this.projectTechStacks = projectTechStacks;
+    }
+
+    public void setState(STATE_TYPE state) {
+        this.state = state;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setThumbnail(Attachment thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
 }

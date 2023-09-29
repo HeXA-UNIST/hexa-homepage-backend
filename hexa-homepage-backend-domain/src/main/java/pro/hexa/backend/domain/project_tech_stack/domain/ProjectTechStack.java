@@ -8,16 +8,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.model.model.AbstractEntity;
 import pro.hexa.backend.domain.project.domain.Project;
-import pro.hexa.backend.domain.project_member.domain.ProjectMember;
-import pro.hexa.backend.domain.project_tech_stack.repository.ProjectTechStackRepository;
 
 @Entity(name = "project_tech_stack")
 @Getter
-@Setter
 public class ProjectTechStack extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,11 +29,9 @@ public class ProjectTechStack extends AbstractEntity {
     private Project project;
 
     public static ProjectTechStack create(
-            Long id,
             String content
     ) {
         ProjectTechStack projectTechStack = new ProjectTechStack();
-        projectTechStack.id = id;
         projectTechStack.content = content;
         return projectTechStack;
     }

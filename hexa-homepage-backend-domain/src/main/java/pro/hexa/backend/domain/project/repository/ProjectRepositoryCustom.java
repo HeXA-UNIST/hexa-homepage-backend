@@ -12,4 +12,8 @@ public interface ProjectRepositoryCustom {
 
     int getMaxPage(String searchText, List<String> status, String sort, List<String> includeTechStack,
         List<String> excludeTechStack, Integer year, Integer perPage);
+
+    List<Project> findAllInAdminPage(Integer pageNum, Integer perPage);
+
+    int getAdminMaxPage(Integer perPage);
 }

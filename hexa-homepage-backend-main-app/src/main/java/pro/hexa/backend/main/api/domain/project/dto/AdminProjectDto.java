@@ -3,8 +3,11 @@ package pro.hexa.backend.main.api.domain.project.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import pro.hexa.backend.domain.project.domain.Project;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class AdminProjectDto {
 
@@ -19,4 +22,11 @@ public class AdminProjectDto {
 
     @Schema(description = "상태")
     private String state;
+
+    public void fromProject(Project project) {
+        this.projectId = project.getId();
+        this.title = project.getTitle();
+        this.thumbnail = Long.valueOf(project.getThumbnail().getLocation());
+        this.state = String.valueOf(project.getState());
+    }
 }

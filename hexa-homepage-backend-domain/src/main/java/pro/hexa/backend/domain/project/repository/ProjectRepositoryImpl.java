@@ -24,18 +24,18 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         QProject project = QProject.project;
         QProjectMember projectMember = QProjectMember.projectMember;
         QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
-        List<STATE_TYPE> stats = status.stream().map(STATE_TYPE::valueOf).collect(Collectors.toList());
+        List<STATE_TYPE> states = status.stream().map(STATE_TYPE::valueOf).collect(Collectors.toList());
 
         return queryFactory.selectFrom(project)
             .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
             .leftJoin(project.members, projectMember).fetchJoin()
             .where(project.title.contains(searchText),
-                project.state.in(stats),
+                project.state.in(states),
                 projectTechStack.content.in(includeTechStack),
                 projectTechStack.content.notIn(excludeTechStack)
             )
             .orderBy((sort == "asc") ? project.title.asc() : project.title.desc())    // 임시로 title로 둠
-            .offset((long)pageNum * perPage)
+            .offset((long) pageNum * perPage)
             .limit(perPage)
             .fetch();
     }
@@ -43,11 +43,10 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
     @Override
     public int getMaxPage(String searchText, List<String> status, String sort, List<String> includeTechStack,
-                          List<String> excludeTechStack, Integer year, Integer perPage) {
+        List<String> excludeTechStack, Integer year, Integer perPage) {
         QProject project = QProject.project;
         QProjectMember projectMember = QProjectMember.projectMember;
         QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
-
 
         BooleanExpression whereQuery = project.createdAt.isNotNull();
 
@@ -74,11 +73,11 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         }
 
         return Math.toIntExact(queryFactory.select(project.id.count().divide(perPage))
-                .from(project)
-                .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
-                .leftJoin(project.members, projectMember).fetchJoin()
-                .where(whereQuery)
-                .fetchFirst());
+            .from(project)
+            .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
+            .leftJoin(project.members, projectMember).fetchJoin()
+            .where(whereQuery)
+            .fetchFirst());
     }
 
 
@@ -97,5 +96,28 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
             .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
             .where(project.id.eq(id))
             .fetchOne();
+    }
+
+    @Override
+    public List<Project> findAllInAdminPage(Integer pageNum, Integer perPage) {
+        QProject project = QProject.project;
+        return queryFactory.selectFrom(project)
+            .orderBy(project.title.desc())
+            .offset((long) pageNum * perPage)
+            .limit(perPage)
+            .fetch();
+    }
+
+    @Override
+    public int getAdminMaxPage(Integer perPage) {
+        QProject project = QProject.project;
+        QProjectMember projectMember = QProjectMember.projectMember;
+        QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
+
+        return Math.toIntExact(queryFactory.select(project.id.count().divide(perPage))
+            .from(project)
+            .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
+            .leftJoin(project.members, projectMember).fetchJoin()
+            .fetchFirst());
     }
 }
