@@ -3,6 +3,8 @@ package pro.hexa.backend.main.api.domain.project.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,7 +19,6 @@ import pro.hexa.backend.domain.project_member.model.AUTHORIZATION_TYPE;
 import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
 import pro.hexa.backend.domain.project_tech_stack.repository.ProjectTechStackRepository;
 import pro.hexa.backend.domain.user.domain.User;
-import pro.hexa.backend.domain.user.model.GENDER_TYPE;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectListResponse;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectResponse;
 import pro.hexa.backend.main.api.domain.project.dto.ProjectTechStackResponse;
@@ -48,7 +49,7 @@ class ProjectPageServiceTest {
     void getProjectListResponse() {
         // given
         String searchText = "test";
-        List<String> status = List.of("승인중");
+        List<STATE_TYPE> status = List.of(STATE_TYPE.승인중);
         String sort = "asc";
         List<String> includeTechStack = List.of("Java", "Spring");
         List<String> excludeTechStack = List.of("Python");
@@ -60,16 +61,15 @@ class ProjectPageServiceTest {
 
         // Mock repository
         when(projectRepository.findAllByQuery(
-                searchText, status, sort, includeTechStack, excludeTechStack, year, pageNum, perPage
-        ))
-                .thenReturn(mockedProjects);
+            searchText, status, sort, includeTechStack, excludeTechStack, year, pageNum, perPage
+        )).thenReturn(mockedProjects);
 
-        when(projectRepository.getMaxPage(searchText, status, sort, includeTechStack, excludeTechStack, year, perPage))
-                .thenReturn(1);
+        when(projectRepository.getTotalCount(searchText, status, sort, includeTechStack, excludeTechStack, year))
+            .thenReturn(1300);
 
         // When
         ProjectListResponse response = projectPageService.getProjectListResponse(
-                searchText, status, sort,  includeTechStack, excludeTechStack, year, pageNum, perPage
+            searchText, status, sort, includeTechStack, excludeTechStack, year, pageNum, perPage
         );
 
         // Then
@@ -81,36 +81,31 @@ class ProjectPageServiceTest {
 
     private List<Project> createMockedProjects(int count) {
         List<Project> projects = new ArrayList<>();
-        ProjectTechStack projectTechStack1 = ProjectTechStack.create(128L, "Java");
-        ProjectTechStack projectTechStack3 = ProjectTechStack.create(1L, "Python");
+        ProjectTechStack projectTechStack1 = ProjectTechStack.create("Java");
+        ProjectTechStack projectTechStack3 = ProjectTechStack.create("Python");
 
-        User user1 = User.create("testId",
-                "test@hexa.pro",
-                GENDER_TYPE.여,
-               pro.hexa.backend.domain.user.model.STATE_TYPE.휴학,
-                (short) 2020,
-                "20202020",
-                "test",
-                "qwer1234",
-                pro.hexa.backend.domain.user.model.AUTHORIZATION_TYPE.Member);
-        ProjectMember projectMember1 = ProjectMember.create("k", user1, AUTHORIZATION_TYPE.Member);
+        Attachment attachment = Attachment.create("/path/to/file.jpg", "file.jpg", 2048L);
 
-        Attachment attachment = new Attachment();
-        attachment.setLocation("path/to/thumbnail");
-        attachment.setName("thumbnail.jpg");
-        attachment.setSize(100L);
+        User user1 = User.createForTest("testId",
+            "hexapro",
+            attachment
+        );
+        ProjectMember projectMember1 = ProjectMember.create(user1, AUTHORIZATION_TYPE.Member);
+
+        Attachment attachment2 = Attachment.create("/path/to/thumbnail.jpg", "thumbnail.jpg", 100L);
 
         for (int i = 0; i < count; i++) {
-
-            Project project = Project.create((long)i,
-                    "title",
-                    LocalDateTime.of(2023,3,3,3,3),
-                    LocalDateTime.of(2023,4,3,3,3),
-                    List.of(projectTechStack1, projectTechStack3), List.of(projectMember1),
-                    AUTHORIZATION_TYPE.Member,
-                    STATE_TYPE.승인중,
-                    "This is a project about web development",
-                    attachment);
+            Project project = Project.create(
+                (long) i,
+                "title",
+                LocalDateTime.of(2023, 3, 3, 3, 3),
+                LocalDateTime.of(2023, 4, 3, 3, 3),
+                List.of(projectTechStack1, projectTechStack3), List.of(projectMember1),
+                AUTHORIZATION_TYPE.Member,
+                STATE_TYPE.승인중,
+                "This is a project about web development",
+                attachment2
+            );
 
             projects.add(project);
         }
@@ -134,6 +129,7 @@ class ProjectPageServiceTest {
         assertNotNull(response);
         assertEquals(projectId, response.getProjectId());
     }
+
     @Test
     void testGetProjectResponse2() {
         // Given
@@ -152,34 +148,30 @@ class ProjectPageServiceTest {
 
     private Project createMockedProject(Long projectId) {
 
-        ProjectTechStack projectTechStack1 = ProjectTechStack.create(128L, "Java");
-        User user1 = User.create("testId",
-                "test@hexa.pro",
-                GENDER_TYPE.여,
-                pro.hexa.backend.domain.user.model.STATE_TYPE.휴학,
-                (short) 2020,
-                "20202020",
-                "test",
-                "qwer1234",
-                pro.hexa.backend.domain.user.model.AUTHORIZATION_TYPE.Member);
-        ProjectMember projectMember1 = ProjectMember.create("k", user1, AUTHORIZATION_TYPE.Member);
+        ProjectTechStack projectTechStack1 = ProjectTechStack.create("Java");
+        Attachment attachment1 = Attachment.create("/path/to/file.jpg", "file.jpg", 2048L);
 
-        Attachment attachment = new Attachment();
-        attachment.setLocation("path/to/thumbnail");
-        attachment.setName("thumbnail.jpg");
-        attachment.setSize(100L);
+        User user1 = User.createForTest(
+            "testId",
+            "hexapro",
+            attachment1
+        );
 
-        Project project = Project.create(projectId,
-                "title",
-                LocalDateTime.of(2023,3,3,3,3),
-                LocalDateTime.of(2023,4,3,3,3),
-                List.of(projectTechStack1), List.of(projectMember1),
-                AUTHORIZATION_TYPE.Member,
-                STATE_TYPE.승인중,
-                "This is a project about web development",
-                attachment);
+        ProjectMember projectMember1 = ProjectMember.create(user1, AUTHORIZATION_TYPE.Member);
 
-        return project;
+        Attachment attachment2 = Attachment.create("/path/to/thumbnail.jpg", "thumbnail.jpg", 100L);
+
+        return Project.create(
+            projectId,
+            "title",
+            LocalDateTime.of(2023, 3, 3, 3, 3),
+            LocalDateTime.of(2023, 4, 3, 3, 3),
+            List.of(projectTechStack1), List.of(projectMember1),
+            AUTHORIZATION_TYPE.Member,
+            STATE_TYPE.승인중,
+            "This is a project about web development",
+            attachment2
+        );
     }
 
     @Test
@@ -198,15 +190,9 @@ class ProjectPageServiceTest {
     }
 
     private List<ProjectTechStack> createMockedProjectTechStacks(int count) {
-        List<ProjectTechStack> projectTechStacks = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            ProjectTechStack projecttechstack = ProjectTechStack.create((long) (127+i), "내용" + Integer.toString(i));
-
-            projectTechStacks.add(projecttechstack);
-        }
-
-        return projectTechStacks;
+        return IntStream.range(0, count)
+            .mapToObj(i -> ProjectTechStack.create("내용" + i))
+            .collect(Collectors.toList());
     }
-
 
 }
