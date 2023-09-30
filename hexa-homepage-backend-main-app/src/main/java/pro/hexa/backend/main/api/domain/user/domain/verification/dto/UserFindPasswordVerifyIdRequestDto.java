@@ -1,4 +1,4 @@
-package pro.hexa.backend.main.api.domain.login.dto;
+package pro.hexa.backend.main.api.domain.user.domain.verification.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -8,12 +8,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UserFindVerificationRequestDto {
-    @Schema(description = "이름")
-    private String name;
+public class UserFindPasswordVerifyIdRequestDto {
 
-    @Schema(description = "e-mail")
-    private String email;
+    @Schema(description = "아이디")
+    private String id;
 
     @Schema(description = "인증번호")
     private String VerificationCode;

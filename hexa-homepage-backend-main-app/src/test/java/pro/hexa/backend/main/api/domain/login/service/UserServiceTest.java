@@ -17,8 +17,9 @@ import pro.hexa.backend.domain.user.model.GENDER_TYPE;
 import pro.hexa.backend.domain.user.model.STATE_TYPE;
 import pro.hexa.backend.domain.user.repository.UserRepository;
 import pro.hexa.backend.main.api.common.exception.BadRequestException;
-import pro.hexa.backend.main.api.domain.login.dto.UserCreateRequestDto;
-import pro.hexa.backend.main.api.domain.login.dto.UserFindPasswordRequestDto1;
+import pro.hexa.backend.main.api.domain.user.domain.login.dto.UserCreateRequestDto;
+import pro.hexa.backend.main.api.domain.user.domain.login.dto.UserFindPasswordRequestDto;
+import pro.hexa.backend.main.api.domain.user.domain.login.service.UserService;
 import pro.hexa.backend.service.EmailService;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -72,8 +73,8 @@ class UserServiceTest {
         when(userRepository.findById("seonuk")).thenReturn(user);
         when(userRepository.findById("invalid")).thenReturn(null);
 
-        UserFindPasswordRequestDto1 requestDto1 = new UserFindPasswordRequestDto1("seonuk");
-        UserFindPasswordRequestDto1 requestDto2 = new UserFindPasswordRequestDto1("invalid");
+        UserFindPasswordRequestDto requestDto1 = new UserFindPasswordRequestDto("seonuk");
+        UserFindPasswordRequestDto requestDto2 = new UserFindPasswordRequestDto("invalid");
 
         assertDoesNotThrow(() -> {
             userService.findUserPasswordById(requestDto1);
