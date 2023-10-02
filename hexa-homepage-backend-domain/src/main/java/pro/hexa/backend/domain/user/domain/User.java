@@ -136,21 +136,9 @@ public class User extends AbstractEntity {
     }
 
     public static User createForTest(
-            String id,
-            String name,
-            Attachment profileImage
-    ) {
-        User user = new User();
-        user.id = id;
-        user.name = name;
-        user.profileImage = profileImage;
-        return user;
-    }
-
-    public static User createForTest(
-            String id,
-            String name,
-            Attachment profileImage
+        String id,
+        String name,
+        Attachment profileImage
     ) {
         User user = new User();
         user.id = id;

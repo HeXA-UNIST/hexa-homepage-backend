@@ -26,7 +26,7 @@ public class AdminProjectDto {
     public void fromProject(Project project) {
         this.projectId = project.getId();
         this.title = project.getTitle();
-        this.thumbnail = Long.valueOf(project.getThumbnail().getLocation());
-        this.state = String.valueOf(project.getState());
+        this.thumbnail = project.getThumbnail().getId();
+        this.state = project.getState().getValue();
     }
 }

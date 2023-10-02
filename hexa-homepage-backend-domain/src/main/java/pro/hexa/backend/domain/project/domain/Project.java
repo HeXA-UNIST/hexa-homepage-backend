@@ -95,6 +95,32 @@ public class Project extends AbstractEntity {
         return project;
     }
 
+    public static Project createForTest(
+        Long id,
+        String title,
+        LocalDateTime startDate,
+        LocalDateTime endDate,
+        List<ProjectTechStack> projectTechStacks,
+        List<ProjectMember> members,
+        AUTHORIZATION_TYPE authorization,
+        STATE_TYPE state,
+        String content,
+        Attachment thumbnail
+    ) {
+        Project project = new Project();
+        project.id = id;
+        project.title = title;
+        project.startDate = startDate;
+        project.endDate = endDate;
+        project.addProjectTechStacksAll(projectTechStacks);
+        project.addMembersAll(members);
+        project.authorization = authorization;
+        project.state = state;
+        project.content = content;
+        project.thumbnail = thumbnail;
+        return project;
+    }
+
     public void update(
         String title,
         LocalDateTime startDate,
@@ -105,16 +131,16 @@ public class Project extends AbstractEntity {
         STATE_TYPE state,
         String content,
         Attachment thumbnail
-    ){
-        this.title=title;
-        this.startDate=startDate;
-        this.endDate=endDate;
-        this.projectTechStacks=projectTechStacks;
-        this.members=members;
-        this.authorization=authorization;
-        this.state=state;
-        this.content=content;
-        this.thumbnail=thumbnail;
+    ) {
+        this.title = title;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        addProjectTechStacksAll(projectTechStacks);
+        addMembersAll(members);
+        this.authorization = authorization;
+        this.state = state;
+        this.content = content;
+        this.thumbnail = thumbnail;
 
     }
 

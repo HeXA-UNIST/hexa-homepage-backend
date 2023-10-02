@@ -1,6 +1,5 @@
 package pro.hexa.backend.main.api.common.utils;
 
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -22,10 +21,5 @@ public final class DateUtils {
             .atZone(ZoneId.systemDefault())
             .toLocalDateTime();
         return localDateTime;
-    }
-
-    public static Date convertLocalDateTimeToDate(LocalDateTime localDateTime){
-        Date date= Timestamp.valueOf(localDateTime);
-        return date;
     }
 }
