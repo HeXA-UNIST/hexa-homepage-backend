@@ -46,8 +46,9 @@ class UserControllerTest {
     @Test
     void userSignup() {
         //given
+        String userId = "testId";
         UserCreateRequestDto request = new UserCreateRequestDto(
-            "testId",
+            userId,
             "test@hexa.pro",
             0,
             0,
@@ -62,8 +63,10 @@ class UserControllerTest {
         userController.userSignup(request);
 
         //then
-        User user = userRepository.findByNameAndEmail("test", "test@hexa.pro")
-            .orElseGet(() -> User.create(null, null, null, null, null, null, null, null, null));
+        User user = userRepository.findById(userId)
+            .orElse(null);
+
+        assertNotNull(user);
         assertThat(request.getId()).isEqualTo(user.getId());
         assertThat(request.getGender()).isEqualTo(user.getGender().getApiValue());
         assertThat(request.getState()).isEqualTo(user.getState().getApiValue());
@@ -75,8 +78,8 @@ class UserControllerTest {
     void findUserIdSendVerificationCode() {
         //given
         String userId = "testId+01";
-        String userEmail = "test@hexa.pro";
-        String userName = "test";
+        String userEmail = "test+01@hexa.pro";
+        String userName = "test+01";
 
         User user = User.create(
             userId,
@@ -110,8 +113,8 @@ class UserControllerTest {
     void idVerifyVerificationCode() {
         // given
         String userId = "testId+02";
-        String userEmail = "test@hexa.pro";
-        String userName = "test";
+        String userEmail = "test+02@hexa.pro";
+        String userName = "test+02";
 
         User user = User.create(
             userId,
@@ -153,8 +156,8 @@ class UserControllerTest {
     void findUserPasswordById() {
         // given
         String userId = "testId+03";
-        String userEmail = "test@hexa.pro";
-        String userName = "test";
+        String userEmail = "test+03@hexa.pro";
+        String userName = "test+03";
 
         User user = User.create(
             userId,
@@ -183,8 +186,8 @@ class UserControllerTest {
     void findUserPasswordSendVerificationCode() {
         // given
         String userId = "testId+04";
-        String userEmail = "test@hexa.pro";
-        String userName = "test";
+        String userEmail = "test+04@hexa.pro";
+        String userName = "test+04";
 
         User user = User.create(
             userId,
@@ -218,9 +221,9 @@ class UserControllerTest {
     @Test
     void passwordVerifyVerificationCode() {
         // given
-        String userId = "testId+06";
-        String userEmail = "test@hexa.pro";
-        String userName = "test";
+        String userId = "testId+05";
+        String userEmail = "test+05@hexa.pro";
+        String userName = "test+05";
 
         User user = User.create(
             userId,
@@ -267,9 +270,9 @@ class UserControllerTest {
     @Test
     void changingUserPassword() {
         // given
-        String userId = "testId+05";
-        String userEmail = "test@hexa.pro";
-        String userName = "test";
+        String userId = "testId+06";
+        String userEmail = "test+06@hexa.pro";
+        String userName = "test+06";
 
         User user = User.create(
             userId,

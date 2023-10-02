@@ -2,14 +2,16 @@ package pro.hexa.backend.main.api.domain.login.service;
 
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pro.hexa.backend.domain.user.domain.User;
 import pro.hexa.backend.domain.user.model.AUTHORIZATION_TYPE;
@@ -28,8 +30,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class UserServiceTest {
-
 
     @Mock
     private UserRepository userRepository;
@@ -40,11 +43,6 @@ class UserServiceTest {
 
     @InjectMocks
     private UserService userService;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     @DisplayName("정상적인 회원가입 테스트")
@@ -62,9 +60,7 @@ class UserServiceTest {
 
         //when, then
         Assertions.assertEquals(result, userCreateRequestDto.getId());
-
     }
-
 
     @Test
     void findUserPasswordById() {
@@ -85,8 +81,6 @@ class UserServiceTest {
 
 
     }
-
-
 
     private UserCreateRequestDto createDefaultUserCreateRequestDtoForTest() {
         UserCreateRequestDto userCreateRequestDto = new UserCreateRequestDto();
