@@ -1,7 +1,6 @@
 package pro.hexa.backend.config;
 
 import java.security.Key;
-import java.security.SecureRandom;
 import java.util.Base64;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -11,16 +10,14 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 @Converter
-@Component
 public class StringCryptoConverter implements AttributeConverter<String, String> {
 
     private static final String ALGORITHM = "AES/CBC/PKCS5Padding";
 
     @Value("${hexa-page-jwt-secret-key}")
-    private byte[] secretKey;
+    private String secretKey;
 
     @Override
     public String convertToDatabaseColumn(String attribute) {
@@ -28,14 +25,14 @@ public class StringCryptoConverter implements AttributeConverter<String, String>
             return null;
         }
 
-        Key key = new SecretKeySpec(secretKey, "AES");
-        IvParameterSpec secretIv = generateSecretIv();
+        Key key = new SecretKeySpec(secretKey.getBytes(), "AES");
+        IvParameterSpec secretIv = getSecretIv();
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, key, secretIv);
             byte[] encrypted = Base64.getEncoder().encode(cipher.doFinal(attribute.getBytes()));
 
-            return new String(secretIv.getIV()) + new String(encrypted);
+            return new String(encrypted);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -47,10 +44,11 @@ public class StringCryptoConverter implements AttributeConverter<String, String>
             return null;
         }
 
-        Key key = new SecretKeySpec(secretKey, "AES");
+        Key key = new SecretKeySpec(secretKey.getBytes(), "AES");
+
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM);
-            cipher.init(Cipher.DECRYPT_MODE, key, getSecretIv(dbData));
+            cipher.init(Cipher.DECRYPT_MODE, key, getSecretIv());
 
             return decodeFromData(dbData, cipher);
         } catch (Exception e) {
@@ -67,13 +65,8 @@ public class StringCryptoConverter implements AttributeConverter<String, String>
         }
     }
 
-    private IvParameterSpec generateSecretIv() {
-        byte[] iv = new byte[16];
-        new SecureRandom().nextBytes(iv);
+    private IvParameterSpec getSecretIv() {
+        byte[] iv = secretKey.substring(0,16).getBytes();
         return new IvParameterSpec(iv);
-    }
-
-    private IvParameterSpec getSecretIv(String cipherText) {
-        return new IvParameterSpec(cipherText.substring(0,15).getBytes());
     }
 }

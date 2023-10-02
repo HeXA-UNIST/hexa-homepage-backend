@@ -2,14 +2,16 @@ package pro.hexa.backend.main.api.domain.login.service;
 
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pro.hexa.backend.domain.user.domain.User;
 import pro.hexa.backend.domain.user.model.AUTHORIZATION_TYPE;
@@ -17,8 +19,9 @@ import pro.hexa.backend.domain.user.model.GENDER_TYPE;
 import pro.hexa.backend.domain.user.model.STATE_TYPE;
 import pro.hexa.backend.domain.user.repository.UserRepository;
 import pro.hexa.backend.main.api.common.exception.BadRequestException;
-import pro.hexa.backend.main.api.domain.login.dto.UserCreateRequestDto;
-import pro.hexa.backend.main.api.domain.login.dto.UserFindPasswordRequestDto1;
+import pro.hexa.backend.main.api.domain.user.domain.login.dto.UserCreateRequestDto;
+import pro.hexa.backend.main.api.domain.user.domain.login.dto.UserFindPasswordRequestDto;
+import pro.hexa.backend.main.api.domain.user.domain.login.service.UserService;
 import pro.hexa.backend.service.EmailService;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -27,8 +30,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class UserServiceTest {
-
 
     @Mock
     private UserRepository userRepository;
@@ -39,11 +43,6 @@ class UserServiceTest {
 
     @InjectMocks
     private UserService userService;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     @DisplayName("정상적인 회원가입 테스트")
@@ -61,9 +60,7 @@ class UserServiceTest {
 
         //when, then
         Assertions.assertEquals(result, userCreateRequestDto.getId());
-
     }
-
 
     @Test
     void findUserPasswordById() {
@@ -72,8 +69,8 @@ class UserServiceTest {
         when(userRepository.findById("seonuk")).thenReturn(user);
         when(userRepository.findById("invalid")).thenReturn(null);
 
-        UserFindPasswordRequestDto1 requestDto1 = new UserFindPasswordRequestDto1("seonuk");
-        UserFindPasswordRequestDto1 requestDto2 = new UserFindPasswordRequestDto1("invalid");
+        UserFindPasswordRequestDto requestDto1 = new UserFindPasswordRequestDto("seonuk");
+        UserFindPasswordRequestDto requestDto2 = new UserFindPasswordRequestDto("invalid");
 
         assertDoesNotThrow(() -> {
             userService.findUserPasswordById(requestDto1);
@@ -84,8 +81,6 @@ class UserServiceTest {
 
 
     }
-
-
 
     private UserCreateRequestDto createDefaultUserCreateRequestDtoForTest() {
         UserCreateRequestDto userCreateRequestDto = new UserCreateRequestDto();
