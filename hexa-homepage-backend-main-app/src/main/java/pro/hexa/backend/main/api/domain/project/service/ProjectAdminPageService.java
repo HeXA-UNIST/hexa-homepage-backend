@@ -1,5 +1,6 @@
 package pro.hexa.backend.main.api.domain.project.service;
 
+import io.netty.util.internal.StringUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -104,16 +105,12 @@ public class ProjectAdminPageService {
 
     private void validateAdminCreateProjectRequest(AdminCreateProjectRequestDto adminCreateProjectRequestDto) {
 
-        if ((adminCreateProjectRequestDto.getTitle() == null)
+        if ((!StringUtil.isNullOrEmpty(adminCreateProjectRequestDto.getTitle()))
             || (adminCreateProjectRequestDto.getStartDate() == null)
             || (adminCreateProjectRequestDto.getProjectTechStacks() == null)
             || (adminCreateProjectRequestDto.getState() == null)
         ) {
             throw new BadRequestException(BadRequestType.NULL_VALUE);
-        }
-
-        if (adminCreateProjectRequestDto.getTitle().isEmpty()) {
-            throw new BadRequestException(BadRequestType.EMPTY_STRING);
         }
     }
 
