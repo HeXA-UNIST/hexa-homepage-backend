@@ -1,5 +1,7 @@
 package pro.hexa.backend.main.api.domain.project.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,7 +52,12 @@ public class ProjectPageService {
 
         int maxPage = projectRepository.getMaxPage(searchText, status, sort, includeTechStack, excludeTechStack, year, perPage);
 
-        return ProjectListResponse.builder().projects(projects).page(perPage).maxPage(maxPage).build();
+        return ProjectListResponse
+            .builder()
+            .projects(projects)
+            .page(perPage)
+            .maxPage(maxPage)
+            .build();
     }
 
     public ProjectResponse getProjectResponse(Long projectId) {
@@ -65,20 +72,38 @@ public class ProjectPageService {
         List<ProjectTechStack> techStackList = projectTechStackRepository.findTechStackByQuery();
 
         return ProjectTechStackResponse.builder()
-            .techStackList(techStackList.stream().map(ProjectTechStack::getContent).collect(Collectors.toList())).build();
+            .techStackList(
+                techStackList
+                    .stream()
+                    .map(ProjectTechStack::getContent)
+                    .collect(Collectors.toList()))
+            .build();
     }
 
     public AdminProjectListResponse getAdminProjectList(Integer pageNum, Integer perPage) {
-        int maxPage = projectRepository.getAdminMaxPage(perPage);
 
         List<Project> projectList = projectRepository.findAllInAdminPage(pageNum, perPage);
-        List<AdminProjectDto> projects = projectList.stream().map(project -> {
-            AdminProjectDto adminProjectDto = new AdminProjectDto();
-            adminProjectDto.fromProject(project);
-            return adminProjectDto;
-        }).collect(Collectors.toList());
+        if(projectList.isEmpty()){
+            return AdminProjectListResponse.builder()
+                .totalPage(0)
+                .list(new ArrayList<>(0))
+                .build();
+        }
+        int maxPage = projectRepository.getAdminMaxPage(perPage);
+        List<AdminProjectDto> projects = projectList.stream()
+            .map(project ->
+            {
+                AdminProjectDto adminProjectDto = new AdminProjectDto();
+                adminProjectDto.fromProject(project);
+                return adminProjectDto;
+            })
+            .collect(Collectors.toList());
 
-        return AdminProjectListResponse.builder().totalPage(maxPage).list(projects).build();
+        return AdminProjectListResponse
+            .builder()
+            .totalPage(maxPage)
+            .list(projects)
+            .build();
     }
 
     public AdminProjectDetailResponse getAdminProjectDetail(Long projectId) {
@@ -98,8 +123,8 @@ public class ProjectPageService {
             adminCreateProjectRequestDto.getProjectTechStacks());
         Attachment thumbnail = attachmentRepository.findById(adminCreateProjectRequestDto.getThumbnail()).orElse(null);
         Project project = Project.create(adminCreateProjectRequestDto.getTitle(),
-            DateUtils.dateToLocalDateTime(adminCreateProjectRequestDto.getStartDate()),
-            DateUtils.dateToLocalDateTime(adminCreateProjectRequestDto.getEndDate()), projectTechStackList, null, null,
+            DateUtils.convertDateToLocalDateTime(adminCreateProjectRequestDto.getStartDate()),
+            DateUtils.convertDateToLocalDateTime(adminCreateProjectRequestDto.getEndDate()), projectTechStackList, null, null,
             STATE_TYPE.valueOf(adminCreateProjectRequestDto.getState()), adminCreateProjectRequestDto.getContent(), thumbnail);
 
         projectRepository.save(project);
@@ -107,6 +132,13 @@ public class ProjectPageService {
 
     @Transactional
     protected List<ProjectTechStack> getProjectTechStackListFromTheContentList(List<String> contentList) {
+        /*
+         * If there is no entity for the given content, it automatically creates and saves one.
+         * */
+        if (contentList.isEmpty()) {
+            return new ArrayList<>(0);
+        }
+
         Stream<ProjectTechStack> presentingProjectTechStackList = projectTechStackRepository.getTechStackByContentList(contentList)
             .stream();
         List<String> presentingProjectTechStackContentList = presentingProjectTechStackList.map(ProjectTechStack::getContent)
@@ -121,44 +153,82 @@ public class ProjectPageService {
 
     @Transactional
     public void adminModifyProject(AdminModifyProjectRequestDto adminModifyProjectRequestDto) {
-        Optional<Project> optionalProject = projectRepository.findById(adminModifyProjectRequestDto.getProjectId());
-        if (optionalProject.isEmpty()) {
-            throw new BadRequestException(BadRequestType.PROJECT_NOT_FOUND);
-        }
-        Project project = optionalProject.get();
 
+        Project project = projectRepository.findById(adminModifyProjectRequestDto.getProjectId())
+            .orElseThrow(() -> new BadRequestException(BadRequestType.PROJECT_NOT_FOUND));
+
+        if ((adminModifyProjectRequestDto.getTitle() == null)
+            && (adminModifyProjectRequestDto.getStartDate() == null)
+            && (adminModifyProjectRequestDto.getEndDate() == null)
+            && (adminModifyProjectRequestDto.getProjectTechStacks().isEmpty())
+            && (adminModifyProjectRequestDto.getState() == null)
+            && (adminModifyProjectRequestDto.getContent() == null)
+            && (adminModifyProjectRequestDto.getThumbnail() == null)) {
+            return;
+        }
+
+        String title;
         if (adminModifyProjectRequestDto.getTitle() != null) {
-            project.setTitle(adminModifyProjectRequestDto.getTitle());
+            title = adminModifyProjectRequestDto.getTitle();
+        } else {
+            title = project.getTitle();
         }
 
+        LocalDateTime startDate;
         if (adminModifyProjectRequestDto.getStartDate() != null) {
-            project.setStartDate(DateUtils.dateToLocalDateTime(adminModifyProjectRequestDto.getStartDate()));
+            startDate = DateUtils.convertDateToLocalDateTime(adminModifyProjectRequestDto.getStartDate());
+        } else {
+            startDate = project.getStartDate();
         }
 
+        LocalDateTime endDate;
         if (adminModifyProjectRequestDto.getEndDate() != null) {
-            project.setEndDate(DateUtils.dateToLocalDateTime(adminModifyProjectRequestDto.getEndDate()));
+            endDate = DateUtils.convertDateToLocalDateTime(adminModifyProjectRequestDto.getEndDate());
+        } else {
+            endDate = project.getEndDate();
         }
 
-        if (adminModifyProjectRequestDto.getProjectTechStacks() != null) {
-            List<ProjectTechStack> projectTechStacks = adminModifyProjectRequestDto.getProjectTechStacks().stream()
-                .map(ProjectTechStack::create).collect(Collectors.toList());
-            project.setProjectTechStacks(projectTechStacks);
+        List<ProjectTechStack> projectTechStacks;
+        if (!adminModifyProjectRequestDto.getProjectTechStacks().isEmpty()) {
+            projectTechStacks = getProjectTechStackListFromTheContentList(
+                adminModifyProjectRequestDto.getProjectTechStacks());
+        } else {
+            projectTechStacks = project.getProjectTechStacks();
         }
 
+        STATE_TYPE state;
         if (adminModifyProjectRequestDto.getState() != null) {
-            STATE_TYPE state = STATE_TYPE.valueOf(adminModifyProjectRequestDto.getState());
-            project.setState(state);
+            state = STATE_TYPE.valueOf(adminModifyProjectRequestDto.getState());
+        } else {
+            state = project.getState();
         }
 
+        String content;
         if (adminModifyProjectRequestDto.getContent() != null) {
-            project.setContent(adminModifyProjectRequestDto.getContent());
+            content = adminModifyProjectRequestDto.getContent();
+        } else {
+            content = project.getContent();
         }
 
+        Attachment thumbnail;
         if (adminModifyProjectRequestDto.getThumbnail() != null) {
-            Attachment thumbnail = attachmentRepository.findById(adminModifyProjectRequestDto.getThumbnail())
+            thumbnail = attachmentRepository.findById(adminModifyProjectRequestDto.getThumbnail())
                 .orElseThrow(() -> new BadRequestException(BadRequestType.ATTACHMENT_NOT_EXIST));
-            project.setThumbnail(thumbnail);
+        } else {
+            thumbnail = project.getThumbnail();
         }
+
+        project.update(
+            title,
+            startDate,
+            endDate,
+            projectTechStacks,
+            null, //members
+            null, // authorization
+            state,
+            content,
+            thumbnail
+        );
     }
 
     @Transactional

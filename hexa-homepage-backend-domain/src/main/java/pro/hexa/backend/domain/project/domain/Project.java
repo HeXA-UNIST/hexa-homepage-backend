@@ -80,7 +80,6 @@ public class Project extends AbstractEntity {
         STATE_TYPE state,
         String content,
         Attachment thumbnail
-
     ) {
         Project project = new Project();
         project.title = title;
@@ -93,6 +92,29 @@ public class Project extends AbstractEntity {
         project.content = content;
         project.thumbnail = thumbnail;
         return project;
+    }
+
+    public void update(
+        String title,
+        LocalDateTime startDate,
+        LocalDateTime endDate,
+        List<ProjectTechStack> projectTechStacks,
+        List<ProjectMember> members,
+        AUTHORIZATION_TYPE authorization,
+        STATE_TYPE state,
+        String content,
+        Attachment thumbnail
+    ){
+        this.title=title;
+        this.startDate=startDate;
+        this.endDate=endDate;
+        this.projectTechStacks=projectTechStacks;
+        this.members=members;
+        this.authorization=authorization;
+        this.state=state;
+        this.content=content;
+        this.thumbnail=thumbnail;
+
     }
 
     public void setTitle(String title) {

@@ -17,14 +17,14 @@ public final class DateUtils {
         return dateTime.format(DateTimeFormatter.ofPattern(format));
     }
 
-    public static LocalDateTime dateToLocalDateTime(Date date){
+    public static LocalDateTime convertDateToLocalDateTime(Date date){
         LocalDateTime localDateTime = Instant.ofEpochMilli(date.getTime())
             .atZone(ZoneId.systemDefault())
             .toLocalDateTime();
         return localDateTime;
     }
 
-    public static Date localDateTimeToDate(LocalDateTime localDateTime){
+    public static Date convertLocalDateTimeToDate(LocalDateTime localDateTime){
         Date date= Timestamp.valueOf(localDateTime);
         return date;
     }
