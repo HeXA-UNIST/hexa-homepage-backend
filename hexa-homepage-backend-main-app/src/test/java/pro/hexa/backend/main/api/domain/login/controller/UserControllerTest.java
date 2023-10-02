@@ -1,23 +1,35 @@
 package pro.hexa.backend.main.api.domain.login.controller;
 
+import io.jsonwebtoken.Claims;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import pro.hexa.backend.config.StringCryptoConverter;
 import pro.hexa.backend.domain.user.domain.User;
+import pro.hexa.backend.domain.user.model.AUTHORIZATION_TYPE;
+import pro.hexa.backend.domain.user.model.GENDER_TYPE;
+import pro.hexa.backend.domain.user.model.STATE_TYPE;
 import pro.hexa.backend.domain.user.repository.UserRepository;
-import pro.hexa.backend.main.api.domain.login.dto.UserCreateRequestDto;
-import pro.hexa.backend.main.api.domain.login.dto.UserFindIdRequestDto;
-import pro.hexa.backend.main.api.domain.login.dto.UserFindPasswordRequestDto1;
-import pro.hexa.backend.main.api.domain.login.dto.UserFindPasswordRequestDto2;
-import pro.hexa.backend.main.api.domain.login.dto.UserFindPasswordRequestDto3;
-import pro.hexa.backend.main.api.domain.login.dto.UserFindVerificationRequestDto;
+import pro.hexa.backend.main.api.common.jwt.Jwt;
+import pro.hexa.backend.main.api.common.jwt.JwtTokenType;
+import pro.hexa.backend.main.api.domain.user.controller.UserController;
+import pro.hexa.backend.main.api.domain.user.domain.login.dto.UserCreateRequestDto;
+import pro.hexa.backend.main.api.domain.user.domain.login.dto.UserFindPasswordChangeRequestDto;
+import pro.hexa.backend.main.api.domain.user.domain.login.dto.UserFindPasswordRequestDto;
+import pro.hexa.backend.main.api.domain.user.domain.verification.domain.Verification;
+import pro.hexa.backend.main.api.domain.user.domain.verification.dto.UserFindIdRequestDto;
+import pro.hexa.backend.main.api.domain.user.domain.verification.dto.UserFindPasswordVerifyIdRequestDto;
+import pro.hexa.backend.main.api.domain.user.domain.verification.dto.UserFindVerificationRequestDto;
+import pro.hexa.backend.main.api.domain.user.domain.verification.repository.VerificationRedisRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static pro.hexa.backend.main.api.common.jwt.Jwt.JWT_TOKEN_TYPE;
+import static pro.hexa.backend.main.api.common.jwt.Jwt.JWT_USER_ID;
 
 @SpringBootTest
 class UserControllerTest {
@@ -29,14 +41,14 @@ class UserControllerTest {
     private UserRepository userRepository;
 
     @Autowired
-    private StringCryptoConverter stringCryptoConverter;
+    private VerificationRedisRepository verificationRedisRepository;
 
     @Test
-    @Transactional
     void userSignup() {
         //given
+        String userId = "testId";
         UserCreateRequestDto request = new UserCreateRequestDto(
-            "testId",
+            userId,
             "test@hexa.pro",
             0,
             0,
@@ -51,8 +63,10 @@ class UserControllerTest {
         userController.userSignup(request);
 
         //then
-        User user = userRepository.findByNameAndEmail("test", "test@hexa.pro")
-            .orElseGet(() -> User.create(null, null, null, null, null, null, null, null, null));
+        User user = userRepository.findById(userId)
+            .orElse(null);
+
+        assertNotNull(user);
         assertThat(request.getId()).isEqualTo(user.getId());
         assertThat(request.getGender()).isEqualTo(user.getGender().getApiValue());
         assertThat(request.getState()).isEqualTo(user.getState().getApiValue());
@@ -61,191 +75,244 @@ class UserControllerTest {
     }
 
     @Test
-    @Transactional
     void findUserIdSendVerificationCode() {
         //given
-        UserCreateRequestDto request1 = new UserCreateRequestDto(
-                "testId",
-                "test@hexa.pro",
-                0,
-                0,
-                "2021",
-                "",
-                "test",
-                "qwer1234",
-                "qwer1234"
-        );
+        String userId = "testId+01";
+        String userEmail = "test+01@hexa.pro";
+        String userName = "test+01";
 
-        //when
-        userController.userSignup(request1);
+        User user = User.create(
+            userId,
+            userEmail,
+            GENDER_TYPE.남,
+            STATE_TYPE.재학,
+            (short) 2021,
+            "",
+            userName,
+            "qwer1234",
+            AUTHORIZATION_TYPE.Member
+        );
+        userRepository.saveAndFlush(user);
 
         UserFindIdRequestDto request = new UserFindIdRequestDto(
-                "test",
-                "test@hexa.pro"
+            userName,
+            userEmail
         );
-
         userController.findUserIdSendVerificationCode(request);
 
-        // then
-        User user = userRepository.findByNameAndEmail("test", "test@hexa.pro")
-                .orElseGet(() -> User.create(null, null, null, null, null, null, null, null, null));
-        assertNotNull(user);
-        assertNotNull(user.getVerificationCode());
+        //when
+        Verification verification = verificationRedisRepository.findByUserId(userId)
+            .orElseThrow(() -> new IllegalStateException("verificationCode not created"));
 
+        // then
+        assertNotNull(verification.getVerificationCode());
+        assertNotEquals("", verification.getVerificationCode());
     }
 
     @Test
-    @Transactional
     void idVerifyVerificationCode() {
+        // given
+        String userId = "testId+02";
+        String userEmail = "test+02@hexa.pro";
+        String userName = "test+02";
 
-        UserCreateRequestDto request1 = new UserCreateRequestDto(
-                "testId",
-                "test@hexa.pro",
-                0,
-                0,
-                "2021",
-                "",
-                "test",
-                "qwer1234",
-                "qwer1234"
+        User user = User.create(
+            userId,
+            userEmail,
+            GENDER_TYPE.남,
+            STATE_TYPE.재학,
+            (short) 2021,
+            "",
+            userName,
+            "qwer1234",
+            AUTHORIZATION_TYPE.Member
         );
-
-        //when
-        userController.userSignup(request1);
+        userRepository.saveAndFlush(user);
 
         UserFindIdRequestDto request2 = new UserFindIdRequestDto(
-                "test",
-                "test@hexa.pro"
+            userName,
+            userEmail
         );
         userController.findUserIdSendVerificationCode(request2);
 
-        User user = userRepository.findByNameAndEmail("test", "test@hexa.pro")
-                .orElseGet(() -> User.create(null, null, null, null, null, null, null, null, null));
+        Verification verification = verificationRedisRepository.findByUserId(userId)
+            .orElseThrow(() -> new IllegalStateException("verificationCode not created"));
 
-
+        // when
         UserFindVerificationRequestDto request3 = new UserFindVerificationRequestDto(
-                "test",
-                "test@hexa.pro",
-                user.getVerificationCode()
+            userName,
+            userEmail,
+            verification.getVerificationCode()
         );
+        String foundUserId = Optional.ofNullable(userController.idVerifyVerificationCode(request3))
+            .map(HttpEntity::getBody)
+            .orElse(null);
 
-        String k = String.valueOf(userController.idVerifyVerificationCode(request3));
-        System.out.println(k);
-        assertNotNull(k);
-
-
+        // then
+        assertEquals(userId, foundUserId);
     }
 
     @Test
-    @Transactional
     void findUserPasswordById() {
+        // given
+        String userId = "testId+03";
+        String userEmail = "test+03@hexa.pro";
+        String userName = "test+03";
 
-        UserCreateRequestDto request1 = new UserCreateRequestDto(
-                "testId",
-                "test@hexa.pro",
-                0,
-                0,
-                "2021",
-                "",
-                "test",
-                "qwer1234",
-                "qwer1234"
+        User user = User.create(
+            userId,
+            userEmail,
+            GENDER_TYPE.남,
+            STATE_TYPE.재학,
+            (short) 2021,
+            "",
+            userName,
+            "qwer1234",
+            AUTHORIZATION_TYPE.Member
         );
+        userRepository.saveAndFlush(user);
 
-        //when
-        userController.userSignup(request1);
+        // when
+        UserFindPasswordRequestDto request = new UserFindPasswordRequestDto(userId);
+        String foundUserId = Optional.ofNullable(userController.findUserPasswordById(request))
+            .map(HttpEntity::getBody)
+            .orElse(null);
 
-        User user = userRepository.findByNameAndEmail("test", "test@hexa.pro")
-                .orElseGet(() -> User.create(null, null, null, null, null, null, null, null, null));
-
-
-        UserFindPasswordRequestDto1 request = new UserFindPasswordRequestDto1("testId");
-
-        ResponseEntity<String> response =userController.findUserPasswordById(request);
-        String responseBody = response.getBody();
-
-        assertEquals(responseBody, user.getId());
+        // then
+        assertEquals(userId, foundUserId);
     }
 
     @Test
-    @Transactional
+    void findUserPasswordSendVerificationCode() {
+        // given
+        String userId = "testId+04";
+        String userEmail = "test+04@hexa.pro";
+        String userName = "test+04";
+
+        User user = User.create(
+            userId,
+            userEmail,
+            GENDER_TYPE.남,
+            STATE_TYPE.재학,
+            (short) 2021,
+            "",
+            userName,
+            "qwer1234",
+            AUTHORIZATION_TYPE.Member
+        );
+        userRepository.saveAndFlush(user);
+
+        UserFindIdRequestDto request2 = new UserFindIdRequestDto(
+            userName,
+            userEmail
+        );
+        userController.findUserPasswordSendVerificationCode(request2);
+
+        // when
+        Verification verification = verificationRedisRepository.findByUserId(userId)
+            .orElseThrow(() -> new IllegalStateException("verificationCode not created"));
+
+        // then
+        String verificationCode = verification.getVerificationCode();
+        assertNotNull(verificationCode);
+        assertNotEquals("", verificationCode);
+    }
+
+    @Test
     void passwordVerifyVerificationCode() {
-        UserCreateRequestDto request1 = new UserCreateRequestDto(
-                "testId",
-                "test@hexa.pro",
-                0,
-                0,
-                "2021",
-                "",
-                "test",
-                "qwer1234",
-                "qwer1234"
-        );
+        // given
+        String userId = "testId+05";
+        String userEmail = "test+05@hexa.pro";
+        String userName = "test+05";
 
-        //when
-        userController.userSignup(request1);
+        User user = User.create(
+            userId,
+            userEmail,
+            GENDER_TYPE.남,
+            STATE_TYPE.재학,
+            (short) 2021,
+            "",
+            userName,
+            "qwer1234",
+            AUTHORIZATION_TYPE.Member
+        );
+        userRepository.saveAndFlush(user);
 
         UserFindIdRequestDto request2 = new UserFindIdRequestDto(
-                "test",
-                "test@hexa.pro"
+            userName,
+            userEmail
         );
         userController.findUserPasswordSendVerificationCode(request2);
 
-        User user = userRepository.findByNameAndEmail("test", "test@hexa.pro")
-                .orElseGet(() -> User.create(null, null, null, null, null, null, null, null, null));
+        Verification verification = verificationRedisRepository.findByUserId(userId)
+            .orElseThrow(() -> new IllegalStateException("verificationCode not created"));
 
-        UserFindPasswordRequestDto2 request3 = new UserFindPasswordRequestDto2(
-                "testId",
-                user.getVerificationCode()
+        //when
+        UserFindPasswordVerifyIdRequestDto request3 = new UserFindPasswordVerifyIdRequestDto(
+            userId,
+            verification.getVerificationCode()
         );
+        ResponseEntity<String> response = userController.passwordVerifyVerificationCode(request3);
 
-        assertNotNull(userController.passwordVerifyVerificationCode(request3));
+        // then
+        String token = Optional.ofNullable(response)
+            .map(HttpEntity::getBody)
+            .orElse(null);
+        assertNotNull(token);
 
+        Claims claims = Jwt.validate(token, Jwt.jwtSecretKey);
+        JwtTokenType jwtTokenType = (JwtTokenType) claims.get(JWT_TOKEN_TYPE);
+        String tokenUserId = (String) claims.get(JWT_USER_ID);
+        assertEquals(JwtTokenType.CHANGE_PW_TOKEN, jwtTokenType);
+        assertEquals(userId, tokenUserId);
     }
 
     @Test
-    @Transactional
     void changingUserPassword() {
+        // given
+        String userId = "testId+06";
+        String userEmail = "test+06@hexa.pro";
+        String userName = "test+06";
 
-        UserCreateRequestDto request1 = new UserCreateRequestDto(
-                "testId",
-                "test@hexa.pro",
-                0,
-                0,
-                "2021",
-                "",
-                "test",
-                "qwer1234",
-                "qwer1234"
+        User user = User.create(
+            userId,
+            userEmail,
+            GENDER_TYPE.남,
+            STATE_TYPE.재학,
+            (short) 2021,
+            "",
+            userName,
+            "qwer1234",
+            AUTHORIZATION_TYPE.Member
         );
-
-        //when
-        userController.userSignup(request1);
+        userRepository.saveAndFlush(user);
 
         UserFindIdRequestDto request2 = new UserFindIdRequestDto(
-                "test",
-                "test@hexa.pro"
+            userName,
+            userEmail
         );
         userController.findUserPasswordSendVerificationCode(request2);
 
-        User user = userRepository.findByNameAndEmail("test", "test@hexa.pro")
-                .orElseGet(() -> User.create(null, null, null, null, null, null, null, null, null));
+        Verification verification = verificationRedisRepository.findByUserId(userId)
+            .orElseThrow(() -> new IllegalStateException("verificationCode not created"));
 
-        UserFindPasswordRequestDto2 request3 = new UserFindPasswordRequestDto2(
-                "testId",
-                user.getVerificationCode()
+        UserFindPasswordVerifyIdRequestDto request3 = new UserFindPasswordVerifyIdRequestDto(
+            userId,
+            verification.getVerificationCode()
         );
-
-        ResponseEntity<String> k = userController.passwordVerifyVerificationCode(request3);
-        String token = k.getBody();
+        ResponseEntity<String> response = userController.passwordVerifyVerificationCode(request3);
+        String token = response.getBody();
 
         String newPassword = "password1asfdkjsfkdjlfsdahla";
-        UserFindPasswordRequestDto3 request4 = new UserFindPasswordRequestDto3(newPassword, newPassword);
+        UserFindPasswordChangeRequestDto request4 = new UserFindPasswordChangeRequestDto(newPassword, newPassword);
 
+        //when
         userController.changingUserPassword(request4, token);
 
         // then
-        String encryptedPassword = stringCryptoConverter.convertToDatabaseColumn(newPassword);
-        assertEquals(user.getPassword(), encryptedPassword);
+        User foundUser = userRepository.findById(userId)
+            .orElseThrow(() -> new IllegalStateException("user not created"));
+
+        assertEquals(newPassword, foundUser.getPassword());
     }
 }

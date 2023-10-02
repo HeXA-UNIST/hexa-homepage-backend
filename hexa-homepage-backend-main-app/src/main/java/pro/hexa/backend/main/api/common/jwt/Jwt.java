@@ -56,7 +56,7 @@ public class Jwt {
             .compact();
     }
 
-    public static String generateChangePwToken(String userId) {
+    public static String generateChangePasswordToken(String userId) {
         Timestamp expiration = Timestamp.valueOf(LocalDateTime.now().plusMinutes(CHANGE_PW_TOKEN_EXPIRE_MINUTE));
         return Jwts.builder()
             .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
