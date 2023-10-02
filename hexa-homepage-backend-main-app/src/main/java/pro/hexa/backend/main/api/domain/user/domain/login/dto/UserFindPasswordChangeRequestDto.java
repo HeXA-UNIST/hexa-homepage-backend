@@ -1,4 +1,4 @@
-package pro.hexa.backend.main.api.domain.login.dto;
+package pro.hexa.backend.main.api.domain.user.domain.login.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UserFindPasswordRequestDto3 {
+public class UserFindPasswordChangeRequestDto {
 
     @Schema(description = "새 비밀번호")
     private String password1;

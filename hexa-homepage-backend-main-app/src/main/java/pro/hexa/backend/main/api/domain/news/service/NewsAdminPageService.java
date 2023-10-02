@@ -10,16 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pro.hexa.backend.domain.news.domain.News;
 import pro.hexa.backend.domain.news.repository.NewsRepository;
-import pro.hexa.backend.main.api.domain.news.dto.AdminCreateNewsRequestDto;
-import pro.hexa.backend.main.api.domain.news.dto.AdminModifyNewsRequestDto;
-import pro.hexa.backend.main.api.domain.news.dto.AdminNewsDetailResponse;
-import pro.hexa.backend.main.api.domain.news.dto.AdminNewsListResponse;
+import pro.hexa.backend.main.api.domain.news.dto.*;
 
 import static pro.hexa.backend.main.api.common.utils.constant.yyyy_MM_dd;
 
 @Service
 @Slf4j
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class NewsAdminPageService {
     private final NewsRepository newsRepository;
@@ -27,49 +24,62 @@ public class NewsAdminPageService {
     public AdminNewsListResponse getAdminNewsList(
             Integer pageNum, Integer perPage
     ) {
-        return null;
+        List<News> newsList = newsRepository.findAllByQuery(pageNum, perPage);
+        List<AdminNewsDto> adminNewsDtos = newsList.stream()
+                .map(news -> {
+                    AdminNewsDto adminNewsDto = new AdminNewsDto();
+                    adminNewsDto.fromNews(news);
+                    return adminNewsDto;
+                })
+                .collect(Collectors.toList());
+
+        int maxPage = newsRepository.getMaxPage(perPage);
+
+        return AdminNewsListResponse.builder()
+                .totalPage(maxPage)
+                .list(adminNewsDtos)
+                .build();
     }
 
     public AdminNewsDetailResponse getAdminNewsDetail(Long newsId) {
-        return null;
+        AdminNewsDetailResponse adminNewsDetailResponse = new AdminNewsDetailResponse();
+
+        Optional.ofNullable(newsRepository.findByQuery(newsId))
+                .ifPresent(adminNewsDetailResponse::fromNews);
+
+        return adminNewsDetailResponse;
 
     }
 
     public void adminCreateNews(AdminCreateNewsRequestDto adminCreateNewsRequestDto) {
+        News createdNews = News.create(null,
+                adminCreateNewsRequestDto.getNewsType(),
+                adminCreateNewsRequestDto.getTitle(),
+                adminCreateNewsRequestDto.getDate(),
+                adminCreateNewsRequestDto.getContent());
+
+        newsRepository.save(createdNews);
     }
 
     public void adminModifyNews(AdminModifyNewsRequestDto adminModifyNewsRequestDto) {
+        News foundNews = Optional.ofNullable(newsRepository.findByQuery(adminModifyNewsRequestDto.getNewsId()))
+                            .orElseThrow();
 
+        Optional.ofNullable(adminModifyNewsRequestDto.getNewsType())
+                .ifPresent(newsType -> foundNews.setNewsType(newsType));
+        Optional.ofNullable(adminModifyNewsRequestDto.getTitle())
+                .ifPresent(title -> foundNews.setTitle(title));
+        Optional.ofNullable(adminModifyNewsRequestDto.getDate())
+                .ifPresent(date -> foundNews.setDate(date));
+        Optional.ofNullable(adminModifyNewsRequestDto.getContent())
+                .ifPresent(content -> foundNews.setContent(content));
+
+        newsRepository.save(foundNews);
     }
 
     public void adminDeleteNews(Long newsId) {
-        Optional<News> news = newsRepository.findById(newsId);
-        News findNews = news.orElseThrow();
-        newsRepository.delete(findNews);
-
+        Optional.ofNullable(newsRepository.findByQuery(newsId))
+                .ifPresent(newsRepository::delete);
     }
 }
-
-/*
-public MainPageResponse getMainPageResponse() {
-        List<News> news = newsRepository.findForMainPageByQuery();
-        List<MainPageNewsDto> newsList = news.stream()
-                .map(this::transformNewsToMainPageNewsDto)
-                .collect(Collectors.toList());
-
-        return MainPageResponse.builder()
-                .newsList(newsList)
-                .build();
-    }
-
-    private MainPageNewsDto transformNewsToMainPageNewsDto(News news) {
-        return MainPageNewsDto.builder()
-                .newsId(news.getId())
-                .newsType(news.getNewsType())
-                .title(news.getTitle())
-                .date(news.getDate().format(DateTimeFormatter.ofPattern(yyyy_MM_dd)))
-                .build();
-    }
-
-*/
 

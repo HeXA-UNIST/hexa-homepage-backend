@@ -40,7 +40,7 @@ public class ProjectPageService {
     private final ProjectTechStackRepository projectTechStackRepository;
     private final AttachmentRepository attachmentRepository;
 
-    public ProjectListResponse getProjectListResponse(String searchText, List<String> status, String sort, List<String> includeTechStack,
+    public ProjectListResponse getProjectListResponse(String searchText, List<STATE_TYPE> status, String sort, List<String> includeTechStack,
         List<String> excludeTechStack, Integer year, Integer pageNum, Integer perPage) {
         List<Project> projectList = projectRepository.findAllByQuery(searchText, status, sort, includeTechStack, excludeTechStack, year,
             pageNum, perPage);
@@ -50,7 +50,7 @@ public class ProjectPageService {
             return projectDto;
         }).collect(Collectors.toList());
 
-        int maxPage = projectRepository.getMaxPage(searchText, status, sort, includeTechStack, excludeTechStack, year, perPage);
+        int maxPage = getMaxPage(searchText, status, sort, includeTechStack, excludeTechStack, year, perPage);
 
         return ProjectListResponse
             .builder()
@@ -58,6 +58,13 @@ public class ProjectPageService {
             .page(perPage)
             .maxPage(maxPage)
             .build();
+    }
+
+    private int getMaxPage(String searchText, List<STATE_TYPE> status, String sort, List<String> includeTechStack, List<String> excludeTechStack, Integer year, Integer perPage) {
+        int totalProjectCount = projectRepository.getTotalCount(searchText, status, sort, includeTechStack, excludeTechStack, year);
+        int maxPage = totalProjectCount / perPage;
+
+        return totalProjectCount % perPage == 0 ? maxPage : maxPage + 1;
     }
 
     public ProjectResponse getProjectResponse(Long projectId) {

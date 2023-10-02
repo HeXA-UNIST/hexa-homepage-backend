@@ -29,11 +29,19 @@ public class ProjectTechStack extends AbstractEntity {
     private Project project;
 
     public static ProjectTechStack create(
-            String content
+        String content
     ) {
         ProjectTechStack projectTechStack = new ProjectTechStack();
         projectTechStack.content = content;
         return projectTechStack;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+
+        if (project != null && !project.getProjectTechStacks().contains(this)) {
+            project.addProjectTechStack(this);
+        }
     }
 }
 

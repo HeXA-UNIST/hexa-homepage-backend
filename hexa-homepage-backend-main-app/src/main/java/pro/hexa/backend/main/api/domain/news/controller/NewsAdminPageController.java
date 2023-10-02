@@ -14,13 +14,13 @@ import pro.hexa.backend.main.api.domain.news.dto.AdminNewsListResponse;
 import pro.hexa.backend.main.api.domain.news.service.NewsAdminPageService;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/news")
 @RequiredArgsConstructor
 public class NewsAdminPageController {
     private final NewsAdminPageService newsAdminPageService;
 
     @Operation(description = "뉴스 리스트 조회")
-    @GetMapping("/newsList")
+    @GetMapping("/list")
     public ResponseEntity<AdminNewsListResponse> getAdminNewsList(
         @RequestParam(required = false) Integer pageNum,
         @RequestParam(required = false) @Valid @Min(value = 1) Integer perPage
@@ -29,15 +29,15 @@ public class NewsAdminPageController {
     }
 
     @Operation(description = "뉴스 수정 창에서 보여줄 정보 조회")
-    @GetMapping("/newsDetail")
+    @GetMapping("/detail")
     public ResponseEntity<AdminNewsDetailResponse> getAdminNewsDetail(
-        @RequestParam() Long newsId
+            @RequestParam() Long newsId
     ) {
         return new ResponseEntity<>(newsAdminPageService.getAdminNewsDetail(newsId), HttpStatus.OK);
     }
 
     @Operation(description = "뉴스 생성 요청")
-    @PostMapping("/createNews")
+    @PostMapping("/create")
     public ResponseEntity adminCreateNews(
             @RequestBody AdminCreateNewsRequestDto adminCreateNewsRequestDto
     ) {
@@ -46,7 +46,7 @@ public class NewsAdminPageController {
     }
 
     @Operation(description = "뉴스 수정 요청")
-    @PostMapping("/modifyNews")
+    @PostMapping("/modify")
     public ResponseEntity adminModifyNews(
             @RequestBody AdminModifyNewsRequestDto adminModifyNewsRequestDto
     ) {
@@ -55,7 +55,7 @@ public class NewsAdminPageController {
     }
 
     @Operation(description = "뉴스 삭제")
-    @DeleteMapping("/deleteNews")
+    @DeleteMapping("/delete")
     public ResponseEntity adminDeleteNews(
         @RequestParam() Long newsId
     ) {

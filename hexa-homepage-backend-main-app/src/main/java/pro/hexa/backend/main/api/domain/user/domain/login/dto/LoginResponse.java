@@ -1,4 +1,4 @@
-package pro.hexa.backend.main.api.domain.login.dto;
+package pro.hexa.backend.main.api.domain.user.domain.login.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
