@@ -89,7 +89,7 @@ class SeminarPageControllerTest {
                 Seminar seminar = seminarMap.get(seminarDto.getSeminarId());
                 assertSeminar(seminarDto, seminar);
             });
-
+        assertEquals(response.getSeminars().size(), 0);
         assertEquals(response.getPage(), 3);
         assertEquals(response.getMaxPage(), 1);
     }
