@@ -24,9 +24,9 @@ public class AdminCreateProjectRequestDto {
     @Schema(description = "프로젝트 상태", required = true)
     private String state;
 
-    @Schema(description = "프로젝트 내용", required = true)
+    @Schema(description = "프로젝트 내용")
     private String content;
 
-    @Schema(description = "썸네일 이미지 파일 ID", required = true)
+    @Schema(description = "썸네일 이미지 파일 ID")
     private Long thumbnail;
 }

@@ -32,6 +32,7 @@ import pro.hexa.backend.main.api.domain.project.dto.AdminProjectListResponse;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ProjectAdminPageService {
+
     private final ProjectRepository projectRepository;
     private final ProjectTechStackRepository projectTechStackRepository;
     private final AttachmentRepository attachmentRepository;
@@ -75,7 +76,7 @@ public class ProjectAdminPageService {
 
     @Transactional
     public void adminCreateProject(AdminCreateProjectRequestDto adminCreateProjectRequestDto) {
-        // todo: validate dto
+        validateAdminCreateProjectRequest(adminCreateProjectRequestDto);
         List<ProjectTechStack> projectTechStackList = getProjectTechStackListFromTheContentList(
             adminCreateProjectRequestDto.getProjectTechStacks()
         );
@@ -92,7 +93,7 @@ public class ProjectAdminPageService {
             adminCreateProjectRequestDto.getEndDate().atStartOfDay(),
             projectTechStackList,
             null,
-            AUTHORIZATION_TYPE.Pro, // todo: authorization 공개 범위 수정 필요
+            AUTHORIZATION_TYPE.All,
             STATE_TYPE.valueOf(adminCreateProjectRequestDto.getState()),
             adminCreateProjectRequestDto.getContent(),
             thumbnail
@@ -100,6 +101,22 @@ public class ProjectAdminPageService {
 
         projectRepository.save(project);
     }
+
+    private void validateAdminCreateProjectRequest(AdminCreateProjectRequestDto adminCreateProjectRequestDto) {
+
+        if ((adminCreateProjectRequestDto.getTitle() == null)
+            || (adminCreateProjectRequestDto.getStartDate() == null)
+            || (adminCreateProjectRequestDto.getProjectTechStacks() == null)
+            || (adminCreateProjectRequestDto.getState() == null)
+        ) {
+            throw new BadRequestException(BadRequestType.NULL_VALUE);
+        }
+
+        if (adminCreateProjectRequestDto.getTitle().isEmpty()) {
+            throw new BadRequestException(BadRequestType.EMPTY_STRING);
+        }
+    }
+
 
     private List<ProjectTechStack> getProjectTechStackListFromTheContentList(List<String> contentList) {
         /*
@@ -176,7 +193,7 @@ public class ProjectAdminPageService {
             adminModifyProjectRequestDto.getEndDate().atStartOfDay(),
             getProjectTechStackListFromTheContentList(adminModifyProjectRequestDto.getProjectTechStacks()),
             null, //members
-            AUTHORIZATION_TYPE.Pro, // todo: authorization 공개 범위 수정 필요
+            AUTHORIZATION_TYPE.All,
             STATE_TYPE.valueOf(adminModifyProjectRequestDto.getState()),
             adminModifyProjectRequestDto.getContent(),
             getAttachmentById(adminModifyProjectRequestDto.getThumbnail())

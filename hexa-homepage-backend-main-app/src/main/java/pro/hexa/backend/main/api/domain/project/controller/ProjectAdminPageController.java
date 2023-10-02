@@ -37,7 +37,7 @@ public class ProjectAdminPageController {
     @Operation(description = "프로젝트 수정 창에서 보여줄 정보 조회")
     @GetMapping("/detail")
     public ResponseEntity<AdminProjectDetailResponse> getAdminProjectDetail(
-        @RequestParam() Long projectId
+        @RequestParam Long projectId
     ) {
         return ResponseEntity.ok(projectAdminPageService.getAdminProjectDetail(projectId));
     }
