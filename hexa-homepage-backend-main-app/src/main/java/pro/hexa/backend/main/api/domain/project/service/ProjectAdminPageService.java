@@ -105,7 +105,7 @@ public class ProjectAdminPageService {
 
     private void validateAdminCreateProjectRequest(AdminCreateProjectRequestDto adminCreateProjectRequestDto) {
 
-        if ((!StringUtil.isNullOrEmpty(adminCreateProjectRequestDto.getTitle()))
+        if ((StringUtil.isNullOrEmpty(adminCreateProjectRequestDto.getTitle()))
             || (adminCreateProjectRequestDto.getStartDate() == null)
             || (adminCreateProjectRequestDto.getProjectTechStacks() == null)
             || (adminCreateProjectRequestDto.getState() == null)
