@@ -4,10 +4,12 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
+import pro.hexa.backend.domain.attachment.domain.QAttachment;
 import pro.hexa.backend.domain.project.domain.Project;
 import pro.hexa.backend.domain.project.domain.QProject;
 import pro.hexa.backend.domain.project.model.STATE_TYPE;
@@ -85,19 +87,46 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
     }
 
     @Override
-    public Project findByQuery(Long id) {
+    public Optional<Project> findByQuery(Long id) {
         if (id == null) {
-            return null;
+            return Optional.empty();
         }
 
         QProject project = QProject.project;
         QProjectMember projectMember = QProjectMember.projectMember;
         QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
+        QAttachment attachment = QAttachment.attachment;
 
+        return Optional.ofNullable(
+            queryFactory.selectFrom(project)
+                .leftJoin(project.members, projectMember).fetchJoin()
+                .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
+                .leftJoin(project.thumbnail, attachment).fetchJoin()
+                .where(project.id.eq(id))
+                .fetchOne()
+        );
+    }
+
+    @Override
+    public List<Project> findAllInAdminPage(Integer pageNum, Integer perPage) {
+        QProject project = QProject.project;
         return queryFactory.selectFrom(project)
-            .leftJoin(project.members, projectMember).fetchJoin()
+            .orderBy(project.title.desc())
+            .offset((long) pageNum * perPage)
+            .limit(perPage)
+            .fetch();
+    }
+
+    @Override
+    public int getAdminMaxPage(Integer perPage) {
+        QProject project = QProject.project;
+        QProjectMember projectMember = QProjectMember.projectMember;
+        QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
+
+        return Math.toIntExact(queryFactory.select(project.id.count().divide(perPage))
+            .from(project)
             .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
-            .where(project.id.eq(id))
-            .fetchOne();
+            .leftJoin(project.members, projectMember).fetchJoin()
+            .fetchFirst());
     }
 }

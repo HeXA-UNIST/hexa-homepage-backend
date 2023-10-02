@@ -1,7 +1,7 @@
 package pro.hexa.backend.main.api.domain.project.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,10 +13,10 @@ public class AdminCreateProjectRequestDto {
     private String title;
 
     @Schema(description = "프로젝트 시작일", required = true)
-    private Date startDate;
+    private LocalDate startDate;
 
     @Schema(description = "프로젝트 종료일")
-    private Date endDate;
+    private LocalDate endDate;
 
     @Schema(description = "프로젝트 기술 스택", required = true)
     private List<String> projectTechStacks;
@@ -24,9 +24,9 @@ public class AdminCreateProjectRequestDto {
     @Schema(description = "프로젝트 상태", required = true)
     private String state;
 
-    @Schema(description = "프로젝트 내용", required = true)
+    @Schema(description = "프로젝트 내용")
     private String content;
 
-    @Schema(description = "썸네일 이미지 파일 ID", required = true)
+    @Schema(description = "썸네일 이미지 파일 ID")
     private Long thumbnail;
 }

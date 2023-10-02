@@ -5,5 +5,6 @@ import org.springframework.stereotype.Repository;
 import pro.hexa.backend.domain.attachment.domain.Attachment;
 
 @Repository
-public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
+public interface AttachmentRepository extends JpaRepository<Attachment,Long>, AttachmentRepositoryCustom {
+
 }

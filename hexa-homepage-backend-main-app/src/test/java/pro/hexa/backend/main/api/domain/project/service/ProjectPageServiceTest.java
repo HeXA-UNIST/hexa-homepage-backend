@@ -3,6 +3,7 @@ package pro.hexa.backend.main.api.domain.project.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
@@ -95,7 +96,7 @@ class ProjectPageServiceTest {
         Attachment attachment2 = Attachment.create("/path/to/thumbnail.jpg", "thumbnail.jpg", 100L);
 
         for (int i = 0; i < count; i++) {
-            Project project = Project.create(
+            Project project = Project.createForTest(
                 (long) i,
                 "title",
                 LocalDateTime.of(2023, 3, 3, 3, 3),
@@ -117,7 +118,7 @@ class ProjectPageServiceTest {
     void testGetProjectResponse1() {
         // Given
         Long projectId = 1L;
-        Project mockedProject = createMockedProject(projectId);
+        Optional<Project> mockedProject = createMockedProject(projectId);
 
         // Mock repository
         when(projectRepository.findByQuery(projectId)).thenReturn(mockedProject);
@@ -146,7 +147,7 @@ class ProjectPageServiceTest {
         assertNull(response.getProjectId());
     }
 
-    private Project createMockedProject(Long projectId) {
+    private Optional<Project> createMockedProject(Long projectId) {
 
         ProjectTechStack projectTechStack1 = ProjectTechStack.create("Java");
         Attachment attachment1 = Attachment.create("/path/to/file.jpg", "file.jpg", 2048L);
@@ -161,7 +162,7 @@ class ProjectPageServiceTest {
 
         Attachment attachment2 = Attachment.create("/path/to/thumbnail.jpg", "thumbnail.jpg", 100L);
 
-        return Project.create(
+        return Optional.of(Project.createForTest(
             projectId,
             "title",
             LocalDateTime.of(2023, 3, 3, 3, 3),
@@ -171,7 +172,7 @@ class ProjectPageServiceTest {
             STATE_TYPE.승인중,
             "This is a project about web development",
             attachment2
-        );
+        ));
     }
 
     @Test
