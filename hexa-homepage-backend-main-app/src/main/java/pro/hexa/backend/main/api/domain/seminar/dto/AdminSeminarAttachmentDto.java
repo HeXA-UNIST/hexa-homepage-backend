@@ -14,6 +14,6 @@ public class AdminSeminarAttachmentDto {
     @Schema(description = "파일 이름")
     private String fileName;
 
-    @Schema(description = "세미나 날짜")
+    @Schema(description = "파일 용량")
     private long fileSize;
 }

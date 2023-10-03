@@ -1,8 +1,6 @@
 package pro.hexa.backend.main.api.domain.project.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
