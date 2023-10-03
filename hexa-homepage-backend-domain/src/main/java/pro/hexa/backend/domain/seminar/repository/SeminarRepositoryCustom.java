@@ -8,4 +8,8 @@ public interface SeminarRepositoryCustom {
     List<Seminar> findAllByQuery(String searchText, Integer year, Integer pageNum, Integer perPage);
 
     int getMaxPage(String searchText, Integer year, Integer perPage);
+
+    List<Seminar> findAllInAdminPage(Integer pageNum, Integer perPage);
+
+    int getAdminMaxPage(Integer perPage);
 }

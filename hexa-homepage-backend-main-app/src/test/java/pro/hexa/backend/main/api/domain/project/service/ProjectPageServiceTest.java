@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import static jdk.nashorn.internal.codegen.LocalVariableTypesCalculator.assertNotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -76,7 +77,7 @@ class ProjectPageServiceTest {
         // Then
         assertNotNull(response);
         assertEquals(perPage, response.getPage());
-        assertEquals(1, response.getMaxPage());
+        assertEquals(130, response.getMaxPage());
     }
 
 

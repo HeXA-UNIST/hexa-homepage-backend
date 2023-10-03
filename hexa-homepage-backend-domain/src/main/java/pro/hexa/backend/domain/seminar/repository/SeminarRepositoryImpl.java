@@ -56,4 +56,23 @@ public class SeminarRepositoryImpl implements SeminarRepositoryCustom {
         }
         return whereQuery;
     }
+
+    @Override
+    public List<Seminar> findAllInAdminPage(Integer pageNum, Integer perPage) {
+        QSeminar seminar = QSeminar.seminar;
+        return queryFactory.selectFrom(seminar)
+                .orderBy(seminar.title.desc())
+                .offset((long) pageNum * perPage)
+                .limit(perPage)
+                .fetch();
+    }
+
+    @Override
+    public int getAdminMaxPage(Integer perPage) {
+        QSeminar seminar = QSeminar.seminar;
+
+        return Math.toIntExact(queryFactory.select(seminar.id.count().divide(perPage))
+                .from(seminar)
+                .fetchFirst());
+    }
 }
