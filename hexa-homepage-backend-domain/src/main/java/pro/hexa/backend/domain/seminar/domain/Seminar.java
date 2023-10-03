@@ -15,6 +15,10 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import pro.hexa.backend.domain.abstract_activity.domain.AbstractActivity;
 import pro.hexa.backend.domain.attachment.domain.Attachment;
+import pro.hexa.backend.domain.project.model.STATE_TYPE;
+import pro.hexa.backend.domain.project_member.domain.ProjectMember;
+import pro.hexa.backend.domain.project_member.model.AUTHORIZATION_TYPE;
+import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
 import pro.hexa.backend.domain.user.domain.User;
 
 @Entity(name = "seminar")
@@ -44,5 +48,16 @@ public class Seminar extends AbstractActivity {
         seminar.user = user;
         seminar.attachments = attachments;
         return seminar;
+    }
+
+    public void update(
+            LocalDateTime date,
+            User user,
+            List<Attachment> attachments
+    ) {
+        this.date = date;
+        this.user = user;
+        this.attachments = attachments;
+
     }
 }

@@ -4,6 +4,8 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import pro.hexa.backend.domain.attachment.domain.QAttachment;
@@ -55,6 +57,23 @@ public class SeminarRepositoryImpl implements SeminarRepositoryCustom {
             whereQuery = whereQuery.and(seminar.updatedAt.between(standardDateForYear, standardDateForYear.plusYears(1)));
         }
         return whereQuery;
+    }
+
+    @Override
+    public Optional<Seminar> findByQuery(Long id) {
+        if (id == null) {
+            return Optional.empty();
+        }
+
+        QSeminar seminar = QSeminar.seminar;
+        QAttachment attachment = QAttachment.attachment;
+
+        Seminar result = queryFactory.selectFrom(seminar)
+                .leftJoin(seminar.attachments, attachment).fetchJoin()
+                .where(seminar.id.eq(id))
+                .fetchOne();
+
+        return Optional.ofNullable(result);
     }
 
     @Override
