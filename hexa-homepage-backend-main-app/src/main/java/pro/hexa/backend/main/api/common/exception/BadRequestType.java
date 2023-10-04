@@ -12,7 +12,8 @@ public enum BadRequestType {
     NULL_MODIFY_PROJECT_VALUES("프로젝트 수정 요청 시, 반드시 1개 값은 변경 되어야 합니다."),
     INVALID_PAGE_NUM("조회 시 page는 반드시 1보다 커야합니다."),
     PROJECT_NOT_FOUND("존재하지 않는 프로젝트 id입니다."),
-    ATTACHMENT_NOT_EXIST("존재하지 않는 파일입니다.");
+    ATTACHMENT_NOT_EXIST("존재하지 않는 파일입니다."),
+    NEWS_NOT_FOUND("존재하지 않는 뉴스 id입니다.");
     private final String message;
 
     BadRequestType(String message) {

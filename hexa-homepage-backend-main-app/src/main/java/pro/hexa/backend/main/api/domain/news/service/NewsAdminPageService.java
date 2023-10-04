@@ -1,22 +1,27 @@
 package pro.hexa.backend.main.api.domain.news.service;
 
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pro.hexa.backend.domain.news.domain.News;
 import pro.hexa.backend.domain.news.repository.NewsRepository;
-import pro.hexa.backend.main.api.domain.news.dto.*;
+import pro.hexa.backend.main.api.common.exception.BadRequestException;
+import pro.hexa.backend.main.api.common.exception.BadRequestType;
+import pro.hexa.backend.main.api.domain.news.dto.AdminCreateNewsRequestDto;
+import pro.hexa.backend.main.api.domain.news.dto.AdminModifyNewsRequestDto;
+import pro.hexa.backend.main.api.domain.news.dto.AdminNewsDetailResponse;
+import pro.hexa.backend.main.api.domain.news.dto.AdminNewsDto;
+import pro.hexa.backend.main.api.domain.news.dto.AdminNewsListResponse;
 
-import static pro.hexa.backend.main.api.common.utils.constant.yyyy_MM_dd;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class NewsAdminPageService {
     private final NewsRepository newsRepository;
@@ -24,7 +29,7 @@ public class NewsAdminPageService {
     public AdminNewsListResponse getAdminNewsList(
             Integer pageNum, Integer perPage
     ) {
-        List<News> newsList = newsRepository.findAllByQuery(pageNum, perPage);
+        List<News> newsList = newsRepository.findAllWithPaging(pageNum, perPage);
         List<AdminNewsDto> adminNewsDtos = newsList.stream()
                 .map(news -> {
                     AdminNewsDto adminNewsDto = new AdminNewsDto();
@@ -44,13 +49,13 @@ public class NewsAdminPageService {
     public AdminNewsDetailResponse getAdminNewsDetail(Long newsId) {
         AdminNewsDetailResponse adminNewsDetailResponse = new AdminNewsDetailResponse();
 
-        Optional.ofNullable(newsRepository.findByQuery(newsId))
+        newsRepository.findNewsByQuery(newsId)
                 .ifPresent(adminNewsDetailResponse::fromNews);
 
         return adminNewsDetailResponse;
-
     }
 
+    @Transactional
     public void adminCreateNews(AdminCreateNewsRequestDto adminCreateNewsRequestDto) {
         News createdNews = News.create(null,
                 adminCreateNewsRequestDto.getNewsType(),
@@ -61,25 +66,25 @@ public class NewsAdminPageService {
         newsRepository.save(createdNews);
     }
 
+    @Transactional
     public void adminModifyNews(AdminModifyNewsRequestDto adminModifyNewsRequestDto) {
-        News foundNews = Optional.ofNullable(newsRepository.findByQuery(adminModifyNewsRequestDto.getNewsId()))
-                            .orElseThrow();
+        Long newsId = adminModifyNewsRequestDto.getNewsId();
+        News foundNews = newsRepository.findNewsByQuery(newsId)
+                            .orElseThrow((() -> new BadRequestException(BadRequestType.NEWS_NOT_FOUND)));
 
         Optional.ofNullable(adminModifyNewsRequestDto.getNewsType())
-                .ifPresent(newsType -> foundNews.setNewsType(newsType));
+                .ifPresent(newsType -> foundNews.updateNewsType(newsType));
         Optional.ofNullable(adminModifyNewsRequestDto.getTitle())
-                .ifPresent(title -> foundNews.setTitle(title));
+                .ifPresent(title -> foundNews.updateTitle(title));
         Optional.ofNullable(adminModifyNewsRequestDto.getDate())
-                .ifPresent(date -> foundNews.setDate(date));
+                .ifPresent(date -> foundNews.updateDate(date));
         Optional.ofNullable(adminModifyNewsRequestDto.getContent())
-                .ifPresent(content -> foundNews.setContent(content));
-
-        newsRepository.save(foundNews);
+                .ifPresent(content -> foundNews.updateContent(content));
     }
 
+    @Transactional
     public void adminDeleteNews(Long newsId) {
-        Optional.ofNullable(newsRepository.findByQuery(newsId))
-                .ifPresent(newsRepository::delete);
+        newsRepository.deleteById(newsId);
     }
 }
 

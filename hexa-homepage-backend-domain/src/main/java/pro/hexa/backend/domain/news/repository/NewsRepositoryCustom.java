@@ -1,16 +1,17 @@
 package pro.hexa.backend.domain.news.repository;
 
-import java.util.List;
 import pro.hexa.backend.domain.news.domain.News;
-import pro.hexa.backend.domain.project.domain.Project;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface NewsRepositoryCustom {
 
     List<News> findForMainPageByQuery();
 
-    List<News> findAllByQuery(Integer pageNum, Integer perPage);
+    List<News> findAllWithPaging(Integer pageNum, Integer perPage);
 
-    News findByQuery(Long newsId);
+    Optional<News> findNewsByQuery(Long newsId);
 
     int getMaxPage(Integer perPage);
 }

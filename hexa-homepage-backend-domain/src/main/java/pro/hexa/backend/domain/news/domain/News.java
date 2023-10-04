@@ -1,6 +1,10 @@
 package pro.hexa.backend.domain.news.domain;
 
-import java.time.LocalDate;
+import lombok.Getter;
+import org.hibernate.annotations.Comment;
+import pro.hexa.backend.domain.model.model.AbstractEntity;
+import pro.hexa.backend.domain.news.model.NEWS_TYPE;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -8,12 +12,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.Comment;
-import pro.hexa.backend.domain.model.model.AbstractEntity;
-import pro.hexa.backend.domain.news.model.NEWS_TYPE;
+import java.time.LocalDate;
 
 @Entity(name = "news")
 @Getter
@@ -58,18 +57,19 @@ public class News extends AbstractEntity {
         return news;
     }
 
-    public void setNewsType(NEWS_TYPE newsType) {
+    public void updateNewsType(NEWS_TYPE newsType) {
         this.newsType = newsType;
     }
-    public void setTitle(String title) {
+
+    public void updateTitle(String title) {
         this.title = title;
     }
 
-    public void setDate(LocalDate date) {
+    public void updateDate(LocalDate date) {
         this.date = date;
     }
 
-    public void setContent(String content) {
+    public void updateContent(String content) {
         this.content = content;
     }
 }

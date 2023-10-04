@@ -2,13 +2,13 @@ package pro.hexa.backend.domain.news.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import pro.hexa.backend.domain.news.domain.News;
 import pro.hexa.backend.domain.news.domain.QNews;
+
+import java.util.List;
+import java.util.Optional;
+
 
 
 @RequiredArgsConstructor
@@ -26,7 +26,7 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
     }
 
     @Override
-    public List<News> findAllByQuery(Integer pageNum, Integer perPage) {
+    public List<News> findAllWithPaging(Integer pageNum, Integer perPage) {
         QNews news = QNews.news;
 
         return queryFactory.selectFrom(news)
@@ -36,16 +36,18 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
     }
 
     @Override
-    public News findByQuery(Long id) {
+    public Optional<News> findNewsByQuery(Long id) {
         if (id == null) {
-            return null;
+            return Optional.empty();
         }
 
         QNews news = QNews.news;
 
-        return queryFactory.selectFrom(news)
+        return Optional.ofNullable(
+                queryFactory.selectFrom(news)
                 .where(news.id.eq(id))
-                .fetchOne();
+                .fetchOne()
+        );
     }
 
     @Override
