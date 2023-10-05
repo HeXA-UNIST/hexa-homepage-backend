@@ -49,7 +49,7 @@ public class NewsAdminPageService {
     public AdminNewsDetailResponse getAdminNewsDetail(Long newsId) {
         AdminNewsDetailResponse adminNewsDetailResponse = new AdminNewsDetailResponse();
 
-        newsRepository.findNewsByQuery(newsId)
+        newsRepository.findById(newsId)
                 .ifPresent(adminNewsDetailResponse::fromNews);
 
         return adminNewsDetailResponse;
@@ -69,7 +69,7 @@ public class NewsAdminPageService {
     @Transactional
     public void adminModifyNews(AdminModifyNewsRequestDto adminModifyNewsRequestDto) {
         Long newsId = adminModifyNewsRequestDto.getNewsId();
-        News foundNews = newsRepository.findNewsByQuery(newsId)
+        News foundNews = newsRepository.findById(newsId)
                             .orElseThrow((() -> new BadRequestException(BadRequestType.NEWS_NOT_FOUND)));
 
         Optional.ofNullable(adminModifyNewsRequestDto.getNewsType())

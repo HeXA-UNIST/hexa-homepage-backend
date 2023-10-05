@@ -7,7 +7,6 @@ import pro.hexa.backend.domain.news.domain.News;
 import pro.hexa.backend.domain.news.domain.QNews;
 
 import java.util.List;
-import java.util.Optional;
 
 
 
@@ -36,21 +35,6 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
                 .offset((long) pageNum * perPage)
                 .limit(perPage)
                 .fetch();
-    }
-
-    @Override
-    public Optional<News> findNewsByQuery(Long id) {
-        if (id == null) {
-            return Optional.empty();
-        }
-
-        QNews news = QNews.news;
-
-        return Optional.ofNullable(
-                queryFactory.selectFrom(news)
-                .where(news.id.eq(id))
-                .fetchOne()
-        );
     }
 
     /*  전체 페이지 수를 리턴하기 위한 메서드
