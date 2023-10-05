@@ -49,8 +49,9 @@ public class NewsAdminPageService {
     public AdminNewsDetailResponse getAdminNewsDetail(Long newsId) {
         AdminNewsDetailResponse adminNewsDetailResponse = new AdminNewsDetailResponse();
 
-        newsRepository.findById(newsId)
-                .ifPresent(adminNewsDetailResponse::fromNews);
+        News foundNews = newsRepository.findById(newsId)
+                .orElseThrow((() -> new BadRequestException(BadRequestType.NEWS_NOT_FOUND)));
+        adminNewsDetailResponse.fromNews(foundNews);
 
         return adminNewsDetailResponse;
     }
