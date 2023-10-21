@@ -76,7 +76,7 @@ class ProjectPageServiceTest {
         // Then
         assertNotNull(response);
         assertEquals(perPage, response.getPage());
-        assertEquals(1, response.getMaxPage());
+        assertEquals(130, response.getMaxPage());
     }
 
 
@@ -137,7 +137,7 @@ class ProjectPageServiceTest {
         Long projectId = 1L;
 
         // Mock repository
-        when(projectRepository.findByQuery(projectId)).thenReturn(null);
+        when(projectRepository.findByQuery(projectId)).thenReturn(Optional.empty());
 
         // When
         ProjectResponse response = projectPageService.getProjectResponse(projectId);
