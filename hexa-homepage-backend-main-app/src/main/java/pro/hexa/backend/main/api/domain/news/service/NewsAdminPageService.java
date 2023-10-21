@@ -1,6 +1,9 @@
 package pro.hexa.backend.main.api.domain.news.service;
 
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,10 +17,6 @@ import pro.hexa.backend.main.api.domain.news.dto.AdminModifyNewsRequestDto;
 import pro.hexa.backend.main.api.domain.news.dto.AdminNewsDetailResponse;
 import pro.hexa.backend.main.api.domain.news.dto.AdminNewsDto;
 import pro.hexa.backend.main.api.domain.news.dto.AdminNewsListResponse;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -74,13 +73,13 @@ public class NewsAdminPageService {
                             .orElseThrow((() -> new BadRequestException(BadRequestType.NEWS_NOT_FOUND)));
 
         Optional.ofNullable(adminModifyNewsRequestDto.getNewsType())
-                .ifPresent(newsType -> foundNews.updateNewsType(newsType));
+                .ifPresent(foundNews::updateNewsType);
         Optional.ofNullable(adminModifyNewsRequestDto.getTitle())
-                .ifPresent(title -> foundNews.updateTitle(title));
+                .ifPresent(foundNews::updateTitle);
         Optional.ofNullable(adminModifyNewsRequestDto.getDate())
-                .ifPresent(date -> foundNews.updateDate(date));
+                .ifPresent(foundNews::updateDate);
         Optional.ofNullable(adminModifyNewsRequestDto.getContent())
-                .ifPresent(content -> foundNews.updateContent(content));
+                .ifPresent(foundNews::updateContent);
     }
 
     @Transactional
