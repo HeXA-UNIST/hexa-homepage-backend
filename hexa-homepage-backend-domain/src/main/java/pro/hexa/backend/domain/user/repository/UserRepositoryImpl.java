@@ -26,7 +26,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     public List<User> findByName(String name) {
         QUser user = QUser.user;
         return queryFactory.selectFrom(user)
-                .where(user.name.eq(name))  // name 필드에 따라 적절하게 조건을 지정하세요
+                .where(user.name.eq(name))
                 .fetch();
     }
 }

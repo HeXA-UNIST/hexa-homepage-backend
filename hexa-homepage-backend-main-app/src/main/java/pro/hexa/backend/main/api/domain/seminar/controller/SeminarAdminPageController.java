@@ -21,7 +21,9 @@ import pro.hexa.backend.main.api.domain.seminar.service.SeminarAdminPageService;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-public class SeminarAdminPageController {
+public class
+
+SeminarAdminPageController {
 
     private final SeminarAdminPageService seminarAdminPageService;
     @Operation(description = "세미나 리스트 조회")

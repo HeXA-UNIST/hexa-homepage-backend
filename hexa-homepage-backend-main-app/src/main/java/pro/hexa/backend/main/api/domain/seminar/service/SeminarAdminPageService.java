@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import io.netty.util.internal.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -17,9 +18,17 @@ import pro.hexa.backend.domain.attachment.domain.Attachment;
 import pro.hexa.backend.domain.attachment.repository.AttachmentRepository;
 import pro.hexa.backend.domain.seminar.domain.Seminar;
 import pro.hexa.backend.domain.seminar.repository.SeminarRepository;
+import pro.hexa.backend.domain.user.domain.User;
+import pro.hexa.backend.domain.user.repository.UserRepository;
+import pro.hexa.backend.main.api.common.config.security.dto.CustomUserDetails;
 import pro.hexa.backend.main.api.common.exception.BadRequestException;
 import pro.hexa.backend.main.api.common.exception.BadRequestType;
-import pro.hexa.backend.main.api.domain.seminar.dto.*;
+import pro.hexa.backend.main.api.domain.seminar.dto.AdminCreateSeminarRequestDto;
+import pro.hexa.backend.main.api.domain.seminar.dto.AdminModifySeminarRequestDto;
+import pro.hexa.backend.main.api.domain.seminar.dto.AdminSeminarDetailResponse;
+import pro.hexa.backend.main.api.domain.seminar.dto.AdminSeminarDto;
+import pro.hexa.backend.main.api.domain.seminar.dto.AdminSeminarListResponse;
+
 
 @Slf4j
 @Service
@@ -29,6 +38,7 @@ public class SeminarAdminPageService {
 
     private final SeminarRepository seminarRepository;
     private final AttachmentRepository attachmentRepository;
+    private final UserRepository userRepository;
 
     public AdminSeminarListResponse getAdminSeminarList(Integer pageNum, Integer perPage) {
 
@@ -85,10 +95,13 @@ public class SeminarAdminPageService {
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
 
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
+        User user = userRepository.findById(username).orElse(null);
+
         Seminar seminar = Seminar.create(
                 seminarDate,
-                //user 처리 방법 생각해 봐야함.
-                null,
+                user,
                 attachmentList
         );
 
@@ -146,10 +159,13 @@ public class SeminarAdminPageService {
             }
         }
 
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
+        User user = userRepository.findById(username).orElse(null);
+
         seminar.update(
                 adminModifySeminarRequestDto.getDate(),
-                //이 부분도 user구현을 해야 함.
-                null,
+                user,
                 attachmentList
         );
     }

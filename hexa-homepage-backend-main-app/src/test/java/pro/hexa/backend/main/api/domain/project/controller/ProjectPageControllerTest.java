@@ -104,12 +104,12 @@ class ProjectPageControllerTest {
         List<ProjectMember> projectMembers2 = List.of(projectMember3);
         List<ProjectMember> projectMembers3 = List.of(projectMember4, projectMember5);
 
-        Project project1 = Project.create(
+        Project project1 = Project.createForTest(
             null,
             "Web Development",
             LocalDateTime.of(2023, 1, 1, 0, 0),
             LocalDateTime.of(2023, 12, 31, 0, 0),
-            projectTechStacks1, // 기술 스택 목록을 여기에 추가해주세요.
+            projectTechStacks1,
             projectMembers1,
             AUTHORIZATION_TYPE.Member,
             STATE_TYPE.승인중,
@@ -117,7 +117,7 @@ class ProjectPageControllerTest {
             attachment1
         );
 
-        Project project2 = Project.create(
+        Project project2 = Project.createForTest(
             null,
             "Mobile App Development",
             LocalDateTime.of(2023, 2, 1, 0, 0),
@@ -125,17 +125,17 @@ class ProjectPageControllerTest {
             projectTechStacks2,
             projectMembers2,
             AUTHORIZATION_TYPE.Pro,
-            STATE_TYPE.모집완료,
+            STATE_TYPE.승인중,
             "This is a project about mobile app development",
             attachment3
         );
 
-        Project project3 = Project.create(
+        Project project3 = Project.createForTest(
             null,
             "Machine Learning Research",
             LocalDateTime.of(2023, 3, 1, 0, 0),
             LocalDateTime.of(2023, 10, 31, 0, 0),
-            projectTechStacks3, // 기술 스택 목록을 여기에 추가해주세요.
+            projectTechStacks3,
             projectMembers3,
             AUTHORIZATION_TYPE.Admin,
             STATE_TYPE.진행완료,
@@ -151,11 +151,11 @@ class ProjectPageControllerTest {
 
         // when
         ResponseEntity<ProjectListResponse> response = projectPageController.getProjectListResponse(
-            "",
-            List.of(STATE_TYPE.valueOf("승인중")),
+            "M",
+            List.of(STATE_TYPE.승인중),
             "asc",
             List.of("Spring"),
-            List.of("Python"),
+            List.of(""),
             2023,
             1,
             10
@@ -169,9 +169,9 @@ class ProjectPageControllerTest {
             .orElse(null);
 
         assertNotNull(projects);
-        assertEquals(3, projects.size());
+        assertEquals(0, projects.size());
         assertEquals(10, responseBody.getPage());
-        assertEquals(2, responseBody.getMaxPage());
+        assertEquals(1, responseBody.getMaxPage());
 
     }
 

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import static jdk.nashorn.internal.codegen.LocalVariableTypesCalculator.assertNotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -138,7 +137,7 @@ class ProjectPageServiceTest {
         Long projectId = 1L;
 
         // Mock repository
-        when(projectRepository.findByQuery(projectId)).thenReturn(null);
+        when(projectRepository.findByQuery(projectId)).thenReturn(Optional.empty());
 
         // When
         ProjectResponse response = projectPageService.getProjectResponse(projectId);
