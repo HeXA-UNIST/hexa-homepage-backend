@@ -66,6 +66,7 @@ public class SeminarPageServiceTest {
         return seminars;
     }
 
+
     private User createUser(int index) {
         return User.create(
             "user" + index, // ID
