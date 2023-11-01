@@ -57,6 +57,7 @@ public class NewsAdminPageService {
 
     @Transactional
     public void adminCreateNews(AdminCreateNewsRequestDto adminCreateNewsRequestDto) {
+        validateAdminCreateNewsRequest(adminCreateNewsRequestDto);
         News createdNews = News.create(null,
                 adminCreateNewsRequestDto.getNewsType(),
                 adminCreateNewsRequestDto.getTitle(),
@@ -64,6 +65,21 @@ public class NewsAdminPageService {
                 adminCreateNewsRequestDto.getContent());
 
         newsRepository.save(createdNews);
+    }
+    private void validateAdminCreateNewsRequest(AdminCreateNewsRequestDto adminCreateNewsRequestDto){
+        // null check
+        if (adminCreateNewsRequestDto.getNewsType() == null){
+            throw new BadRequestException(BadRequestType.INVALID_DTO);
+        }
+        if (adminCreateNewsRequestDto.getContent().isEmpty()){
+            throw new BadRequestException(BadRequestType.INVALID_DTO);
+        }
+        if (adminCreateNewsRequestDto.getTitle().isEmpty()){
+            throw new BadRequestException(BadRequestType.INVALID_DTO);
+        }
+        if(adminCreateNewsRequestDto.getDate() == null){
+            throw new BadRequestException(BadRequestType.INVALID_DTO);
+        }
     }
 
     @Transactional
@@ -81,6 +97,7 @@ public class NewsAdminPageService {
         Optional.ofNullable(adminModifyNewsRequestDto.getContent())
                 .ifPresent(foundNews::updateContent);
     }
+
 
     @Transactional
     public void adminDeleteNews(Long newsId) {
