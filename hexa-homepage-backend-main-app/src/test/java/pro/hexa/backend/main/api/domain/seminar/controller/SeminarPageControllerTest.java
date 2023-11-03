@@ -60,19 +60,25 @@ class SeminarPageControllerTest {
         seminars.add(Seminar.create(
             LocalDateTime.of(2023, 1, 1, 1, 1),
             user1,
-            new ArrayList<>()
+            new ArrayList<>(),
+                "title1",
+                "content1"
         ));
 
         seminars.add(Seminar.create(
             LocalDateTime.of(2024, 1, 1, 1, 1),
             user1,
-            new ArrayList<>()
+            new ArrayList<>(),
+                "title1",
+                "content1"
         ));
 
         seminars.add(Seminar.create(
             LocalDateTime.of(2023, 1, 2, 1, 1),
             user1,
-            new ArrayList<>()
+            new ArrayList<>(),
+                "title1",
+                "content1"
         ));
         seminarRepository.saveAll(seminars);
 
