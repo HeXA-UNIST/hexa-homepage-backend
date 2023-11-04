@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -53,14 +54,15 @@ class NewsAdminPageServiceTest {
         int resultTotalPage = newsAdminPageService.getAdminNewsList(pageNum, perPage).getTotalPage();
         int resultTotalPageForTest = newsRepository.getMaxPage(perPage);
         // when & then
-        for(int i = 0; i < resultList.size(); i++){
-            AdminNewsDto result = resultList.get(i);
-            AdminNewsDto resultOfListForTest = resultForTest.get(i);
+        IntStream.range(0, resultList.size()).forEach(index-> {
+            AdminNewsDto result = resultList.get(index);
+            AdminNewsDto resultOfListForTest = resultForTest.get(index);
             Assertions.assertEquals(result.getNewsId(), resultOfListForTest.getNewsId());
             Assertions.assertEquals(result.getNewsType(), resultOfListForTest.getNewsType());
             Assertions.assertEquals(result.getDate(), resultOfListForTest.getDate());
             Assertions.assertEquals(result.getTitle(), resultOfListForTest.getTitle());
-        }
+        });
+
         Assertions.assertEquals(resultTotalPage, resultTotalPageForTest);
     }
 
