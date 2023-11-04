@@ -54,7 +54,7 @@ class NewsAdminPageServiceTest {
         int resultTotalPage = newsAdminPageService.getAdminNewsList(pageNum, perPage).getTotalPage();
         int resultTotalPageForTest = newsRepository.getMaxPage(perPage);
         // when & then
-        IntStream.range(0, resultList.size()).forEach(index-> {
+        IntStream.range(0, resultList.size()).forEach(index -> {
             AdminNewsDto result = resultList.get(index);
             AdminNewsDto resultOfListForTest = resultForTest.get(index);
             Assertions.assertEquals(result.getNewsId(), resultOfListForTest.getNewsId());
@@ -67,6 +67,7 @@ class NewsAdminPageServiceTest {
     }
 
     @Test
+    @DisplayName("뉴스의 detail 내용을 받아오는 메서드")
     void getAdminNewsDetail() {
         // given
         Long newsId = 5L;
@@ -91,6 +92,7 @@ class NewsAdminPageServiceTest {
     }
 
     @Test
+    @DisplayName("뉴스를 create해서 저장하는 메서드")
     void adminCreateNews() {
         // given
 
@@ -126,10 +128,10 @@ class NewsAdminPageServiceTest {
             invalidNews4.getTitle(), invalidNews4.getDate(), invalidNews4.getContent());
         Mockito.when(newsRepository.save(invalidNews4)).thenReturn(invalidNews4);
         // when & then
-        Assertions.assertThrows(BadRequestException.class, () -> newsAdminPageService.adminCreateNews(adminCreateNewsRequestDto1));
-        Assertions.assertThrows(BadRequestException.class, () -> newsAdminPageService.adminCreateNews(adminCreateNewsRequestDto2));
-        Assertions.assertThrows(BadRequestException.class, () -> newsAdminPageService.adminCreateNews(adminCreateNewsRequestDto3));
-        Assertions.assertThrows(BadRequestException.class, () -> newsAdminPageService.adminCreateNews(adminCreateNewsRequestDto4));
+        Assertions.assertThrowsExactly(BadRequestException.class, () -> newsAdminPageService.adminCreateNews(adminCreateNewsRequestDto1), "dto의 newstype 값이 올바르지 않습니다");
+        Assertions.assertThrowsExactly(BadRequestException.class, () -> newsAdminPageService.adminCreateNews(adminCreateNewsRequestDto2), "dto의 title 값이 올바르지 않습니다");
+        Assertions.assertThrowsExactly(BadRequestException.class, () -> newsAdminPageService.adminCreateNews(adminCreateNewsRequestDto3), "dto의 date 값이 올바르지 않습니다");
+        Assertions.assertThrowsExactly(BadRequestException.class, () -> newsAdminPageService.adminCreateNews(adminCreateNewsRequestDto4), "dto의 content 값이 올바르지 않습니다");
     }
 
 

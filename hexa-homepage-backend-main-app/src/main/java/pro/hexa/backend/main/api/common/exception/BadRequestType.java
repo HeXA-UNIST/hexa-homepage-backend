@@ -16,7 +16,10 @@ public enum BadRequestType {
     SEMINAR_NOT_FOUND("존재하지 않는 seminar id입니다."),
     ATTACHMENT_NOT_EXIST("존재하지 않는 파일입니다."),
     NEWS_NOT_FOUND("뉴스 데이터를 찾을 수 없습니다."),
-    INVALID_DTO("dto의 값들이 올바르지 않습니다");
+    INVALID_DTO_CONTENT("dto의 content 값이 올바르지 않습니다"),
+    INVALID_DTO_TITLE("dto의 title 값이 올바르지 않습니다"),
+    INVALID_DTO_DATE("dto의 date 값이 올바르지 않습니다"),
+    INVALID_DTO_NEWSTYPE("dto의 newstype 값이 올바르지 않습니다");
 
     private final String message;
 

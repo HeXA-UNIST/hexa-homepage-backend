@@ -69,16 +69,16 @@ public class NewsAdminPageService {
     private void validateAdminCreateNewsRequest(AdminCreateNewsRequestDto adminCreateNewsRequestDto){
         // null check
         if (adminCreateNewsRequestDto.getNewsType() == null){
-            throw new BadRequestException(BadRequestType.INVALID_DTO);
+            throw new BadRequestException(BadRequestType.INVALID_DTO_NEWSTYPE);
         }
         if (adminCreateNewsRequestDto.getContent().isEmpty()){
-            throw new BadRequestException(BadRequestType.INVALID_DTO);
+            throw new BadRequestException(BadRequestType.INVALID_DTO_CONTENT);
         }
         if (adminCreateNewsRequestDto.getTitle().isEmpty()){
-            throw new BadRequestException(BadRequestType.INVALID_DTO);
+            throw new BadRequestException(BadRequestType.INVALID_DTO_TITLE);
         }
         if(adminCreateNewsRequestDto.getDate() == null){
-            throw new BadRequestException(BadRequestType.INVALID_DTO);
+            throw new BadRequestException(BadRequestType.INVALID_DTO_DATE);
         }
     }
 
