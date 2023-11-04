@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Slf4j
 @Configuration
 @EnableTransactionManagement
-@Profile({ "production "})
+@Profile({ "production" })
 public class ProductionDataSourceConfig {
 
     @Value("${spring.datasource.username}")
