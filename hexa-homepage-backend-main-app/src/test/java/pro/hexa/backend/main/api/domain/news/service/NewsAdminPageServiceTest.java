@@ -21,7 +21,9 @@ import pro.hexa.backend.domain.news.model.NEWS_TYPE;
 import pro.hexa.backend.domain.news.repository.NewsRepository;
 import pro.hexa.backend.main.api.common.exception.BadRequestException;
 import pro.hexa.backend.main.api.domain.news.dto.AdminCreateNewsRequestDto;
+import pro.hexa.backend.main.api.domain.news.dto.AdminNewsDetailResponse;
 import pro.hexa.backend.main.api.domain.news.dto.AdminNewsDto;
+import pro.hexa.backend.main.api.domain.news.dto.AdminNewsListResponse;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -34,6 +36,7 @@ class NewsAdminPageServiceTest {
     private NewsAdminPageService newsAdminPageService;
 
 
+
     @Test
     @DisplayName("뉴스의 리스트를 받아오는 메서드")
     void getAdminNewsList() {
@@ -44,14 +47,16 @@ class NewsAdminPageServiceTest {
         Mockito.when(newsRepository.findAllWithPaging(pageNum, perPage)).thenReturn(makeNewsListForTest().subList(0, 3));
         Mockito.when(newsRepository.getMaxPage(perPage)).thenReturn(3);
 
-        List<AdminNewsDto> resultList = newsAdminPageService.getAdminNewsList(pageNum, perPage).getList();
+
+        AdminNewsListResponse response = newsAdminPageService.getAdminNewsList(pageNum, perPage);
+        List<AdminNewsDto> resultList = response.getList();
         List<AdminNewsDto> resultForTest = makeNewsListForTest().subList(0, 3).stream().map(n -> {
             AdminNewsDto adminNewsDto = new AdminNewsDto();
             adminNewsDto.fromNews(n);
             return adminNewsDto;
         }).collect(Collectors.toList());
 
-        int resultTotalPage = newsAdminPageService.getAdminNewsList(pageNum, perPage).getTotalPage();
+        int resultTotalPage = response.getTotalPage();
         int resultTotalPageForTest = newsRepository.getMaxPage(perPage);
         // when & then
         IntStream.range(0, resultList.size()).forEach(index -> {
@@ -72,15 +77,17 @@ class NewsAdminPageServiceTest {
         // given
         Long newsId = 5L;
         List<News> testList = makeNewsListForTest();
-        Mockito.when(newsRepository.findById(newsId)).thenReturn(Optional.of(testList.get(5)));
+        News testedEntity = testList.get(5);
+        Mockito.when(newsRepository.findById(newsId)).thenReturn(Optional.of(testedEntity));
 
-        String resultTitle = newsAdminPageService.getAdminNewsDetail(newsId).getTitle();
-        LocalDate resultDate = newsAdminPageService.getAdminNewsDetail(newsId).getDate();
-        String resultContent = newsAdminPageService.getAdminNewsDetail(newsId).getContent();
+        AdminNewsDetailResponse response = newsAdminPageService.getAdminNewsDetail(newsId);
+        String resultTitle = response.getTitle();
+        LocalDate resultDate = response.getDate();
+        String resultContent = response.getContent();
 
-        String resultTitleForTest = testList.get(5).getTitle();
-        LocalDate resultDateForTest = testList.get(5).getDate();
-        String resultContentForTest = testList.get(5).getContent();
+        String resultTitleForTest = testedEntity.getTitle();
+        LocalDate resultDateForTest = testedEntity.getDate();
+        String resultContentForTest = testedEntity.getContent();
         // when & then
         Assertions.assertNotEquals(resultTitle, null);
         Assertions.assertNotEquals(resultDate, null);
