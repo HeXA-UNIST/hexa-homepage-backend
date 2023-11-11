@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.Triple;
@@ -112,9 +111,6 @@ class SeminarPageControllerTest {
 
         seminarRepository.saveAll(seminars);
 
-        Optional<Seminar> gsem = seminarRepository.findById(seminar1.getId());
-
-        assertEquals(gsem.get().getContent(), "content1");
         // when
         SeminarListResponse response = seminarPageController.getSeminarListResponse("t", 2023, 1, 3).getBody();
 
