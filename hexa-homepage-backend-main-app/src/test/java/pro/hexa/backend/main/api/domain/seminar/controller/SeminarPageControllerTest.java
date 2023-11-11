@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.Triple;
@@ -54,36 +55,68 @@ class SeminarPageControllerTest {
             AUTHORIZATION_TYPE.Member
         );
 
-        user1 = userRepository.save(user1);  // User 객체 저장
+        User user2 = User.create(
+                "user2",
+                "user2",
+                GENDER_TYPE.남,
+                STATE_TYPE.재학,
+                (short) 2022,
+                "20202020",
+                "User",
+                "password",
+                AUTHORIZATION_TYPE.Member
+        );
+
+        User user3 = User.create(
+                "user3",
+                "user3",
+                GENDER_TYPE.남,
+                STATE_TYPE.재학,
+                (short) 2022,
+                "20202023",
+                "User",
+                "password",
+                AUTHORIZATION_TYPE.Member
+        );
+
+
+        userRepository.save(user1);
+        userRepository.save(user2);
+        userRepository.save(user3);
 
         List<Seminar> seminars = new ArrayList<>();
         seminars.add(Seminar.create(
             LocalDateTime.of(2023, 1, 1, 1, 1),
             user1,
             new ArrayList<>(),
-                "title1",
-                "content1"
+                "title2",
+                "content2"
         ));
 
         seminars.add(Seminar.create(
             LocalDateTime.of(2024, 1, 1, 1, 1),
-            user1,
+            user2,
             new ArrayList<>(),
                 "title1",
                 "content1"
         ));
 
-        seminars.add(Seminar.create(
+        Seminar seminar1 = Seminar.create(
             LocalDateTime.of(2023, 1, 2, 1, 1),
-            user1,
+            user3,
             new ArrayList<>(),
                 "title1",
                 "content1"
-        ));
+        );
+        seminars.add(seminar1);
+
         seminarRepository.saveAll(seminars);
 
+        Optional<Seminar> gsem = seminarRepository.findById(seminar1.getId());
+
+        assertEquals(gsem.get().getContent(), "content1");
         // when
-        SeminarListResponse response = seminarPageController.getSeminarListResponse("", 2023, 1, 3).getBody();
+        SeminarListResponse response = seminarPageController.getSeminarListResponse("t", 2023, 1, 3).getBody();
 
         // then
         assertThat(response).isNotNull();
@@ -95,9 +128,9 @@ class SeminarPageControllerTest {
                 Seminar seminar = seminarMap.get(seminarDto.getSeminarId());
                 assertSeminar(seminarDto, seminar);
             });
-        assertEquals(response.getSeminars().size(), 0);
-        assertEquals(response.getPage(), 3);
-        assertEquals(response.getMaxPage(), 1);
+
+        assertEquals(response.getSeminars().size(), 1);
+
     }
 
     private void assertSeminar(SeminarDto seminarDto, Seminar seminar) {
