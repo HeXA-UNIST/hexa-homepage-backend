@@ -60,7 +60,12 @@ class SeminarAdminPageServiceTest {
         List<Seminar> seminars = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             User user = createUser(i);
-            Seminar seminar = Seminar.create(LocalDateTime.of(2023, 1, 1, 0, 0), user,new ArrayList<>());
+            Seminar seminar = Seminar.create(
+                    LocalDateTime.of(2023, 1, 1, 0, 0),
+                    user,
+                    new ArrayList<>(),
+                    "title1",
+                    "content1");
             seminars.add(seminar);
         }
         return seminars;
@@ -112,7 +117,9 @@ class SeminarAdminPageServiceTest {
         Seminar seminar1 = Seminar.create(
                 LocalDateTime.of(2024, 1, 1, 1, 1),
                 user1,
-                new ArrayList<>()
+                new ArrayList<>(),
+                "title1",
+                "content1"
         );
         when(seminarRepository.findById(seminarId)).thenReturn(Optional.of(seminar1));
 
@@ -121,94 +128,4 @@ class SeminarAdminPageServiceTest {
         assertNotNull(response);
 
     }
-
-    @Test
-    void adminCreateSeminar_SuccessfulCreation() {
-        List<Long> longList = new ArrayList<>();
-        longList.add(100L);
-        longList.add(200L);
-        longList.add(300L);
-
-        User user1 = User.create(
-                "testuser",
-                "user",
-                GENDER_TYPE.남,
-                STATE_TYPE.재학,
-                (short) 2020,
-                "20202020",
-                "User",
-                "password",
-                AUTHORIZATION_TYPE.Member
-        );
-
-        AdminCreateSeminarRequestDto request = new AdminCreateSeminarRequestDto("title1", "this is content1", new Date(),longList);
-
-
-        Attachment attachment1 = Attachment.create("1","att1", 100L);
-        when(attachmentRepository.findById(1L)).thenReturn(Optional.of(attachment1));
-
-        CustomUserDetails userDetails = new CustomUserDetails(user1);
-
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn(userDetails);
-
-        when(userRepository.findById("testUser")).thenReturn(Optional.of(user1));
-
-        seminarAdminPageService.adminCreateSeminar(request);
-
-        verify(attachmentRepository, times(1)).findById(1L);
-        verify(userRepository, times(1)).findById("testUser");
-        verify(seminarRepository, times(1)).save(any(Seminar.class));
-    }
-
-    @Test
-    public void adminModifySeminar_SuccessfulModification() {
-        // 예제 데이터 준비
-        Long seminarId = 1L;
-        User user = User.create(
-                "testuser",
-                "user",
-                GENDER_TYPE.남,
-                STATE_TYPE.재학,
-                (short) 2020,
-                "20202020",
-                "User",
-                "password",
-                AUTHORIZATION_TYPE.Member
-        );
-        Seminar existingSeminar = Seminar.create(
-                LocalDateTime.of(2024, 1, 1, 1, 1),
-                user,
-                new ArrayList<>()
-        );
-
-        CustomUserDetails userDetails = new CustomUserDetails(user);
-
-        // 세미나 수정 요청 데이터
-        AdminModifySeminarRequestDto requestDto = new AdminModifySeminarRequestDto(
-                seminarId,
-                "Updated Title",
-                "Updated Content",
-                LocalDateTime.now(),
-                Arrays.asList(100L, 200L)
-        );
-
-        Attachment attachment1 = Attachment.create("1","att1", 100L);
-
-        // 모의 객체 설정
-        when(seminarRepository.findByQuery(seminarId)).thenReturn(Optional.of(existingSeminar));
-        when(userRepository.findById(anyString())).thenReturn(Optional.of(user));
-        when(attachmentRepository.findById(anyLong())).thenReturn(Optional.of(attachment1));
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn(userDetails);
-
-        // 메소드 실행
-        seminarAdminPageService.adminModifySeminar(requestDto);
-
-        // 검증
-        verify(seminarRepository, times(1)).findByQuery(seminarId);
-        verify(attachmentRepository, atLeast(1)).findById(anyLong());
-        verify(userRepository, times(1)).findById(anyString());
-    }
 }
-

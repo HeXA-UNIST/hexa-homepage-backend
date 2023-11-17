@@ -4,17 +4,17 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import net.bytebuddy.asm.Advice;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import pro.hexa.backend.domain.abstract_activity.domain.AbstractActivity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import pro.hexa.backend.domain.attachment.domain.Attachment;
 import pro.hexa.backend.domain.attachment.repository.AttachmentRepository;
 import pro.hexa.backend.domain.seminar.domain.Seminar;
@@ -24,11 +24,11 @@ import pro.hexa.backend.domain.user.model.AUTHORIZATION_TYPE;
 import pro.hexa.backend.domain.user.model.GENDER_TYPE;
 import pro.hexa.backend.domain.user.model.STATE_TYPE;
 import pro.hexa.backend.domain.user.repository.UserRepository;
+import pro.hexa.backend.main.api.common.config.security.dto.CustomUserDetails;
 import pro.hexa.backend.main.api.domain.seminar.dto.AdminCreateSeminarRequestDto;
 import pro.hexa.backend.main.api.domain.seminar.dto.AdminModifySeminarRequestDto;
 import pro.hexa.backend.main.api.domain.seminar.dto.AdminSeminarDetailResponse;
 import pro.hexa.backend.main.api.domain.seminar.dto.AdminSeminarListResponse;
-import pro.hexa.backend.main.api.domain.seminar.dto.SeminarListResponse;
 
 @SpringBootTest
 class SeminarAdminPageControllerTest {
@@ -56,26 +56,33 @@ class SeminarAdminPageControllerTest {
                 AUTHORIZATION_TYPE.Member
         );
 
-        user1 = userRepository.save(user1);  // User 객체 저장
+        userRepository.save(user1);
 
         List<Seminar> seminars = new ArrayList<>();
         seminars.add(Seminar.create(
                 LocalDateTime.of(2023, 1, 1, 1, 1),
                 user1,
-                new ArrayList<>()
+                new ArrayList<>(),
+                "title1",
+                "content1"
         ));
 
         seminars.add(Seminar.create(
                 LocalDateTime.of(2024, 1, 1, 1, 1),
                 user1,
-                new ArrayList<>()
+                new ArrayList<>(),
+                "title1",
+                "content1"
         ));
 
-        seminars.add(Seminar.create(
+        Seminar seminar1 =Seminar.create(
                 LocalDateTime.of(2023, 1, 2, 1, 1),
                 user1,
-                new ArrayList<>()
-        ));
+                new ArrayList<>(),
+                "title3",
+                "content3");
+        seminars.add(seminar1);
+
         seminarRepository.saveAll(seminars);
 
         // when
@@ -102,47 +109,60 @@ class SeminarAdminPageControllerTest {
                 AUTHORIZATION_TYPE.Member
         );
 
-        user1 = userRepository.save(user1);  // User 객체 저장
+        userRepository.save(user1);
 
         List<Seminar> seminars = new ArrayList<>();
         seminars.add(Seminar.create(
                 LocalDateTime.of(2023, 1, 1, 1, 1),
                 user1,
-                new ArrayList<>()
+                new ArrayList<>(),
+                "title1",
+                "content1"
         ));
 
         seminars.add(Seminar.create(
                 LocalDateTime.of(2024, 1, 1, 1, 1),
                 user1,
-                new ArrayList<>()
+                new ArrayList<>(),
+                "title1",
+                "content1"
         ));
 
-        seminars.add(Seminar.create(
+        Seminar seminar1 =Seminar.create(
                 LocalDateTime.of(2023, 1, 2, 1, 1),
                 user1,
-                new ArrayList<>()
-        ));
+                new ArrayList<>(),
+                "title3",
+                "content3");
+
+        seminars.add(seminar1);
         seminarRepository.saveAll(seminars);
 
-        AdminSeminarDetailResponse response = seminarAdminPageController.getAdminSeminarDetail(7L).getBody();
+        AdminSeminarDetailResponse response = seminarAdminPageController.getAdminSeminarDetail(seminar1.getId()).getBody();
 
         assertThat(response).isNotNull();
     }
 
     @Test
     void adminCreateSeminar() {
+        Attachment attachment1 = Attachment.create("1","att1", 100L);
+        Attachment attachment2 = Attachment.create("2","att2", 200L);
+        Attachment attachment3 = Attachment.create("3","att3", 300L);
+        attachmentRepository.save(attachment1);
+        attachmentRepository.save(attachment2);
+        attachmentRepository.save(attachment3);
         List<Long> longList = new ArrayList<>();
-        longList.add(100L);
-        longList.add(200L);
-        longList.add(300L);
+        longList.add(attachment1.getId());
+        longList.add(attachment2.getId());
+        longList.add(attachment3.getId());
         Date currentdate = new Date();
         AdminCreateSeminarRequestDto adminCreateSeminarRequestDto = new AdminCreateSeminarRequestDto("title1", "this is content1", currentdate, longList);
 
+        CustomUserDetails userDetails = Mockito.mock(CustomUserDetails.class);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         seminarAdminPageController.adminCreateSeminar(adminCreateSeminarRequestDto);
 
-        //id 값 지정못하기 때문에 무조건 attactment못찾았다고 exception 뜰텐데
-        Attachment attachment1 = Attachment.create("1","att1", 100L);
-        attachmentRepository.save(attachment1);
         List<Seminar> seminars = seminarRepository.findAll();
         assertEquals(seminars.size(), 0);
     }
@@ -160,33 +180,49 @@ class SeminarAdminPageControllerTest {
                 "password",
                 AUTHORIZATION_TYPE.Member
         );
+        userRepository.save(user1);
+        Attachment attachment1 = Attachment.create("1","att1", 100L);
+        Attachment attachment2 = Attachment.create("2","att2", 200L);
+        Attachment attachment3 = Attachment.create("3","att3", 300L);
+        attachmentRepository.save(attachment1);
+        attachmentRepository.save(attachment2);
+        attachmentRepository.save(attachment3);
         List<Long> longList = new ArrayList<>();
-        longList.add(100L);
-        longList.add(200L);
-        longList.add(300L);
-        AdminModifySeminarRequestDto adminCreateSeminarRequestDto = new AdminModifySeminarRequestDto(100L, "title1", "This is content1", LocalDateTime.of(2023, 1, 11,1,1),longList);
-
+        longList.add(attachment1.getId());
+        longList.add(attachment2.getId());
+        longList.add(attachment3.getId());
         List<Seminar> seminars = new ArrayList<>();
         seminars.add(Seminar.create(
                 LocalDateTime.of(2023, 1, 1, 1, 1),
                 user1,
-                new ArrayList<>()
+                new ArrayList<>(),
+                "title1",
+                "content1"
         ));
 
         seminars.add(Seminar.create(
                 LocalDateTime.of(2024, 1, 1, 1, 1),
                 user1,
-                new ArrayList<>()
+                new ArrayList<>(),
+                "title2",
+                "content2"
         ));
 
-        seminars.add(Seminar.create(
+        Seminar seminar1 = Seminar.create(
                 LocalDateTime.of(2023, 1, 2, 1, 1),
                 user1,
-                new ArrayList<>()
-        ));
+                new ArrayList<>(),
+                "title3",
+                "content3"
+        );
+
+        seminars.add(seminar1);
 
         seminarRepository.saveAll(seminars);
 
+        AdminModifySeminarRequestDto adminCreateSeminarRequestDto = new AdminModifySeminarRequestDto(seminar1.getId(), "title14", "This is content4", LocalDateTime.of(2023, 1, 11,1,1),longList);
+
+        //securityholder test를 어떻게 하는가.
         seminarAdminPageController.adminModifySeminar(adminCreateSeminarRequestDto);
 
         List<Seminar> seminarv = seminarRepository.findAll();
@@ -208,28 +244,46 @@ class SeminarAdminPageControllerTest {
                 AUTHORIZATION_TYPE.Member
         );
 
+        userRepository.save(user1);
+
         List<Seminar> seminars = new ArrayList<>();
         seminars.add(Seminar.create(
                 LocalDateTime.of(2023, 1, 1, 1, 1),
                 user1,
-                new ArrayList<>()
+                new ArrayList<>(),
+                "title1",
+                "content1"
         ));
 
         seminars.add(Seminar.create(
                 LocalDateTime.of(2024, 1, 1, 1, 1),
                 user1,
-                new ArrayList<>()
+                new ArrayList<>(),
+                "title2",
+                "content2"
         ));
 
-        seminars.add(Seminar.create(
+
+        Seminar seminar1 =Seminar.create(
                 LocalDateTime.of(2023, 1, 2, 1, 1),
                 user1,
-                new ArrayList<>()
-        ));
+                new ArrayList<>(),
+                "title3",
+                "content3");
+
+        seminars.add(seminar1);
 
         seminarRepository.saveAll(seminars);
 
-        seminarAdminPageController.adminDeleteSeminar(100L);
+        Optional<Seminar> result1 = seminarRepository.findById(seminar1.getId());
+
+        assertNotNull(result1);
+
+        seminarAdminPageController.adminDeleteSeminar(seminar1.getId());
+
+        Optional<Seminar> result2 = seminarRepository.findById(seminar1.getId());
+
+        assertEquals(Optional.empty(), result2);
 
     }
 }
