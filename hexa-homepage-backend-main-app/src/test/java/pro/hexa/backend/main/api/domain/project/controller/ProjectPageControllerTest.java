@@ -3,6 +3,7 @@ package pro.hexa.backend.main.api.domain.project.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,6 +49,7 @@ class ProjectPageControllerTest {
     ProjectPageController projectPageController;
 
     @Test
+    @DisplayName("프로젝트 리스트 조회")
     void getProjectListResponse() {
         // given
         ProjectTechStack projectTechStack1 = ProjectTechStack.create("Java");
@@ -177,6 +179,7 @@ class ProjectPageControllerTest {
     }
 
     @Test
+    @DisplayName("프로젝트 조회")
     void projectresponse() {
         ProjectTechStack projectTechStack1 = ProjectTechStack.create("Java");
         ProjectTechStack projectTechStack2 = ProjectTechStack.create("Spring");

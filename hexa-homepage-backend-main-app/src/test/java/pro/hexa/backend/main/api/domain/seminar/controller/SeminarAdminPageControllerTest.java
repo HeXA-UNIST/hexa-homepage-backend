@@ -8,6 +8,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ class SeminarAdminPageControllerTest {
     @Autowired
     private UserRepository userRepository;
     @Test
+    @DisplayName("세미나 리스트 조회")
     void getSeminarListResponse() {
         // given
         User user1 = User.create(
@@ -96,6 +98,7 @@ class SeminarAdminPageControllerTest {
     }
 
     @Test
+    @DisplayName("세미나 수정 창에서 보여줄 정보 조회")
     void getAdminSeminarDetail() {
         User user1 = User.create(
                 "user",
@@ -144,6 +147,7 @@ class SeminarAdminPageControllerTest {
     }
 
     @Test
+    @DisplayName("세미나 생성")
     void adminCreateSeminar() {
         Attachment attachment1 = Attachment.create("1","att1", 100L);
         Attachment attachment2 = Attachment.create("2","att2", 200L);
@@ -168,6 +172,7 @@ class SeminarAdminPageControllerTest {
     }
 
     @Test
+    @DisplayName("세미나 수정")
     void adminModifySeminar() {
         User user1 = User.create(
                 "user",
@@ -230,6 +235,7 @@ class SeminarAdminPageControllerTest {
     }
 
     @Test
+    @DisplayName("세미나 삭제")
     void adminDeleteSeminar() {
 
         User user1 = User.create(

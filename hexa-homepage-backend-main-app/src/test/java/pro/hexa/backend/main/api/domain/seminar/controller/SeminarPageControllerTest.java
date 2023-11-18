@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.Triple;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,6 +41,7 @@ class SeminarPageControllerTest {
     private UserRepository userRepository;
 
     @Test
+    @DisplayName("세미나 리스트 조회")
     void getSeminarListResponse() {
         // given
         User user1 = User.create(
