@@ -8,6 +8,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -15,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import pro.hexa.backend.domain.attachment.domain.Attachment;
 import pro.hexa.backend.domain.attachment.repository.AttachmentRepository;
 import pro.hexa.backend.domain.seminar.domain.Seminar;
@@ -42,6 +45,26 @@ class SeminarAdminPageControllerTest {
     private AttachmentRepository attachmentRepository;
     @Autowired
     private UserRepository userRepository;
+
+    @BeforeEach
+    void setup() {
+        User user1 = User.create(
+                "user",
+                "user",
+                GENDER_TYPE.남,
+                STATE_TYPE.재학,
+                (short) 2020,
+                "20202020",
+                "User",
+                "password",
+                AUTHORIZATION_TYPE.Member
+        );
+        CustomUserDetails user = new CustomUserDetails(user1);
+
+        SecurityContext context = SecurityContextHolder.getContext();
+        context.setAuthentication(new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities()));
+
+    }
     @Test
     @DisplayName("세미나 리스트 조회")
     void getSeminarListResponse() {
@@ -162,19 +185,16 @@ class SeminarAdminPageControllerTest {
         Date currentdate = new Date();
         AdminCreateSeminarRequestDto adminCreateSeminarRequestDto = new AdminCreateSeminarRequestDto("title1", "this is content1", currentdate, longList);
 
-        CustomUserDetails userDetails = Mockito.mock(CustomUserDetails.class);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
         seminarAdminPageController.adminCreateSeminar(adminCreateSeminarRequestDto);
 
         List<Seminar> seminars = seminarRepository.findAll();
-        assertEquals(seminars.size(), 0);
+        assertEquals(seminars.size(), 1);
     }
 
     @Test
     @DisplayName("세미나 수정")
     void adminModifySeminar() {
-        User user1 = User.create(
+        User user2 = User.create(
                 "user",
                 "user",
                 GENDER_TYPE.남,
@@ -185,7 +205,7 @@ class SeminarAdminPageControllerTest {
                 "password",
                 AUTHORIZATION_TYPE.Member
         );
-        userRepository.save(user1);
+        userRepository.save(user2);
         Attachment attachment1 = Attachment.create("1","att1", 100L);
         Attachment attachment2 = Attachment.create("2","att2", 200L);
         Attachment attachment3 = Attachment.create("3","att3", 300L);
@@ -199,7 +219,7 @@ class SeminarAdminPageControllerTest {
         List<Seminar> seminars = new ArrayList<>();
         seminars.add(Seminar.create(
                 LocalDateTime.of(2023, 1, 1, 1, 1),
-                user1,
+                user2,
                 new ArrayList<>(),
                 "title1",
                 "content1"
@@ -207,7 +227,7 @@ class SeminarAdminPageControllerTest {
 
         seminars.add(Seminar.create(
                 LocalDateTime.of(2024, 1, 1, 1, 1),
-                user1,
+                user2,
                 new ArrayList<>(),
                 "title2",
                 "content2"
@@ -215,7 +235,7 @@ class SeminarAdminPageControllerTest {
 
         Seminar seminar1 = Seminar.create(
                 LocalDateTime.of(2023, 1, 2, 1, 1),
-                user1,
+                user2,
                 new ArrayList<>(),
                 "title3",
                 "content3"
@@ -227,11 +247,10 @@ class SeminarAdminPageControllerTest {
 
         AdminModifySeminarRequestDto adminCreateSeminarRequestDto = new AdminModifySeminarRequestDto(seminar1.getId(), "title14", "This is content4", LocalDateTime.of(2023, 1, 11,1,1),longList);
 
-        //securityholder test를 어떻게 하는가.
         seminarAdminPageController.adminModifySeminar(adminCreateSeminarRequestDto);
 
-        List<Seminar> seminarv = seminarRepository.findAll();
-        assertEquals(seminarv.size(), 0);
+        Optional<Seminar> seminarv = seminarRepository.findById(seminar1.getId());
+        assertEquals(seminarv.get().getTitle(), "title14");
     }
 
     @Test
