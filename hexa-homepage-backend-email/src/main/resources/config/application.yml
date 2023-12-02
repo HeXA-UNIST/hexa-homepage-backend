@@ -26,13 +26,3 @@ spring:
         backend: kv
         application-name: homepage/backend/production
       uri: http://vault.hexa.pro
-  mail:
-    host: ${spring.mail.host}
-    port: ${spring.mail.port}
-    protocol: ${spring.mail.protocol}
-    username: ${spring.mail.username}
-    password: ${spring.mail.password}
-    default-encoding: ${spring.mail.default-encoding}
-    smtp:
-      start-tls-enable: ${spring.mail.smtp.start-tls-enable}
-      auth: ${spring.mail.smtp.auth}

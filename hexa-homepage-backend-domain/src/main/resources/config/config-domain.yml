@@ -17,4 +17,3 @@ spring:
         backend: kv
         application-name: homepage/backend/production
       uri: http://vault.hexa.pro
-secretKey: ${secretKey}
