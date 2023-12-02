@@ -33,4 +33,20 @@ spring:
         backend: kv
         application-name: homepage/backend/production
       uri: http://vault.hexa.pro
-
+  redis:
+    host: ${spring.redis.host}
+    port: ${spring.redis.port}
+    password: ${spring.redis.password}
+    database: ${spring.redis.database}
+  mvc:
+    pathmatch:
+      matching-strategy: ${spring.mvc.pathmatch.matching-strategy}
+  datasource:
+    password: ${spring.datasource.password}
+    url: ${spring.datasource.url}
+    username: ${spring.datasource.username}
+logging:
+  level:
+    org.hibernate.SQL: ${logging.level.org.hibernate.SQL}
+    org.hibernate.type: ${logging.level.org.hibernate.type}
+hexa-page-jwt-secret-key: ${hexa-page-jwt-secret-key}
