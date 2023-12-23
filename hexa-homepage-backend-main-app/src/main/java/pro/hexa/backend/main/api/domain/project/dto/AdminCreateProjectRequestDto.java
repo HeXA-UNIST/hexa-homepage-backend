@@ -4,10 +4,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+@Builder
 public class AdminCreateProjectRequestDto {
     @Schema(description = "프로젝트 제목", required = true)
     private String title;

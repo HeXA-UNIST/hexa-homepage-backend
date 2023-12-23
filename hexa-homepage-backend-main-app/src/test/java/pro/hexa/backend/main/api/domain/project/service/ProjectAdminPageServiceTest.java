@@ -105,20 +105,70 @@ class ProjectAdminPageServiceTest {
     void adminCreateProject() {
         // given
         List<String> projectTechStacks = new ArrayList<>(Arrays.asList("java", "python"));
-        AdminCreateProjectRequestDto adminCreateProjectRequestDto1 = new AdminCreateProjectRequestDto("", LocalDate.now(), LocalDate.now()
-            ,projectTechStacks, "recruitment", "make the chat gpt", 0L);
-        AdminCreateProjectRequestDto adminCreateProjectRequestDto2 = new AdminCreateProjectRequestDto("projectName", null, LocalDate.now()
-            ,projectTechStacks, "recruitment", "make the chat gpt", 0L);
-        AdminCreateProjectRequestDto adminCreateProjectRequestDto3 = new AdminCreateProjectRequestDto("projectName", LocalDate.now(), null
-            ,projectTechStacks, "recruitment", "make the chat gpt", 0L);
-        AdminCreateProjectRequestDto adminCreateProjectRequestDto4 = new AdminCreateProjectRequestDto("projectName", LocalDate.now(), LocalDate.now()
-            ,null, "recruitment", "make the chat gpt", 0L);
-        AdminCreateProjectRequestDto adminCreateProjectRequestDto5 = new AdminCreateProjectRequestDto("projectName", LocalDate.now(), LocalDate.now()
-            ,projectTechStacks, "", "make the chat gpt", 0L);
-        AdminCreateProjectRequestDto adminCreateProjectRequestDto6 = new AdminCreateProjectRequestDto("projectName", LocalDate.now(), LocalDate.now()
-            ,projectTechStacks, "recruitment", "", 0L);
-        AdminCreateProjectRequestDto adminCreateProjectRequestDto7 = new AdminCreateProjectRequestDto("projectName", LocalDate.now(), LocalDate.now()
-            ,projectTechStacks, "recruitment", "make the chat gpt", null);
+        AdminCreateProjectRequestDto adminCreateProjectRequestDto1 = AdminCreateProjectRequestDto.builder()
+            .title("")
+            .startDate(LocalDate.now())
+            .endDate(LocalDate.now())
+            .projectTechStacks(projectTechStacks)
+            .state("recruitment")
+            .content("make the chat gpt")
+            .thumbnail(0L)
+            .build();
+        AdminCreateProjectRequestDto adminCreateProjectRequestDto2 = AdminCreateProjectRequestDto.builder()
+            .title("projectName")
+            .startDate(null)
+            .endDate(LocalDate.now())
+            .projectTechStacks(projectTechStacks)
+            .state("recruitment")
+            .content("make the chat gpt")
+            .thumbnail(0L)
+            .build();
+        AdminCreateProjectRequestDto adminCreateProjectRequestDto3 = AdminCreateProjectRequestDto.builder()
+            .title("projectName")
+            .startDate(LocalDate.now())
+            .endDate(null)
+            .projectTechStacks(projectTechStacks)
+            .state("recruitment")
+            .content("make the chat gpt")
+            .thumbnail(0L)
+            .build();
+        AdminCreateProjectRequestDto adminCreateProjectRequestDto4 = AdminCreateProjectRequestDto.builder()
+            .title("projectName")
+            .startDate(LocalDate.now())
+            .endDate(LocalDate.now())
+            .projectTechStacks(null)
+            .state("recruitment")
+            .content("make the chat gpt")
+            .thumbnail(0L)
+            .build();
+        AdminCreateProjectRequestDto adminCreateProjectRequestDto5 = AdminCreateProjectRequestDto.builder()
+            .title("projectName")
+            .startDate(LocalDate.now())
+            .endDate(LocalDate.now())
+            .projectTechStacks(projectTechStacks)
+            .state("")
+            .content("make the chat gpt")
+            .thumbnail(0L)
+            .build();
+        AdminCreateProjectRequestDto adminCreateProjectRequestDto6 = AdminCreateProjectRequestDto.builder()
+            .title("projectName")
+            .startDate(LocalDate.now())
+            .endDate(LocalDate.now())
+            .projectTechStacks(projectTechStacks)
+            .state("recruitment")
+            .content("")
+            .thumbnail(0L)
+            .build();
+        AdminCreateProjectRequestDto adminCreateProjectRequestDto7 = AdminCreateProjectRequestDto.builder()
+            .title("projectName")
+            .startDate(LocalDate.now())
+            .endDate(LocalDate.now())
+            .projectTechStacks(projectTechStacks)
+            .state("recruitment")
+            .content("make the chat gpt")
+            .thumbnail(null)
+            .build();
+
 
         // when & then (invalid input test)
         Assertions.assertThrows(BadRequestException.class, ()-> {projectAdminPageService.adminCreateProject(adminCreateProjectRequestDto1);}, "title이 NULL입니다");
