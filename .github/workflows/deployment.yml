@@ -4,43 +4,46 @@ concurrency: production
 
 on:
   push:
-    branches:
-      - main
     tags:
-      - v2
-      - v1.*
+      - v[0-9]+.[0-9]+.[0-9]+
 
 jobs:
   deploy:
-    name: "Deploy"
+    name: Deploy
     runs-on: [self-hosted, linux]
+
 
     steps:
 
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 11 for x64
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-          architecture: x64
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: build with Gradle
-        run: ./gradlew --info build
-
-      - name: Test with Gradle
-        run: ./gradlew --info test
-
-      # Todo: 환경변수 세팅 해줘야함
-      - name: Check Test Status
+      - name: stop and remove the previous container
         run: |
-          if [[ "$?" -eq "0" ]]; then
-            echo "Tests passed, restarting Docker container..."
-            docker-compose up -d
+          docker stop ${{HeXA_Homepage_Backend_Container_Name}}
+          docker container rm ${{HeXA_Homepage_Backend_Container_Name}}
+
+      - name: generate docker container name
+        run: export HeXA_Homepage_Backend_Container_Name=HeXA_Homepage_Backend:${GITHUB_REF#refs/tags/}
+
+      - name: build docker image
+        env:
+          Vault_Token: ${{ secrets.VAULT_TOKEN }}
+        run: docker build . --file dockerfile -t HeXA_Homepage_Backend:${GITHUB_REF#refs/tags/} --build-arg VAULT_TOKEN=${{Vault_Token}}
+
+      - name: run and test
+        run: |
+          docker run -d -p 8282:8080 --name ${{HeXA_Homepage_Backend_Container_Name}}
+          test_result="$(docker exec ${{HeXA_Homepage_Backend_Container_Name}} ./gradlew test)"
+          second_last_line="$(echo "$log_content" | tail -n 2 | head -n 1)"
+          
+          if [[ "$second_last_line" == "BUILD SUCCESSFUL"* ]]; then
+            echo "TEST SUCCESSFUL"
           else
-            echo "Tests failed, Docker container will not be restarted."
+            docker stop ${{HeXA_Homepage_Backend_Container_Name}}
+            docker container rm ${{HeXA_Homepage_Backend_Container_Name}}
+            last_version=$(docker images | grep 'hompage_test' | awk '{print $2}' | tail -n 2 | head -n 1)
+            docker run -d -p 8282:8080 --name ${{HeXA_Homepage_Backend_Container_Name}}:$last_version
+            echo "TEST FAILED"
           fi
+
+
