@@ -2,8 +2,8 @@ name: hello
 
 on:
   push:
-    branches:
-      - github-action
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
 
 jobs:
   test:
@@ -17,4 +17,4 @@ jobs:
         run: ls
 
       - name: make text file
-        run: echo "hehe" >> by_the_test_action.txt
+        run: echo "good with tags" >> by_the_test_action.txt
