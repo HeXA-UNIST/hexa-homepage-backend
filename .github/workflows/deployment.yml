@@ -1,7 +1,5 @@
 name: Deployment
 
-concurrency: production
-
 on:
   push:
     tags:

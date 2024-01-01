@@ -1,0 +1,11 @@
+name: hello
+
+on: push
+
+jobs:
+  test:
+    runs-on: self-hosted
+
+    steps:
+      - name: why
+        run: ls
