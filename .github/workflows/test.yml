@@ -9,3 +9,5 @@ jobs:
     steps:
       - name: why
         run: ls
+      - name: make text file
+        run: echo "hehe" >> by_the_test_action.txt
