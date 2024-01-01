@@ -1,13 +1,20 @@
 name: hello
 
-on: push
+on:
+  push:
+    branches:
+      - github-actions
 
 jobs:
   test:
+    name: why name again?
     runs-on: self-hosted
 
     steps:
+      - uses: actions/checkout@v4
+
       - name: why
         run: ls
+
       - name: make text file
         run: echo "hehe" >> by_the_test_action.txt
