@@ -19,11 +19,8 @@ jobs:
 
       - name: stop and remove the previous container
         run: |
-          docker stop ${{HeXA_Homepage_Backend_Container_Name}}
-          docker container rm ${{HeXA_Homepage_Backend_Container_Name}}
-
-      - name: generate docker container name
-        run: export HeXA_Homepage_Backend_Container_Name=HeXA_Homepage_Backend:${GITHUB_REF#refs/tags/}
+          docker stop HeXA_Homepage_Backend
+          docker container rm HeXA_Homepage_Backend
 
       - name: build docker image
         env:
@@ -32,17 +29,17 @@ jobs:
 
       - name: run and test
         run: |
-          docker run -d -p 8282:8080 --name ${{HeXA_Homepage_Backend_Container_Name}}
-          test_result="$(docker exec ${{HeXA_Homepage_Backend_Container_Name}} ./gradlew test)"
-          second_last_line="$(echo "$log_content" | tail -n 2 | head -n 1)"
+          docker run -d -p 8282:8080 --name HeXA_Homepage_Backend HeXA_Homepage_Backend
+          test_result="$(docker exec HeXA_Homepage_Backend ./gradlew test)"
+          second_last_line="$(echo "$test_result" | tail -n 2 | head -n 1)"
           
-          if [[ "$second_last_line" == "BUILD SUCCESSFUL"* ]]; then
+          if [[ "$second_last_line" =~ ^BUILD\ SUCCESSFUL ]]; then
             echo "TEST SUCCESSFUL"
           else
-            docker stop ${{HeXA_Homepage_Backend_Container_Name}}
-            docker container rm ${{HeXA_Homepage_Backend_Container_Name}}
-            last_version=$(docker images | grep 'hompage_test' | awk '{print $2}' | tail -n 2 | head -n 1)
-            docker run -d -p 8282:8080 --name ${{HeXA_Homepage_Backend_Container_Name}}:$last_version
+            docker stop HeXA_Homepage_Backend
+            docker container rm HeXA_Homepage_Backend
+            last_version=$(docker images | grep 'HeXA_Homepage_Backend' | awk '{print $2}' | tail -n 2 | head -n 1)
+            docker run -d -p 8282:8080 --name HeXA_Homepage_Backend HeXA_Homepage_Backend:$last_version
             echo "TEST FAILED"
           fi
 
