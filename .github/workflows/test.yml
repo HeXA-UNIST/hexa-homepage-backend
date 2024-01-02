@@ -24,4 +24,4 @@ jobs:
       - name: maybe env
         env:
           Vault_Token: ${{ secrets.VAULT_TOKEN }}
-        run: echo "${GITHUB_REF#refs/tags/} and ${{env.Vault_Token}}"
+        run: echo "${GITHUB_REF#refs/tags/} and ${{env.Vault_Token}}" >> from_env.txt
