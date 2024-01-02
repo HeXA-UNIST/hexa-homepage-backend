@@ -15,4 +15,3 @@ RUN chmod -R 755 .
 
 # execute
 ENTRYPOINT ./gradlew hexa-homepage-backend-main-app:bootRun -Penvironment="production"
-
