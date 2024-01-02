@@ -20,3 +20,8 @@ jobs:
       - name: maybe new line?
         run: |
           echo "good with lines" >> by_the_test_action2.txt
+
+      - name: maybe env
+        env:
+          Vault_Token: ${{ secrets.VAULT_TOKEN }}
+        run: echo "${GITHUB_REF#refs/tags/} and ${{env.Vault_Token}}"
