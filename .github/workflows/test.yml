@@ -1,9 +1,7 @@
 name: hello
 
 on:
-  push:
-    branches:
-      - 'main'
+  push
 
 jobs:
   test:
@@ -21,4 +19,4 @@ jobs:
 
       - name: maybe new line?
         run: |
-          echo "good with tags" >> by_the_test_action.txt
+          echo "good with lines" >> by_the_test_action2.txt
