@@ -20,6 +20,7 @@ jobs:
       - name: maybe new line?
         run: |
           echo "good with lines" >> by_the_test_action2.txt
+          echo "good with lines 2" >> by_the_test_action2.txt
 
       - name: maybe env
         env:
