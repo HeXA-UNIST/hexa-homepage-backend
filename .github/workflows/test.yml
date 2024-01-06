@@ -1,28 +1,50 @@
-name: hello
+name: Deployment
 
 on:
-  push
+  push:
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
 
 jobs:
-  test:
-    name: why name again?
+  deploy:
+    name: Deploy
     runs-on: self-hosted
 
+
     steps:
+
       - uses: actions/checkout@v4
 
-      - name: why
-        run: ls
+      - name: is the github action running
+        run: echo "asdasd" >> by_the_github_action.txt
 
-      - name: make text file
-        run: echo "good with tags" >> by_the_test_action.txt
+      - name: Change to repository root directory
+        run: cd $GITHUB_WORKSPACE
 
-      - name: maybe new line?
+      - name: stop and remove the previous container
         run: |
-          echo "good with lines" >> by_the_test_action2.txt
-          echo "good with lines 2" >> by_the_test_action2.txt
+          docker stop HeXA_Homepage_Backend
+          docker container rm HeXA_Homepage_Backend
 
-      - name: maybe env
+      - name: build docker image
         env:
           Vault_Token: ${{ secrets.VAULT_TOKEN }}
-        run: echo "${GITHUB_REF#refs/tags/} and ${{env.Vault_Token}}" >> from_env.txt
+        run: docker build . --file dockerfile -t HeXA_Homepage_Backend:${GITHUB_REF#refs/tags/} --build-arg VAULT_TOKEN=${{Vault_Token}}
+
+      - name: run and test
+        run: |
+          docker run -d -p 8282:8080 --name HeXA_Homepage_Backend HeXA_Homepage_Backend
+          test_result="$(docker exec HeXA_Homepage_Backend ./gradlew test)"
+          second_last_line="$(echo "$test_result" | tail -n 2 | head -n 1)"
+          
+          if [[ "$second_last_line" =~ ^BUILD\ SUCCESSFUL ]]; then
+            echo "TEST SUCCESSFUL"
+          else
+            docker stop HeXA_Homepage_Backend
+            docker container rm HeXA_Homepage_Backend
+            last_version=$(docker images | grep 'HeXA_Homepage_Backend' | awk '{print $2}' | tail -n 2 | head -n 1)
+            docker run -d -p 8282:8080 --name HeXA_Homepage_Backend HeXA_Homepage_Backend:$last_version
+            echo "TEST FAILED"
+          fi
+
+
