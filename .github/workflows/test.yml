@@ -16,13 +16,15 @@ jobs:
       - name: is the github action running
         run: echo "asdasd" >> by_the_github_action.txt
 
-      - name: Change to repository root directory
-        run: cd $GITHUB_WORKSPACE
-
       - name: stop and remove the previous container
         run: |
-          docker stop HeXA_Homepage_Backend
-          docker container rm HeXA_Homepage_Backend
+          if docker ps -a | grep -q 'HeXA_Homepage_Backend'; then
+            if docker ps | grep -q 'HeXA_Homepage_Backend'; then
+              docker stop HeXA_Homepage_Backend
+            fi
+            docker container rm HeXA_Homepage_Backend
+          fi
+
 
       - name: build docker image
         env:
