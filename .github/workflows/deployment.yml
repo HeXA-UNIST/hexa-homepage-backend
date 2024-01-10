@@ -1,7 +1,7 @@
 name: Deployment
 
 on:
-  push
+  create
 
 jobs:
   deploy:
