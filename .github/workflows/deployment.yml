@@ -20,11 +20,11 @@ jobs:
 
       - name: stop and remove the previous container
         run: |
-          if docker ps -a | grep -q 'HeXA_Homepage_Backend'; then
-            if docker ps | grep -q 'HeXA_Homepage_Backend'; then
-              docker stop HeXA_Homepage_Backend
+          if docker ps -a | grep -q 'hexa_homepage_backend'; then
+            if docker ps | grep -q 'hexa_homepage_backend'; then
+              docker stop hexa_homepage_backend
             fi
-            docker container rm HeXA_Homepage_Backend
+            docker container rm hexa_homepage_backend
           fi
 
 
@@ -35,16 +35,16 @@ jobs:
 
       - name: run and test
         run: |
-          docker run -d -p 8282:8080 --name HeXA_Homepage_Backend HeXA_Homepage_Backend
-          test_result="$(docker exec HeXA_Homepage_Backend ./gradlew test)"
+          docker run -d -p 8282:8080 --name hexa_homepage_backend hexa_homepage_backend
+          test_result="$(docker exec hexa_homepage_backend ./gradlew test)"
           second_last_line="$(echo "$test_result" | tail -n 2 | head -n 1)"
           
           if [[ "$second_last_line" =~ ^BUILD\ SUCCESSFUL ]]; then
             echo "TEST SUCCESSFUL"
           else
-            docker stop HeXA_Homepage_Backend
-            docker container rm HeXA_Homepage_Backend
-            last_version=$(docker images | grep 'HeXA_Homepage_Backend' | awk '{print $2}' | tail -n 2 | head -n 1)
-            docker run -d -p 8282:8080 --name HeXA_Homepage_Backend HeXA_Homepage_Backend:$last_version
+            docker stop hexa_homepage_backend
+            docker container rm hexa_homepage_backend
+            last_version=$(docker images | grep 'hexa_homepage_backend' | awk '{print $2}' | tail -n 2 | head -n 1)
+            docker run -d -p 8282:8080 --name hexa_homepage_backend hexa_homepage_backend:$last_version
             echo "TEST FAILED"
           fi
