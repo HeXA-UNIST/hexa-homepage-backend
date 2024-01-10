@@ -1,13 +1,13 @@
-name: Deployment
+name: Deployment2
 
 on:
   push:
     tags:
-      - v[0-9]+.[0-9]+.[0-9]+
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   deploy:
-    name: Deploy
+    name: Deploy2
     runs-on: self-hosted
 
 
@@ -18,18 +18,20 @@ jobs:
       - name: is the github action running
         run: echo "asdasd" >> by_the_github_action.txt
 
-      - name: Change to repository root directory
-        run: cd $GITHUB_WORKSPACE
-
       - name: stop and remove the previous container
         run: |
-          docker stop HeXA_Homepage_Backend
-          docker container rm HeXA_Homepage_Backend
+          if docker ps -a | grep -q 'HeXA_Homepage_Backend'; then
+            if docker ps | grep -q 'HeXA_Homepage_Backend'; then
+              docker stop HeXA_Homepage_Backend
+            fi
+            docker container rm HeXA_Homepage_Backend
+          fi
+
 
       - name: build docker image
         env:
           Vault_Token: ${{ secrets.VAULT_TOKEN }}
-        run: docker build . --file dockerfile -t HeXA_Homepage_Backend:${GITHUB_REF#refs/tags/} --build-arg VAULT_TOKEN=${{Vault_Token}}
+        run: docker build . --file dockerfile -t HeXA_Homepage_Backend:${GITHUB_REF#refs/tags/} --build-arg VAULT_TOKEN=${{env.Vault_Token}}
 
       - name: run and test
         run: |
