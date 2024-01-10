@@ -1,7 +1,9 @@
 name: Deployment
 
 on:
-  create:
+  push:
+  release:
+    types: [ created ]
 
 jobs:
   deploy:
