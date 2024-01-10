@@ -1,13 +1,12 @@
 name: Deployment
 
 on:
-  push:
-    tags:
-      - 'v*'
+  push
 
 jobs:
   deploy:
     name: Deploy
+    if: startsWith(github.event.ref, 'refs/tags/v')
     runs-on: self-hosted
 
 
