@@ -20,7 +20,7 @@ jobs:
 
       - name: is the github action running
         run: |
-          echo "${GITHUB_REF#refs/tags/}, and ${{env.Vault_Token}}" >> by_the_github_action.txt
+          echo "${GITHUB_REF#refs/tags/}, and ${{env.github_event_ref}}" >> by_the_github_action.txt
 
       - name: stop and remove the previous container
         run: |
