@@ -35,7 +35,7 @@ jobs:
 
       - name: run and test
         run: |
-          docker run -d -p 8282:8080 --name hexa_homepage_backend hexa_homepage_backend
+          docker run -d -p 8282:8080 --name hexa_homepage_backend hexa_homepage_backend:${GITHUB_REF#refs/tags/}
           test_result="$(docker exec hexa_homepage_backend ./gradlew test)"
           second_last_line="$(echo "$test_result" | tail -n 2 | head -n 1)"
           
