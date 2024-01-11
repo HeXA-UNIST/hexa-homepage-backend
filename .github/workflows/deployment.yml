@@ -1,0 +1,50 @@
+name: Deployment
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: self-hosted
+
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - name: is the github action running
+        run: echo "asdasd" >> by_the_github_action.txt
+
+      - name: stop and remove the previous container
+        run: |
+          if docker ps -a | grep -q 'hexa_homepage_backend'; then
+            if docker ps | grep -q 'hexa_homepage_backend'; then
+              docker stop hexa_homepage_backend
+            fi
+            docker container rm hexa_homepage_backend
+          fi
+
+
+      - name: build docker image
+        env:
+          Vault_Token: ${{ secrets.VAULT_TOKEN }}
+        run: docker build . --file dockerfile -t hexa_homepage_backend:${GITHUB_REF#refs/tags/} --build-arg VAULT_TOKEN=${{env.Vault_Token}}
+
+      - name: run and test
+        run: |
+          docker run -d -p 8282:8080 --name hexa_homepage_backend hexa_homepage_backend:${GITHUB_REF#refs/tags/} --network mysql_default --network redis_default 
+          test_result="$(docker exec hexa_homepage_backend ./gradlew test)"
+          second_last_line="$(echo "$test_result" | tail -n 2 | head -n 1)"
+          
+          if [[ "$second_last_line" =~ ^BUILD\ SUCCESSFUL ]]; then
+            echo "TEST SUCCESSFUL"
+          else
+            docker stop hexa_homepage_backend
+            docker container rm hexa_homepage_backend
+            last_version=$(docker images | grep 'hexa_homepage_backend' | awk '{print $2}' | tail -n 2 | head -n 1)
+            docker run -d -p 8282:8080 --name hexa_homepage_backend hexa_homepage_backend:$last_version
+            echo "TEST FAILED"
+          fi
