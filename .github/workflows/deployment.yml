@@ -31,7 +31,7 @@ jobs:
       - name: build docker image
         env:
           Vault_Token: ${{ secrets.VAULT_TOKEN }}
-        run: docker build . --file dockerfile -t hexa_homepage_backend:${GITHUB_REF#refs/tags/} --build-arg VAULT_TOKEN=${{env.Vault_Token}}
+        run: docker build . --file dockerfile -t hexa_homepage_backend:${GITHUB_REF#refs/tags/} --network mysql_default --network redis_default --build-arg VAULT_TOKEN=${{env.Vault_Token}}
 
       - name: run and test
         run: |
