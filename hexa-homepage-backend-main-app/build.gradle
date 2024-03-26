@@ -34,14 +34,14 @@ dependencies {
     implementation 'com.h2database:h2'
     implementation 'mysql:mysql-connector-java'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
-    implementation 'org.apache.httpcomponents:httpclient:4.2'
-    implementation 'commons-io:commons-io:2.6'
+    implementation 'org.apache.httpcomponents:httpclient:4.5'
+    implementation 'commons-io:commons-io:2.9'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.13.4'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'com.sun.mail:javax.mail:1.6.2'
 
     // vault
-    implementation 'org.springframework.cloud:spring-cloud-starter-vault-config:2.2.7.RELEASE'
+    implementation 'org.springframework.cloud:spring-cloud-starter-vault-config:3.1.4'
 
     // swagger
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.4'
