@@ -1,4 +1,7 @@
 spring:
+  config:
+    activate:
+      on-profile: default,development
   mail:
     host: smtp.gmail.com
     port: 587
@@ -9,3 +12,17 @@ spring:
     smtp:
       start-tls-enable: true
       auth: true
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+  cloud:
+    vault:
+      enabled: true
+      token: ${VAULT_TOKEN}
+      kv:
+        enabled: true
+        backend: kv
+        application-name: homepage/backend/production
+      uri: http://vault.hexa.pro

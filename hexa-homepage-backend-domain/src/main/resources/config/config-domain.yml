@@ -1,1 +1,19 @@
+spring:
+  config:
+    activate:
+      on-profile: default,development
 secretKey: HexaH0mePageBack
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+  cloud:
+    vault:
+      enabled: true
+      token: ${VAULT_TOKEN}
+      kv:
+        enabled: true
+        backend: kv
+        application-name: homepage/backend/production
+      uri: http://vault.hexa.pro
