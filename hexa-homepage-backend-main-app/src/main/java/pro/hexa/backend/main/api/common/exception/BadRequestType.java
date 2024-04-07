@@ -16,6 +16,13 @@ public enum BadRequestType {
     SEMINAR_NOT_FOUND("존재하지 않는 seminar id입니다."),
     ATTACHMENT_NOT_EXIST("존재하지 않는 파일입니다."),
     NEWS_NOT_FOUND("뉴스 데이터를 찾을 수 없습니다."),
+    INVALID_CREATE_DTO_TITLE("title이 NULL입니다"),
+    INVALID_CREATE_DTO_START_DATE("startDate가 NULL입니다"),
+    INVALID_CREATE_DTO_END_DATE("endDate가 NULL입니다"),
+    INVALID_CREATE_DTO_PROJECTSTACKS("projectStacks이 NULL입니다"),
+    INVALID_CREATE_DTO_STATE("state가 NULL입니다"),
+    INVALID_CREATE_DTO_CONTENT("content가 NULL입니다"),
+    INVALID_CREATE_DTO_THUMBNAIL("thumbnail이 NULL입니다"),
     SERVICE_NOT_FOUND("서비스를 찾을 수 없습니다.");
 
     private final String message;
