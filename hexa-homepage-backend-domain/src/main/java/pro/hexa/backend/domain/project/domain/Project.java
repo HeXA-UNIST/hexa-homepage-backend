@@ -67,6 +67,10 @@ public class Project extends AbstractEntity {
     @Column(length = 3000)
     private String content;
 
+    @Comment(value = "간단한 소개")
+    @Column(length = 100)
+    private String description;
+
     @Comment("썸네일")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Attachment thumbnail;
@@ -80,6 +84,7 @@ public class Project extends AbstractEntity {
         AUTHORIZATION_TYPE authorization,
         STATE_TYPE state,
         String content,
+        String description,
         Attachment thumbnail
     ) {
         Project project = new Project();
@@ -91,6 +96,7 @@ public class Project extends AbstractEntity {
         project.authorization = authorization;
         project.state = state;
         project.content = content;
+        project.description = description;
         project.thumbnail = thumbnail;
         return project;
     }
@@ -130,6 +136,7 @@ public class Project extends AbstractEntity {
         AUTHORIZATION_TYPE authorization,
         STATE_TYPE state,
         String content,
+        String description,
         Attachment thumbnail
     ) {
         this.title = title;
@@ -140,6 +147,7 @@ public class Project extends AbstractEntity {
         this.authorization = authorization;
         this.state = state;
         this.content = content;
+        this.description = description;
         this.thumbnail = thumbnail;
 
     }

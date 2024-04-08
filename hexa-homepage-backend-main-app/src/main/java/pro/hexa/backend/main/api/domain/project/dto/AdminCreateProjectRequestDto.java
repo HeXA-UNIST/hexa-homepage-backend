@@ -29,6 +29,9 @@ public class AdminCreateProjectRequestDto {
     @Schema(description = "프로젝트 내용")
     private String content;
 
+    @Schema(description = "프로젝트 간단한 설명")
+    private String description;
+
     @Schema(description = "썸네일 이미지 파일 ID")
     private Long thumbnail;
 

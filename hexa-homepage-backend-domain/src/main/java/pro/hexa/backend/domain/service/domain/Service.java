@@ -26,6 +26,10 @@ public class Service extends AbstractActivity {
     @Column(length = 127)
     private String githubLink;
 
+    @Comment(value = "간단한 소개")
+    @Column(length = 100)
+    private String description;
+
     public static Service create(Attachment attachment, String siteLink, String githubLink,
         String title, String content) {
         Service service = new Service();

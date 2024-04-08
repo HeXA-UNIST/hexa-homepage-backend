@@ -35,6 +35,9 @@ public class AdminProjectDetailResponse {
     @Schema(description = "프로젝트 내용")
     private String content;
 
+    @Schema(description = "프로젝트 간단한 설명")
+    private String description;
+
     @Schema(description = "썸네일 이미지 파일 id")
     private Long thumbnail;
 
@@ -47,6 +50,7 @@ public class AdminProjectDetailResponse {
             .collect(Collectors.toList());
         this.state = String.valueOf(project.getState());
         this.content = project.getContent();
+        this.description = project.getDescription();
         this.thumbnail = project.getThumbnail().getId();
     }
 }
