@@ -14,6 +14,9 @@ public class AdminCreateServiceRequestDto {
     @Schema(description = "서비스 설명", required = true)
     private String content;
 
+    @Schema(description = "서비스 간단한 설명", required = true)
+    private String description;
+
     @Schema(description = "썸네일 이미지 파일 id", required = true)
     private Long thumbnail;
 

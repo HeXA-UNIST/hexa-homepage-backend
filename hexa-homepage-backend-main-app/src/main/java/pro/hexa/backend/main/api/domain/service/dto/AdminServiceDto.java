@@ -16,6 +16,9 @@ public class AdminServiceDto {
     @Schema(description = "서비스 제목")
     private String title;
 
+    @Schema(description = "서비스 간단한 설명", required = true)
+    private String description;
+
     @Schema(description = "이미지 파일 id")
     private Long thumbnail;
 }
