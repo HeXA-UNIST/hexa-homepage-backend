@@ -32,4 +32,4 @@ spring:
         enabled: true
         backend: kv
         application-name: homepage/backend/production
-      uri: http://vault.hexa.pro
+      uri: https://vault.hexa.pro
