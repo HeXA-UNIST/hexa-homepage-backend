@@ -33,3 +33,6 @@ spring:
         backend: kv
         application-name: homepage/backend/production
       uri: https://vault.hexa.pro
+---
+file:
+  uploadPath: "./files"
