@@ -1,16 +1,17 @@
 package pro.hexa.backend.main.api.domain.seminar.service;
 
 
+import static pro.hexa.backend.main.api.common.utils.DateUtils.YYYY_MM_DD;
+import static pro.hexa.backend.main.api.common.utils.DateUtils.toFormat;
+
+import io.netty.util.internal.StringUtil;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import io.netty.util.internal.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -20,9 +21,9 @@ import pro.hexa.backend.domain.seminar.domain.Seminar;
 import pro.hexa.backend.domain.seminar.repository.SeminarRepository;
 import pro.hexa.backend.domain.user.domain.User;
 import pro.hexa.backend.domain.user.repository.UserRepository;
-import pro.hexa.backend.main.api.common.config.security.dto.CustomUserDetails;
 import pro.hexa.backend.main.api.common.exception.BadRequestException;
 import pro.hexa.backend.main.api.common.exception.BadRequestType;
+import pro.hexa.backend.main.api.common.utils.DateUtils;
 import pro.hexa.backend.main.api.domain.seminar.dto.AdminCreateSeminarRequestDto;
 import pro.hexa.backend.main.api.domain.seminar.dto.AdminModifySeminarRequestDto;
 import pro.hexa.backend.main.api.domain.seminar.dto.AdminSeminarDetailResponse;
@@ -45,25 +46,25 @@ public class SeminarAdminPageService {
         List<Seminar> seminarList = seminarRepository.findAllInAdminPage(pageNum, perPage);
         if (seminarList.isEmpty()) {
             return AdminSeminarListResponse.builder()
-                    .totalPage(0)
-                    .list(new ArrayList<>(0))
-                    .build();
+                .totalPage(0)
+                .list(new ArrayList<>(0))
+                .build();
         }
         int maxPage = seminarRepository.getAdminMaxPage(perPage);
         List<AdminSeminarDto> seminars = seminarList.stream()
-                .map(seminar ->
-                {
-                    AdminSeminarDto adminSeminarDto = new AdminSeminarDto();
-                    adminSeminarDto.fromSeminar(seminar);
-                    return adminSeminarDto;
-                })
-                .collect(Collectors.toList());
+            .map(seminar ->
+            {
+                AdminSeminarDto adminSeminarDto = new AdminSeminarDto();
+                adminSeminarDto.fromSeminar(seminar);
+                return adminSeminarDto;
+            })
+            .collect(Collectors.toList());
 
         return AdminSeminarListResponse
-                .builder()
-                .totalPage(maxPage)
-                .list(seminars)
-                .build();
+            .builder()
+            .totalPage(maxPage)
+            .list(seminars)
+            .build();
     }
 
     public AdminSeminarDetailResponse getAdminSeminarDetail(Long seminarId) {
@@ -86,32 +87,34 @@ public class SeminarAdminPageService {
         if (adminCreateSeminarRequestDto.getAttachments() != null) {
             for (Long attachmentId : adminCreateSeminarRequestDto.getAttachments()) {
                 Attachment attachment = attachmentRepository.findById(attachmentId)
-                        .orElseThrow(() -> new BadRequestException(BadRequestType.ATTACHMENT_NOT_EXIST));
+                    .orElseThrow(() -> new BadRequestException(BadRequestType.ATTACHMENT_NOT_EXIST));
                 attachmentList.add(attachment);
             }
         }
 
-        LocalDateTime seminarDate = adminCreateSeminarRequestDto.getDate().toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
+        LocalDateTime seminarDate = DateUtils.convertStringToLocalDateTime(adminCreateSeminarRequestDto.getDate(), YYYY_MM_DD);
 
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = userDetails.getUsername();
-        User user = userRepository.findById(username).orElse(null);
+//        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        String username = userDetails.getUsername();
+//        User user = userRepository.findById(username).orElse(null);
+        User user = null;
 
         Seminar seminar = Seminar.create(
-                seminarDate,
-                user,
-                attachmentList
+            seminarDate,
+            user,
+            adminCreateSeminarRequestDto.getTitle(),
+            adminCreateSeminarRequestDto.getContent(),
+            attachmentList
         );
 
         seminarRepository.save(seminar);
     }
+
     private void validateAdminCreateSeminarRequest(AdminCreateSeminarRequestDto adminCreateSeminarRequestDto) {
 
         if ((StringUtil.isNullOrEmpty(adminCreateSeminarRequestDto.getTitle()))
-                || (adminCreateSeminarRequestDto.getDate() == null)
-                || (adminCreateSeminarRequestDto.getContent() == null)
+            || (adminCreateSeminarRequestDto.getDate() == null)
+            || (adminCreateSeminarRequestDto.getContent() == null)
         ) {
             throw new BadRequestException(BadRequestType.NULL_VALUE);
         }
@@ -121,60 +124,67 @@ public class SeminarAdminPageService {
     @Transactional
     public void adminModifySeminar(AdminModifySeminarRequestDto adminModifySeminarRequestDto) {
         Seminar seminar = seminarRepository.findByQuery(adminModifySeminarRequestDto.getSeminarId())
-                .orElseThrow(() -> new BadRequestException(BadRequestType.SEMINAR_NOT_FOUND));
+            .orElseThrow(() -> new BadRequestException(BadRequestType.SEMINAR_NOT_FOUND));
 
         validateAdminModifySeminarRequest(adminModifySeminarRequestDto);
 
         adminModifySeminarRequestDto.setTitle(
-                Optional.ofNullable(adminModifySeminarRequestDto.getTitle())
-                        .orElseGet(seminar::getTitle)
+            Optional.ofNullable(adminModifySeminarRequestDto.getTitle())
+                .orElseGet(seminar::getTitle)
         );
 
-
-        if (CollectionUtils.isEmpty(adminModifySeminarRequestDto.getAttachments())) {
+        if (adminModifySeminarRequestDto.getAttachments() == null) {
+            // there was no "attachments" in request body
             adminModifySeminarRequestDto.setAttachments(
-                    seminar.getAttachments().stream()
-                            .map(Attachment::getId)
-                            .collect(Collectors.toList())
+                seminar.getAttachments().stream()
+                    .map(Attachment::getId)
+                    .collect(Collectors.toList())
             );
         }
 
         adminModifySeminarRequestDto.setContent(
-                Optional.ofNullable(adminModifySeminarRequestDto.getContent())
-                        .orElseGet(seminar::getContent)
+            Optional.ofNullable(adminModifySeminarRequestDto.getContent())
+                .orElseGet(seminar::getContent)
         );
 
         adminModifySeminarRequestDto.setDate(
-                Optional.ofNullable(adminModifySeminarRequestDto.getDate())
-                        .orElseGet(seminar::getDate)
+            Optional.ofNullable(adminModifySeminarRequestDto.getDate())
+                .orElseGet(() -> {
+                    return toFormat(seminar.getDate(), YYYY_MM_DD);
+                })
         );
 
         List<Attachment> attachmentList = new ArrayList<>();
 
-        if (adminModifySeminarRequestDto.getAttachments() != null) {
-            for (Long attachmentId :adminModifySeminarRequestDto.getAttachments()) {
+        if (!CollectionUtils.isEmpty(adminModifySeminarRequestDto.getAttachments())) {
+            // there was "attachments" in request body, but empty
+            for (Long attachmentId : adminModifySeminarRequestDto.getAttachments()) {
                 Attachment attachment = attachmentRepository.findById(attachmentId)
-                        .orElseThrow(() -> new BadRequestException(BadRequestType.ATTACHMENT_NOT_EXIST));
+                    .orElseThrow(() -> new BadRequestException(BadRequestType.ATTACHMENT_NOT_EXIST));
                 attachmentList.add(attachment);
             }
         }
 
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = userDetails.getUsername();
-        User user = userRepository.findById(username).orElse(null);
+//        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        String username = userDetails.getUsername();
+//        User user = userRepository.findById(username).orElse(null);
+        User user = null;
 
         seminar.update(
-                adminModifySeminarRequestDto.getDate(),
-                user,
-                attachmentList
+            DateUtils.convertStringToLocalDateTime(adminModifySeminarRequestDto.getDate(), YYYY_MM_DD),
+            user,
+            adminModifySeminarRequestDto.getTitle(),
+            adminModifySeminarRequestDto.getContent(),
+            attachmentList
         );
     }
+
     private void validateAdminModifySeminarRequest(AdminModifySeminarRequestDto adminModifySeminarRequestDto) {
         if ((adminModifySeminarRequestDto.getTitle() == null)
-                && (adminModifySeminarRequestDto.getSeminarId() == null)
-                && (adminModifySeminarRequestDto.getDate() == null)
-                && (adminModifySeminarRequestDto.getAttachments().isEmpty())
-                && (adminModifySeminarRequestDto.getContent() == null)) {
+            && (adminModifySeminarRequestDto.getSeminarId() == null)
+            && (adminModifySeminarRequestDto.getDate() == null)
+            && (adminModifySeminarRequestDto.getAttachments().isEmpty())
+            && (adminModifySeminarRequestDto.getContent() == null)) {
             throw new BadRequestException(BadRequestType.NULL_MODIFY_SEMINAR_VALUES);
         }
     }

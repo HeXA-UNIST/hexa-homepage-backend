@@ -17,7 +17,7 @@ public class AdminCreateSeminarRequestDto {
     private String content;
 
     @Schema(description = "세미나 날짜", required = true)
-    private Date date;
+    private String date;
 
     @Schema(description = "첨부파일 id 리스트")
     private List<Long> attachments;

@@ -5,7 +5,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import pro.hexa.backend.domain.attachment.domain.QAttachment;
@@ -90,8 +89,10 @@ public class SeminarRepositoryImpl implements SeminarRepositoryCustom {
     public int getAdminMaxPage(Integer perPage) {
         QSeminar seminar = QSeminar.seminar;
 
-        return Math.toIntExact(queryFactory.select(seminar.id.count().divide(perPage))
-                .from(seminar)
-                .fetchFirst());
+        Long totalCount = queryFactory.select(seminar.id.count())
+            .from(seminar)
+            .fetchFirst();
+
+        return (int) Math.ceil((double) totalCount / perPage);
     }
 }
