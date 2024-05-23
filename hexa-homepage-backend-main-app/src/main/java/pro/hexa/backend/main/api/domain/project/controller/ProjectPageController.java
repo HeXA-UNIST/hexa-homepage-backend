@@ -25,7 +25,7 @@ public class ProjectPageController {
     private final ProjectPageService projectPageService;
 
     @Operation(description = "project 리스트를 조회")
-    @GetMapping("/query")
+    @GetMapping("/list")
     public ResponseEntity<ProjectListResponse> getProjectListResponse(
         @RequestParam(required = false, defaultValue = "") String searchText,
         @RequestParam(required = false) List<STATE_TYPE> status,

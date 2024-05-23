@@ -1,20 +1,17 @@
 package pro.hexa.backend.main.api.domain.seminar.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import static pro.hexa.backend.main.api.common.utils.DateUtils.YYYY_MM_DD;
+import static pro.hexa.backend.main.api.common.utils.DateUtils.toFormat;
 
-import java.time.LocalDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
 import pro.hexa.backend.domain.seminar.domain.Seminar;
-import pro.hexa.backend.main.api.common.utils.DateUtils;
 
 @Getter
 @Builder
@@ -29,7 +26,7 @@ public class AdminSeminarDetailResponse {
     private String content;
 
     @Schema(description = "세미나 날짜")
-    private LocalDateTime date;
+    private String date;
 
     @Schema(description = "세미나 첨부파일 리스트")
     private List<AdminSeminarAttachmentDto> attachments;
@@ -37,7 +34,7 @@ public class AdminSeminarDetailResponse {
     public void fromSeminar(Seminar seminar) {
         this.title = seminar.getTitle();
         this.content = seminar.getContent();
-        this.date = seminar.getDate();
+        this.date = toFormat(seminar.getDate(), YYYY_MM_DD);
         if (seminar.getAttachments() != null && !seminar.getAttachments().isEmpty()) {
             this.attachments = seminar.getAttachments().stream()
                     .map(attachment -> new AdminSeminarAttachmentDto(

@@ -23,7 +23,8 @@ public enum BadRequestType {
     INVALID_CREATE_DTO_STATE("state가 NULL입니다"),
     INVALID_CREATE_DTO_CONTENT("content가 NULL입니다"),
     INVALID_CREATE_DTO_THUMBNAIL("thumbnail이 NULL입니다"),
-    SERVICE_NOT_FOUND("서비스를 찾을 수 없습니다.");
+    SERVICE_NOT_FOUND("서비스를 찾을 수 없습니다."),
+    FILE_UPLOAD_FAIL("파일 업로드에 실패했습니다.");
 
     private final String message;
 

@@ -9,12 +9,10 @@ import lombok.Getter;
 @Builder
 public class ProjectListResponse {
 
+    @Schema(description = "총 페이지 수")
+    private Integer totalPage;
+
     @Schema(description = "프로젝트 목록")
     private List<ProjectDto> projects;
 
-    @Schema(description = "페이지")
-    private Integer page;
-
-    @Schema(description = "최대 페이지 범위")
-    private Integer maxPage;
 }
