@@ -38,28 +38,25 @@ public class NewsAdminPageController {
 
     @Operation(description = "뉴스 생성 요청")
     @PostMapping("/create")
-    public ResponseEntity adminCreateNews(
+    public void adminCreateNews(
             @RequestBody AdminCreateNewsRequestDto adminCreateNewsRequestDto
     ) {
         newsAdminPageService.adminCreateNews(adminCreateNewsRequestDto);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(description = "뉴스 수정 요청")
     @PostMapping("/modify")
-    public ResponseEntity adminModifyNews(
+    public void adminModifyNews(
             @RequestBody AdminModifyNewsRequestDto adminModifyNewsRequestDto
     ) {
         newsAdminPageService.adminModifyNews(adminModifyNewsRequestDto);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(description = "뉴스 삭제")
     @DeleteMapping("/delete")
-    public ResponseEntity adminDeleteNews(
+    public void adminDeleteNews(
         @RequestParam() Long newsId
     ) {
         newsAdminPageService.adminDeleteNews(newsId);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -27,6 +27,7 @@ public class SeminarRepositoryImpl implements SeminarRepositoryCustom {
         return queryFactory.selectFrom(seminar)
             .leftJoin(seminar.attachments, attachment).fetchJoin()
             .where(whereQuery)
+            .orderBy(seminar.date.desc())
             .offset((long) pageNum * perPage)
             .limit(perPage)
             .fetch();

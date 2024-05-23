@@ -19,7 +19,7 @@ import pro.hexa.backend.main.api.domain.seminar.dto.AdminSeminarListResponse;
 import pro.hexa.backend.main.api.domain.seminar.service.SeminarAdminPageService;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/seminar")
 @RequiredArgsConstructor
 public class
 
@@ -27,7 +27,7 @@ SeminarAdminPageController {
 
     private final SeminarAdminPageService seminarAdminPageService;
     @Operation(description = "세미나 리스트 조회")
-    @GetMapping("/seminarList")
+    @GetMapping("/list")
     public ResponseEntity<AdminSeminarListResponse> getAdminSeminarList(
         @RequestParam(required = false) Integer pageNum,
         @RequestParam(required = false) @Valid @Min(value = 1) Integer perPage
@@ -36,7 +36,7 @@ SeminarAdminPageController {
     }
 
     @Operation(description = "세미나 수정 창에서 보여줄 정보 조회")
-    @GetMapping("/seminarDetail")
+    @GetMapping("/detail")
     public ResponseEntity<AdminSeminarDetailResponse> getAdminSeminarDetail(
         @RequestParam() Long seminarId
     ) {
@@ -44,21 +44,21 @@ SeminarAdminPageController {
     }
 
     @Operation(description = "세미나 생성 요청")
-    @PostMapping("/createSeminar")
+    @PostMapping("/create")
     public ResponseEntity<Void> adminCreateSeminar(@RequestBody AdminCreateSeminarRequestDto adminCreateSeminarRequestDto) {
         seminarAdminPageService.adminCreateSeminar(adminCreateSeminarRequestDto);
         return ResponseEntity.ok(null);
     }
 
     @Operation(description = "세미나 수정 요청")
-    @PostMapping("/modifySeminar")
+    @PostMapping("/modify")
     public ResponseEntity<Void> adminModifySeminar(@RequestBody AdminModifySeminarRequestDto adminModifySeminarRequestDto) {
         seminarAdminPageService.adminModifySeminar(adminModifySeminarRequestDto);
         return ResponseEntity.ok(null);
     }
 
     @Operation(description = "세미나 삭제")
-    @DeleteMapping("/deleteSeminar")
+    @DeleteMapping("/delete")
     public ResponseEntity<Void> adminDeleteSeminar(
         @RequestParam() Long seminarId
     ) {
