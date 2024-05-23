@@ -11,4 +11,7 @@ public class MainPageResponse {
 
     @Schema(description = "뉴스 목록")
     private List<MainPageNewsDto> newsList;
+
+    @Schema(description = "서비스 목록")
+    private List<MainPageServiceDto> serviceList;
 }

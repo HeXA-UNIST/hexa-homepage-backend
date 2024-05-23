@@ -44,6 +44,9 @@ public class ProjectDto {
     @Schema(description = "공개")
     protected AUTHORIZATION_TYPE public_status;
 
+    @Schema(description = "간단한 소개")
+    protected String description;
+
     public void fromProject(Project project) {
         this.projectId = project.getId();
         this.title = project.getTitle();
@@ -56,6 +59,7 @@ public class ProjectDto {
         this.memberList = project.getMembers().stream()
             .map(ProjectMemberDto::fromProjectMember)
             .collect(Collectors.toList());
+        this.description = project.getDescription();
         this.status = project.getState();
         this.public_status = project.getAuthorization();
     }

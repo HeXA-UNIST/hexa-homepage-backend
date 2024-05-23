@@ -26,23 +26,29 @@ public class Service extends AbstractActivity {
     @Column(length = 127)
     private String githubLink;
 
+    @Comment(value = "간단한 소개")
+    @Column(length = 100)
+    private String description;
+
     public static Service create(Attachment attachment, String siteLink, String githubLink,
-        String title, String content) {
+        String title, String content, String description) {
         Service service = new Service();
         service.thumbnail = attachment;
         service.siteLink = siteLink;
         service.githubLink = githubLink;
         service.title = title;
         service.content = content;
+        service.description = description;
 
         return service;
     }
     public void update(Attachment attachment, String siteLink, String githubLink,
-        String title, String content){
+        String title, String content, String description){
         Optional.ofNullable(attachment).ifPresent((att) -> this.thumbnail = att);
         Optional.ofNullable(siteLink).ifPresent((sl) -> this.siteLink = sl);
         Optional.ofNullable(githubLink).ifPresent((gl) -> this.githubLink = gl);
         Optional.ofNullable(title).ifPresent((t) -> this.title = t);
         Optional.ofNullable(content).ifPresent((cont) -> this.content = cont);
+        Optional.ofNullable(description).ifPresent((des) -> this.content = des);
     }
 }

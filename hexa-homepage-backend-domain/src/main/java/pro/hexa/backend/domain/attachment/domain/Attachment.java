@@ -1,5 +1,6 @@
 package pro.hexa.backend.domain.attachment.domain;
 
+import java.nio.file.Path;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,7 +17,7 @@ import pro.hexa.backend.domain.model.model.AbstractEntity;
 @Entity(name = "attachment")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class Attachment extends AbstractEntity {
 
     @Id
@@ -36,11 +37,23 @@ public class Attachment extends AbstractEntity {
     @Column
     private Long size;
 
-    public static Attachment create(String location, String name, Long size) {
+    public static Attachment create(String fileUploadLocation, String name, Long size) {
         Attachment attachment = new Attachment();
-        attachment.location = location;
+        attachment.location = Path.of(fileUploadLocation, attachment.getId().toString()).toString();
         attachment.name = name;
         attachment.size = size;
         return attachment;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setSize(Long size) {
+        this.size = size;
     }
 }

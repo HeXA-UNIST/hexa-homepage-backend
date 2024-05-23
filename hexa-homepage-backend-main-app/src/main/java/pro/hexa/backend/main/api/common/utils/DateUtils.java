@@ -1,6 +1,7 @@
 package pro.hexa.backend.main.api.common.utils;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -21,5 +22,10 @@ public final class DateUtils {
             .atZone(ZoneId.systemDefault())
             .toLocalDateTime();
         return localDateTime;
+    }
+
+    public static LocalDateTime convertStringToLocalDateTime(String dateString, String format){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        return LocalDate.parse(dateString, formatter).atStartOfDay();
     }
 }

@@ -40,8 +40,7 @@ public class ProjectPageService {
         return ProjectListResponse
             .builder()
             .projects(projects)
-            .page(perPage)
-            .maxPage(maxPage)
+            .totalPage(maxPage)
             .build();
     }
 

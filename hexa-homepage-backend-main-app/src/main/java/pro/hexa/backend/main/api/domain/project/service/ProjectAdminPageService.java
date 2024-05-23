@@ -97,6 +97,7 @@ public class ProjectAdminPageService {
             AUTHORIZATION_TYPE.All,
             STATE_TYPE.valueOf(adminCreateProjectRequestDto.getState()),
             adminCreateProjectRequestDto.getContent(),
+            adminCreateProjectRequestDto.getDescription(),
             thumbnail
         );
 
@@ -207,6 +208,7 @@ public class ProjectAdminPageService {
             AUTHORIZATION_TYPE.All,
             STATE_TYPE.valueOf(adminModifyProjectRequestDto.getState()),
             adminModifyProjectRequestDto.getContent(),
+            adminModifyProjectRequestDto.getDescription(),
             getAttachmentById(adminModifyProjectRequestDto.getThumbnail())
         );
     }
@@ -223,6 +225,7 @@ public class ProjectAdminPageService {
             && (adminModifyProjectRequestDto.getProjectTechStacks().isEmpty())
             && (adminModifyProjectRequestDto.getState() == null)
             && (adminModifyProjectRequestDto.getContent() == null)
+            && (adminModifyProjectRequestDto.getDescription() == null)
             && (adminModifyProjectRequestDto.getThumbnail() == null)) {
             throw new BadRequestException(BadRequestType.NULL_MODIFY_PROJECT_VALUES);
         }

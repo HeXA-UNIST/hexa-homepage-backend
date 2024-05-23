@@ -33,6 +33,7 @@ public class ServiceAdminPageService {
             .map(service -> AdminServiceDto.builder()
                 .serviceId(service.getId())
                 .title(service.getTitle())
+                .description(service.getDescription())
                 .thumbnail(service.getThumbnail().getId())
                 .build())
             .collect(Collectors.toList());
@@ -55,6 +56,7 @@ public class ServiceAdminPageService {
             .title(service.getTitle())
             .thumbnail(thumbnailId)
             .content(service.getContent())
+            .description(service.getDescription())
             .siteLink(service.getSiteLink())
             .githubLink(service.getGithubLink())
             .build();
@@ -65,7 +67,8 @@ public class ServiceAdminPageService {
         // post
         Attachment attachment = attachmentRepository.findById(dto.getThumbnail())
             .orElseThrow(() -> new BadRequestException(BadRequestType.ATTACHMENT_NOT_EXIST));
-        Service newService = Service.create(attachment, dto.getSiteLink(), dto.getGithubLink(), dto.getTitle(), dto.getContent());
+        Service newService = Service.create(attachment, dto.getSiteLink(), dto.getGithubLink(), dto.getTitle(), dto.getContent(),
+            dto.getDescription());
         serviceRepository.save(newService);
     }
 
@@ -76,7 +79,7 @@ public class ServiceAdminPageService {
             .orElseThrow(() -> new BadRequestException(BadRequestType.SERVICE_NOT_FOUND));
         Attachment attachment = attachmentRepository.findById(dto.getThumbnail())
             .orElseThrow(() -> new BadRequestException(BadRequestType.ATTACHMENT_NOT_EXIST));
-        service.update(attachment, dto.getSiteLink(), dto.getGithubLink(), dto.getTitle(), dto.getContent());
+        service.update(attachment, dto.getSiteLink(), dto.getGithubLink(), dto.getTitle(), dto.getContent(), dto.getDescription());
     }
 
     @Transactional

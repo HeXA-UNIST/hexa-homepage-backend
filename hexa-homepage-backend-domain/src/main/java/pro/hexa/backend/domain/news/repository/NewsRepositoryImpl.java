@@ -20,7 +20,7 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
         QNews news = QNews.news;
         return queryFactory.selectFrom(news)
             .orderBy(news.date.desc())
-            .limit(3)
+            .limit(6)
             .fetch();
     }
 
