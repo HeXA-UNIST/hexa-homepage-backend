@@ -17,20 +17,20 @@ import pro.hexa.backend.main.api.domain.service.dto.AdminServiceListResponse;
 import pro.hexa.backend.main.api.domain.service.service.ServiceAdminPageService;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/service")
 @RequiredArgsConstructor
 public class ServiceAdminPageController {
     private final ServiceAdminPageService serviceAdminPageService;
 
     @Operation(description = "서비스 리스트 조회")
-    @GetMapping("/serviceList")
+    @GetMapping("/list")
     public ResponseEntity<AdminServiceListResponse> getAdminServiceList() {
 
         return ResponseEntity.ok(serviceAdminPageService.getList());
     }
 
     @Operation(description = "서비스 수정 창에서 보여줄 정보 조회")
-    @GetMapping("/serviceDetail")
+    @GetMapping("/detail")
     public ResponseEntity<AdminServiceDetailResponse> getAdminServiceDetail(
         @RequestParam Long serviceId
     ) {
@@ -38,21 +38,21 @@ public class ServiceAdminPageController {
     }
 
     @Operation(description = "서비스 생성 요청")
-    @PostMapping("/createService")
+    @PostMapping("/create")
     public ResponseEntity<Boolean> adminCreateService(@RequestBody AdminCreateServiceRequestDto adminCreateServiceRequestDto) {
         serviceAdminPageService.createService(adminCreateServiceRequestDto);
         return ResponseEntity.ok(true);
     }
 
     @Operation(description = "서비스 수정 요청")
-    @PostMapping("/modifyService")
+    @PostMapping("/modify")
     public ResponseEntity<Boolean> adminModifyService(@RequestBody AdminModifyServiceRequestDto adminModifyServiceRequestDto) {
         serviceAdminPageService.modifyService(adminModifyServiceRequestDto);
         return ResponseEntity.ok(true);
     }
 
     @Operation(description = "서비스 삭제")
-    @DeleteMapping("/deleteService")
+    @DeleteMapping("/delete")
     public ResponseEntity<Boolean> adminDeleteService(
         @RequestParam Long serviceId
     ) {
