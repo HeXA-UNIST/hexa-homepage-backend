@@ -29,19 +29,19 @@ public class ProjectPageController {
     public ResponseEntity<ProjectListResponse> getProjectListResponse(
         @RequestParam(required = false, defaultValue = "") String searchText,
         @RequestParam(required = false) List<STATE_TYPE> status,
-        @RequestParam(required = false) String sort,
+        @RequestParam(required = false, defaultValue = "asc") String sort,
         @RequestParam(required = false) List<String> includeTechStack,
         @RequestParam(required = false) List<String> excludeTechStack,
         @RequestParam(required = false) Integer year,
-        @RequestParam(required = false) Integer pageNum,
-        @RequestParam(required = false) @Valid @Min(value = 1) Integer perPage
+        @RequestParam(required = false, defaultValue = "0") Integer pageNum,
+        @RequestParam(required = false, defaultValue = "20") @Valid @Min(value = 1) Integer perPage
     ) {
         return new ResponseEntity<>(projectPageService.getProjectListResponse(searchText, status, sort,
             includeTechStack, excludeTechStack, year, pageNum, perPage), HttpStatus.OK);
     }
 
     @Operation(description = "project를 조회")
-    @GetMapping()
+    @GetMapping("/detail")
     public ResponseEntity<ProjectResponse> getProjectResponse(@RequestParam Long projectId) {
         return new ResponseEntity<>(projectPageService.getProjectResponse(projectId), HttpStatus.OK);
     }
