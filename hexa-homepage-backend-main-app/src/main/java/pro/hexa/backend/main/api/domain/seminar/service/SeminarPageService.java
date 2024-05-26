@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pro.hexa.backend.domain.seminar.domain.Seminar;
 import pro.hexa.backend.domain.seminar.repository.SeminarRepository;
+import pro.hexa.backend.main.api.domain.seminar.dto.SeminarDetailResponse;
 import pro.hexa.backend.main.api.domain.seminar.dto.SeminarDto;
 import pro.hexa.backend.main.api.domain.seminar.dto.SeminarListResponse;
 
@@ -34,8 +35,16 @@ public class SeminarPageService {
 
         return SeminarListResponse.builder()
             .seminars(seminars)
-            .page(perPage)
-            .maxPage(maxPage)
+            .totalPage(maxPage)
             .build();
+    }
+
+    public SeminarDetailResponse getSeminarDetail(Long seminarId) {
+        Seminar seminar = seminarRepository.findById(seminarId).orElseThrow();
+
+        SeminarDetailResponse seminarDetailResponse = new SeminarDetailResponse();
+        seminarDetailResponse.fromSeminar(seminar);
+
+        return seminarDetailResponse;
     }
 }
