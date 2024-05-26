@@ -18,7 +18,9 @@ import pro.hexa.backend.main.api.domain.attachment.service.AttachmentService;
 @RequestMapping("/attachment")
 @RequiredArgsConstructor
 public class AttachmentController {
+
     private final AttachmentService attachmentService;
+
     @GetMapping("")
     public ResponseEntity<InputStreamResource> getAttachment(@RequestParam Long attachmentId) throws FileNotFoundException {
         Attachment attachment = attachmentService.getAttachment(attachmentId);
@@ -28,7 +30,9 @@ public class AttachmentController {
         FileInputStream inputStream = attachmentService.getFileInputStreamFromAttachment(attachment);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + attachment.getName());
+        if (mediaType == MediaType.APPLICATION_OCTET_STREAM) {
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + attachment.getName());
+        }
         headers.setContentType(mediaType);
 
         return ResponseEntity.ok()
