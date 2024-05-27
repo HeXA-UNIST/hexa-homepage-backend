@@ -1,6 +1,6 @@
 package pro.hexa.backend.domain.seminar.domain;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
@@ -23,7 +23,7 @@ public class Seminar extends AbstractActivity {
 
     @Comment("날짜")
     @Column
-    private LocalDateTime date;
+    private LocalDate date;
 
     @Comment("작성자")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,7 +34,7 @@ public class Seminar extends AbstractActivity {
     private List<Attachment> attachments = new ArrayList<>();
 
     public static Seminar create(
-        LocalDateTime date,
+        LocalDate date,
         User user,
         String title,
         String content,
@@ -50,7 +50,7 @@ public class Seminar extends AbstractActivity {
     }
 
     public void update(
-            LocalDateTime date,
+            LocalDate date,
             User user,
             String title,
             String content,

@@ -1,11 +1,7 @@
 package pro.hexa.backend.main.api.domain.seminar.service;
 
 
-import static pro.hexa.backend.main.api.common.utils.DateUtils.YYYY_MM_DD;
-import static pro.hexa.backend.main.api.common.utils.DateUtils.toFormat;
-
 import io.netty.util.internal.StringUtil;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +19,6 @@ import pro.hexa.backend.domain.user.domain.User;
 import pro.hexa.backend.domain.user.repository.UserRepository;
 import pro.hexa.backend.main.api.common.exception.BadRequestException;
 import pro.hexa.backend.main.api.common.exception.BadRequestType;
-import pro.hexa.backend.main.api.common.utils.DateUtils;
 import pro.hexa.backend.main.api.domain.seminar.dto.AdminCreateSeminarRequestDto;
 import pro.hexa.backend.main.api.domain.seminar.dto.AdminModifySeminarRequestDto;
 import pro.hexa.backend.main.api.domain.seminar.dto.AdminSeminarDetailResponse;
@@ -92,7 +87,6 @@ public class SeminarAdminPageService {
             }
         }
 
-        LocalDateTime seminarDate = DateUtils.convertStringToLocalDateTime(adminCreateSeminarRequestDto.getDate(), YYYY_MM_DD);
 
 //        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        String username = userDetails.getUsername();
@@ -100,7 +94,7 @@ public class SeminarAdminPageService {
         User user = null;
 
         Seminar seminar = Seminar.create(
-            seminarDate,
+            adminCreateSeminarRequestDto.getDate(),
             user,
             adminCreateSeminarRequestDto.getTitle(),
             adminCreateSeminarRequestDto.getContent(),
@@ -150,7 +144,7 @@ public class SeminarAdminPageService {
         adminModifySeminarRequestDto.setDate(
             Optional.ofNullable(adminModifySeminarRequestDto.getDate())
                 .orElseGet(() -> {
-                    return toFormat(seminar.getDate(), YYYY_MM_DD);
+                    return seminar.getDate();
                 })
         );
 
@@ -171,7 +165,7 @@ public class SeminarAdminPageService {
         User user = null;
 
         seminar.update(
-            DateUtils.convertStringToLocalDateTime(adminModifySeminarRequestDto.getDate(), YYYY_MM_DD),
+            adminModifySeminarRequestDto.getDate(),
             user,
             adminModifySeminarRequestDto.getTitle(),
             adminModifySeminarRequestDto.getContent(),

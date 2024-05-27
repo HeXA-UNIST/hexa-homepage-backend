@@ -1,8 +1,5 @@
 package pro.hexa.backend.main.api.domain.seminar.dto;
 
-import static pro.hexa.backend.main.api.common.utils.DateUtils.YYYY_MM_DD;
-import static pro.hexa.backend.main.api.common.utils.DateUtils.toFormat;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +29,7 @@ public class SeminarDetailResponse {
     public void fromSeminar(Seminar seminar) {
         this.title = seminar.getTitle();
         this.content = seminar.getContent();
-        this.date = toFormat(seminar.getDate(), YYYY_MM_DD);
+        this.date = seminar.getDate().toString();
         if (seminar.getAttachments() != null && !seminar.getAttachments().isEmpty()) {
             this.attachments = seminar.getAttachments().stream()
                 .map(attachment -> new SeminarAttachmentDto(

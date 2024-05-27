@@ -1,6 +1,7 @@
 package pro.hexa.backend.main.api.domain.seminar.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +22,7 @@ public class AdminModifySeminarRequestDto {
     private String content;
 
     @Schema(description = "세미나 날짜")
-    private String date;
+    private LocalDate date;
 
     @Schema(description = "첨부파일 id 리스트")
     private List<Long> attachments;

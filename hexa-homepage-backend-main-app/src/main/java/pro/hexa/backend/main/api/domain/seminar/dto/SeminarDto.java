@@ -1,8 +1,5 @@
 package pro.hexa.backend.main.api.domain.seminar.dto;
 
-import static pro.hexa.backend.main.api.common.utils.DateUtils.YYYY_MM_DD;
-import static pro.hexa.backend.main.api.common.utils.DateUtils.toFormat;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,7 +30,7 @@ public class SeminarDto {
     public void fromSeminar(Seminar seminar) {
         this.seminarId = seminar.getId();
         this.title = seminar.getTitle();
-        this.date = toFormat(seminar.getDate(), YYYY_MM_DD);
+        this.date = seminar.getDate().toString();
         this.content = seminar.getContent();
         this.hasAttachment = (seminar.getAttachments()!=null&&!seminar.getAttachments().isEmpty());
     }
