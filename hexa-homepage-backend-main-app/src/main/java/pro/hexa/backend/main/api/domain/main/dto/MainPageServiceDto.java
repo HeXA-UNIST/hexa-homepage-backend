@@ -1,9 +1,10 @@
 package pro.hexa.backend.main.api.domain.main.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 @Builder
 public class MainPageServiceDto {
     @Schema(description = "서비스 id")
