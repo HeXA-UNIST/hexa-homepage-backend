@@ -44,13 +44,14 @@ public class AdminProjectDetailResponse {
     public void fromProject(Project project) {
         this.title = project.getTitle();
         this.startDate = DateUtils.toFormat(project.getStartDate(),DateUtils.YYYY_MM_DD);
-        this.endDate = DateUtils.toFormat(project.getEndDate(),DateUtils.YYYY_MM_DD);
+        this.endDate = (project.getEndDate()!=null)?
+            DateUtils.toFormat(project.getEndDate(),DateUtils.YYYY_MM_DD): null;
         this.projectTechStacks = project.getProjectTechStacks().stream()
             .map(ProjectTechStack::getContent)
             .collect(Collectors.toList());
         this.state = String.valueOf(project.getState());
         this.content = project.getContent();
         this.description = project.getDescription();
-        this.thumbnail = project.getThumbnail().getId();
+        this.thumbnail = (project.getThumbnail()!=null)?project.getThumbnail().getId():null;
     }
 }

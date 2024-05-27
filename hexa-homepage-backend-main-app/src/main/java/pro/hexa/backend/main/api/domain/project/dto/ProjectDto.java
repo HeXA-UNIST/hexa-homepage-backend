@@ -28,7 +28,7 @@ public class ProjectDto {
     public void fromProject(Project project) {
         this.projectId = project.getId();
         this.title = project.getTitle();
-        this.thumbnail = project.getThumbnail().getId();
+        this.thumbnail = (project.getThumbnail()!=null)?project.getThumbnail().getId():null;
         this.state = project.getState();
         this.description = project.getDescription();
     }

@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.lang.Nullable;
 
 @Getter
 @AllArgsConstructor
@@ -18,6 +19,7 @@ public class AdminCreateProjectRequestDto {
     private LocalDate startDate;
 
     @Schema(description = "프로젝트 종료일")
+    @Nullable
     private LocalDate endDate;
 
     @Schema(description = "프로젝트 기술 스택", required = true)

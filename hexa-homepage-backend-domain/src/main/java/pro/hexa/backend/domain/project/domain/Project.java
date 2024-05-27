@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.Getter;
@@ -30,7 +31,6 @@ import pro.hexa.backend.domain.project_tech_stack.domain.ProjectTechStack;
 public class Project extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "project_id")
     private Long id;
 
     @Comment(value = "제목")
@@ -46,11 +46,11 @@ public class Project extends AbstractEntity {
     private LocalDateTime endDate;
 
     @Comment(value = "기술스택")
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<ProjectTechStack> projectTechStacks = new HashSet<>();
 
     @Comment(value = "멤버")
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<ProjectMember> members = new HashSet<>();
 
     @Comment(value = "노출")
@@ -88,6 +88,7 @@ public class Project extends AbstractEntity {
         Attachment thumbnail
     ) {
         Project project = new Project();
+        project.id = null;
         project.title = title;
         project.startDate = startDate;
         project.endDate = endDate;
@@ -97,32 +98,6 @@ public class Project extends AbstractEntity {
         project.state = state;
         project.content = content;
         project.description = description;
-        project.thumbnail = thumbnail;
-        return project;
-    }
-
-    public static Project createForTest(
-        Long id,
-        String title,
-        LocalDateTime startDate,
-        LocalDateTime endDate,
-        List<ProjectTechStack> projectTechStacks,
-        List<ProjectMember> members,
-        AUTHORIZATION_TYPE authorization,
-        STATE_TYPE state,
-        String content,
-        Attachment thumbnail
-    ) {
-        Project project = new Project();
-        project.id = id;
-        project.title = title;
-        project.startDate = startDate;
-        project.endDate = endDate;
-        project.addProjectTechStacksAll(projectTechStacks);
-        project.addMembersAll(members);
-        project.authorization = authorization;
-        project.state = state;
-        project.content = content;
         project.thumbnail = thumbnail;
         return project;
     }
@@ -158,10 +133,6 @@ public class Project extends AbstractEntity {
         }
 
         projectTechStacks.add(projectTechStack);
-
-        if (projectTechStack.getProject() != this) {
-            projectTechStack.setProject(this);
-        }
     }
 
     public void addProjectTechStacksAll(List<ProjectTechStack> projectTechStacks) {

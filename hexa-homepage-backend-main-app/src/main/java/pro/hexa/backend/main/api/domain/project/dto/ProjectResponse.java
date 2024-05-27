@@ -38,13 +38,13 @@ public class ProjectResponse{
     public void fromProject(Project project) {
         this.title = project.getTitle();
         this.startDate = toFormat(project.getStartDate(), YYYY_MM_DD);
-        this.endDate = toFormat(project.getEndDate(), YYYY_MM_DD);
+        this.endDate = (project.getEndDate()!=null)?toFormat(project.getEndDate(), YYYY_MM_DD):null;
         this.projectTechStacks = project.getProjectTechStacks().stream()
             .map(ProjectTechStack::getContent)
             .collect(Collectors.toList());
         this.description = project.getDescription();
         this.content = project.getContent();
         this.state = project.getState().getValue();
-        this.thumbnail = project.getThumbnail().getId();
+        this.thumbnail = (project.getThumbnail()!=null)?project.getThumbnail().getId():null;
     }
 }

@@ -120,13 +120,9 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
     @Override
     public int getAdminMaxPage(Integer perPage) {
         QProject project = QProject.project;
-        QProjectMember projectMember = QProjectMember.projectMember;
-        QProjectTechStack projectTechStack = QProjectTechStack.projectTechStack;
 
-        return Math.toIntExact(queryFactory.select(project.id.count().divide(perPage))
+        return (int) Math.ceil((double) queryFactory.select(project.id.count())
             .from(project)
-            .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
-            .leftJoin(project.members, projectMember).fetchJoin()
-            .fetchFirst());
+            .fetchFirst()/perPage);
     }
 }

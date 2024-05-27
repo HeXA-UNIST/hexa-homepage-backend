@@ -91,7 +91,8 @@ public class ProjectAdminPageService {
         Project project = Project.create(
             adminCreateProjectRequestDto.getTitle(),
             adminCreateProjectRequestDto.getStartDate().atStartOfDay(),
-            adminCreateProjectRequestDto.getEndDate().atStartOfDay(),
+            (adminCreateProjectRequestDto.getEndDate()!=null)?
+                adminCreateProjectRequestDto.getEndDate().atStartOfDay():null,
             projectTechStackList,
             null,
             AUTHORIZATION_TYPE.All,
@@ -114,14 +115,8 @@ public class ProjectAdminPageService {
         if (adminCreateProjectRequestDto.getProjectTechStacks() == null) {
             throw new BadRequestException(BadRequestType.INVALID_CREATE_DTO_PROJECTSTACKS);
         }
-        if (adminCreateProjectRequestDto.getThumbnail() == null) {
-            throw new BadRequestException(BadRequestType.INVALID_CREATE_DTO_THUMBNAIL);
-        }
         if (adminCreateProjectRequestDto.getStartDate() == null) {
             throw new BadRequestException(BadRequestType.INVALID_CREATE_DTO_START_DATE);
-        }
-        if (adminCreateProjectRequestDto.getEndDate() == null) {
-            throw new BadRequestException(BadRequestType.INVALID_CREATE_DTO_END_DATE);
         }
         if (Objects.equals(adminCreateProjectRequestDto.getState(), "")) {
             throw new BadRequestException(BadRequestType.INVALID_CREATE_DTO_STATE);
