@@ -49,6 +49,6 @@ public class Service extends AbstractActivity {
         Optional.ofNullable(githubLink).ifPresent((gl) -> this.githubLink = gl);
         Optional.ofNullable(title).ifPresent((t) -> this.title = t);
         Optional.ofNullable(content).ifPresent((cont) -> this.content = cont);
-        Optional.ofNullable(description).ifPresent((des) -> this.content = des);
+        Optional.ofNullable(description).ifPresent((des) -> this.description = des);
     }
 }
