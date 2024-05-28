@@ -27,6 +27,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/${DATABASE_NAME}
     username: ${MYSQL_USERNAME}
@@ -35,10 +38,6 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-logging:
-  level:
-    org.hibernate.SQL: debug
-    org.hibernate.type: trace
 hexa-page-jwt-secret-key: ${DO_WE_EVER_USE_JWT}
 #  cloud:
 #    vault:
