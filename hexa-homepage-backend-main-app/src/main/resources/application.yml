@@ -28,11 +28,10 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:mysql:localhost:3306/${DATABASE_NAME}
-    hikari:
-      username: ${MYSQL_USERNAME}
-      password: ${MYSQL_PASSWORD}
-      driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql:127.0.0.1:3306/${DATABASE_NAME}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 #  cloud:
 #    vault:
 #      enabled: true
