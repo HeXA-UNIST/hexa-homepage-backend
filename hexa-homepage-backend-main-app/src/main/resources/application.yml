@@ -32,6 +32,13 @@ spring:
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
 hexa-page-jwt-secret-key: ${DO_WE_EVER_USE_JWT}
 #  cloud:
 #    vault:
