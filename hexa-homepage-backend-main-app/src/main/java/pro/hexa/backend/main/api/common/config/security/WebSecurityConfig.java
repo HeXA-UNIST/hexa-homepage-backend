@@ -43,9 +43,10 @@ public class WebSecurityConfig {
         Filter jwtAuthorizationFilter = jwtAuthorizationFilter();
         http
             .csrf().disable()
-            .addFilterBefore(customCookieFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(customCookieFilter, UsernamePasswordAuthenticationFilter.class)
 
-//            .cors().configurationSource(corsConfigurationSource()).and()
+            .cors().configurationSource(corsConfigurationSource());
+//            .and()
 //            .csrf().disable()
 //            .addFilterAt(loginAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 //            .addFilterBefore(jwtAuthorizationFilter,UsernamePasswordAuthenticationFilter.class)
