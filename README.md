@@ -6,7 +6,7 @@ docker build -t homepage_backend .
 ```  
 run :
 ```
-docker run --name homepage_backend --network host \
+docker run -d --name homepage_backend --network host \
 -v homepage_backend_attachments:/app/files \
 -e DATABASE_NAME=${HOMEPAGE_BACKEND_DATABASE_NAME} \
 -e MYSQL_PASSWORD=${HOMEPAGE_BACKEND_MYSQL_PASSWORD} \
