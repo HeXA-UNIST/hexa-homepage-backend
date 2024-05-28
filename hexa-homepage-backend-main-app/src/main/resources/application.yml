@@ -30,6 +30,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
+    show-sql: true
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/${DATABASE_NAME}
     username: ${MYSQL_USERNAME}
