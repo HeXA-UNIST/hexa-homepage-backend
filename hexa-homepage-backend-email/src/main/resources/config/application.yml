@@ -1,7 +1,7 @@
 spring:
   config:
     activate:
-      on-profile: default,development
+      on-profile: default,development,production
   mail:
     host: smtp.gmail.com
     port: 587
