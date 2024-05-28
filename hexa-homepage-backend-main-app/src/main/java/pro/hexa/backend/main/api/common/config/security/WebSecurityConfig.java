@@ -12,7 +12,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -32,6 +31,8 @@ public class WebSecurityConfig {
     private final UserRepository userRepository;
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
     private final AuthenticationConfiguration authenticationConfiguration;
+
+    private final CustomCookieFilter customCookieFilter;
     public static final String[] AUTHENTICATION_UNNECESSARY_REQUESTS={
 
     };
@@ -40,15 +41,19 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         Filter loginAuthenticationFilter = loginAuthenticationFilter();
         Filter jwtAuthorizationFilter = jwtAuthorizationFilter();
-        http.cors().configurationSource(corsConfigurationSource()).and()
+        http
             .csrf().disable()
-            .addFilterAt(loginAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(jwtAuthorizationFilter,UsernamePasswordAuthenticationFilter.class)
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-            .authorizeRequests().anyRequest().permitAll().and()
-            .formLogin().disable()
-            .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-            .accessDeniedHandler(new CustomAccessDeniedHandler());
+            .addFilterBefore(customCookieFilter, UsernamePasswordAuthenticationFilter.class);
+
+//            .cors().configurationSource(corsConfigurationSource()).and()
+//            .csrf().disable()
+//            .addFilterAt(loginAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+//            .addFilterBefore(jwtAuthorizationFilter,UsernamePasswordAuthenticationFilter.class)
+//            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+//            .authorizeRequests().anyRequest().permitAll().and()
+//            .formLogin().disable()
+//            .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+//            .accessDeniedHandler(new CustomAccessDeniedHandler());
 
         return http.build();
     }

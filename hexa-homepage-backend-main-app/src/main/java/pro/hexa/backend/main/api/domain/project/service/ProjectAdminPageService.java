@@ -168,7 +168,7 @@ public class ProjectAdminPageService {
 
         adminModifyProjectRequestDto.setEndDate(
             Optional.ofNullable(adminModifyProjectRequestDto.getEndDate())
-                .orElseGet(() -> project.getEndDate().toLocalDate())
+                .orElseGet(() -> (project.getEndDate()!=null)?project.getEndDate().toLocalDate():null)
         );
 
         if (CollectionUtils.isEmpty(adminModifyProjectRequestDto.getProjectTechStacks())) {
@@ -191,7 +191,7 @@ public class ProjectAdminPageService {
 
         adminModifyProjectRequestDto.setThumbnail(
             Optional.ofNullable(adminModifyProjectRequestDto.getThumbnail())
-                .orElseGet(() -> project.getThumbnail().getId())
+                .orElseGet(() -> (project.getThumbnail()!=null)?project.getThumbnail().getId():null)
         );
 
         project.update(
