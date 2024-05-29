@@ -44,7 +44,7 @@ hexa-page-jwt-secret-key: ${DO_WE_EVER_USE_JWT}
 #      uri: https://vault.hexa.pro
 ---
 file:
-  uploadPath: "./files"
+  uploadPath: "/homepage_files"
 spring:
   servlet:
     multipart:
