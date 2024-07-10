@@ -1,0 +1,28 @@
+spring:
+  config:
+    activate:
+      on-profile: default,development,production
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    protocol: smtp
+    username: hexa.unist.no.reply@gmail.com
+    password: zarbehcegbirkwzk
+    default-encoding: UTF-8
+    smtp:
+      start-tls-enable: true
+      auth: true
+---
+#spring:
+#  config:
+#    activate:
+#      on-profile: production
+#  cloud:
+#    vault:
+#      enabled: true
+#      token: ${VAULT_TOKEN}
+#      kv:
+#        enabled: true
+#        backend: kv
+#        application-name: homepage/backend/production
+#      uri: https://vault.hexa.pro

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pro.hexa.backend.domain.seminar.domain.Seminar;
 import pro.hexa.backend.domain.seminar.repository.SeminarRepository;
+import pro.hexa.backend.main.api.domain.seminar.dto.SeminarDetailResponse;
 import pro.hexa.backend.main.api.domain.seminar.dto.SeminarDto;
 import pro.hexa.backend.main.api.domain.seminar.dto.SeminarListResponse;
 
@@ -19,8 +20,9 @@ public class SeminarPageService {
 
     private final SeminarRepository seminarRepository;
 
-    public SeminarListResponse getSeminarListResponse(String searchText, Integer year, Integer pageNum, Integer page) {
-        List<Seminar> seminarList = seminarRepository.findAllByQuery(searchText, year, pageNum, page);
+    public SeminarListResponse getSeminarListResponse(String searchText, Integer year, Integer pageNum, Integer perPage) {
+
+        List<Seminar> seminarList = seminarRepository.findAllByQuery(searchText, year, pageNum, perPage);
         List<SeminarDto> seminars = seminarList.stream()
             .map(seminar -> {
                 SeminarDto seminarDto = new SeminarDto();
@@ -29,12 +31,20 @@ public class SeminarPageService {
             })
             .collect(Collectors.toList());
 
-        int maxPage = seminarRepository.getMaxPage(searchText, year, pageNum, page);
+        int maxPage = seminarRepository.getMaxPage(searchText, year, perPage);
 
         return SeminarListResponse.builder()
             .seminars(seminars)
-            .page(page)
-            .maxPage(maxPage)
+            .totalPage(maxPage)
             .build();
+    }
+
+    public SeminarDetailResponse getSeminarDetail(Long seminarId) {
+        Seminar seminar = seminarRepository.findById(seminarId).orElseThrow();
+
+        SeminarDetailResponse seminarDetailResponse = new SeminarDetailResponse();
+        seminarDetailResponse.fromSeminar(seminar);
+
+        return seminarDetailResponse;
     }
 }

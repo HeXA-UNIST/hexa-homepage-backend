@@ -9,12 +9,9 @@ import lombok.Getter;
 @Builder
 public class SeminarListResponse {
 
+
+    private Integer totalPage;
+
     @Schema(description = "세미나 목록")
     private List<SeminarDto> seminars;
-
-    @Schema(description = "페이지")
-    private Integer page;
-
-    @Schema(description = "최대 페이지 범위")
-    private Integer maxPage;
 }

@@ -12,7 +12,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -22,7 +21,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import pro.hexa.backend.domain.user.repository.UserRepository;
 import pro.hexa.backend.main.api.common.auth.repository.RefreshTokenRedisRepository;
-import pro.hexa.backend.main.api.common.config.security.LoginAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -32,24 +30,31 @@ public class WebSecurityConfig {
     private final ObjectMapper objectMapper;
     private final UserRepository userRepository;
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
+    private final AuthenticationConfiguration authenticationConfiguration;
+
+    private final CustomCookieFilter customCookieFilter;
     public static final String[] AUTHENTICATION_UNNECESSARY_REQUESTS={
 
     };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        AuthenticationManager authenticationManager = authenticationManager(http.getSharedObject(AuthenticationConfiguration.class));
-        Filter loginAuthenticationFilter = loginAuthenticationFilter(authenticationManager);
-        Filter jwtAuthorizationFilter = jwtAuthorizationFilter(authenticationManager);
-        http.cors().configurationSource(corsConfigurationSource()).and()
+        Filter loginAuthenticationFilter = loginAuthenticationFilter();
+        Filter jwtAuthorizationFilter = jwtAuthorizationFilter();
+        http
             .csrf().disable()
-            .addFilterAt(loginAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(jwtAuthorizationFilter,UsernamePasswordAuthenticationFilter.class)
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-            .authorizeRequests().anyRequest().permitAll().and()
-            .formLogin().disable()
-            .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-            .accessDeniedHandler(new CustomAccessDeniedHandler());
+            .addFilterBefore(customCookieFilter, UsernamePasswordAuthenticationFilter.class)
+
+            .cors().configurationSource(corsConfigurationSource());
+//            .and()
+//            .csrf().disable()
+//            .addFilterAt(loginAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+//            .addFilterBefore(jwtAuthorizationFilter,UsernamePasswordAuthenticationFilter.class)
+//            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+//            .authorizeRequests().anyRequest().permitAll().and()
+//            .formLogin().disable()
+//            .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+//            .accessDeniedHandler(new CustomAccessDeniedHandler());
 
         return http.build();
     }
@@ -71,14 +76,13 @@ public class WebSecurityConfig {
         return source;
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    private AuthenticationManager getAuthenticationManager() throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    public LoginAuthenticationFilter loginAuthenticationFilter(AuthenticationManager authenticationManager){
-
+    public LoginAuthenticationFilter loginAuthenticationFilter() throws Exception {
+        AuthenticationManager authenticationManager = getAuthenticationManager();
         LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(objectMapper, userRepository,
             refreshTokenRedisRepository);
         loginAuthenticationFilter.setAuthenticationManager(authenticationManager);
@@ -86,7 +90,8 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public JwtAuthorizationFilter jwtAuthorizationFilter(AuthenticationManager authenticationManager){
+    public JwtAuthorizationFilter jwtAuthorizationFilter() throws Exception {
+        AuthenticationManager authenticationManager = getAuthenticationManager();
         return new JwtAuthorizationFilter(authenticationManager, userRepository);
     }
 

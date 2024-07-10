@@ -12,14 +12,14 @@ import pro.hexa.backend.main.api.domain.main.service.MainPageService;
 
 
 @RestController
-@RequestMapping("/mainpage")
+@RequestMapping("/")
 @RequiredArgsConstructor
 public class MainPageController {
 
     private final MainPageService mainPageService;
 
     @Operation(description = "main page 조회")
-    @GetMapping("/data")
+    @GetMapping("")
     public ResponseEntity<MainPageResponse> getMainPageResponse() {
         return new ResponseEntity<>(mainPageService.getMainPageResponse(), HttpStatus.OK);
     }
