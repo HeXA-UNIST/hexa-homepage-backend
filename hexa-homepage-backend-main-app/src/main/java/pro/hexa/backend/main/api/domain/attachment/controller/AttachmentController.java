@@ -30,10 +30,10 @@ public class AttachmentController {
         FileInputStream inputStream = attachmentService.getFileInputStreamFromAttachment(attachment);
 
         HttpHeaders headers = new HttpHeaders();
-        if (mediaType == MediaType.APPLICATION_OCTET_STREAM) {
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + attachment.getName());
-        }
         headers.setContentType(mediaType);
+        if (mediaType == MediaType.APPLICATION_OCTET_STREAM) {
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachment.getName()+"\"");
+        }
 
         return ResponseEntity.ok()
             .headers(headers)
