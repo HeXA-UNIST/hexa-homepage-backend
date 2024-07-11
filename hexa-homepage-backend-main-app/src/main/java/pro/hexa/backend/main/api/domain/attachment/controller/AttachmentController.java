@@ -31,7 +31,7 @@ public class AttachmentController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(mediaType);
-        if (mediaType == MediaType.APPLICATION_OCTET_STREAM) {
+        if (mediaType.toString().equals(MediaType.APPLICATION_OCTET_STREAM.toString())) {
             headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachment.getName()+"\"");
         }
 
