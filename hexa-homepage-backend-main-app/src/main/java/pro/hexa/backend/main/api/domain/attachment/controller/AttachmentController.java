@@ -2,6 +2,8 @@ package pro.hexa.backend.main.api.domain.attachment.controller;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -32,7 +34,10 @@ public class AttachmentController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(mediaType);
         if (mediaType.toString().equals(MediaType.APPLICATION_OCTET_STREAM.toString())) {
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachment.getName()+"\"");
+            String encodedFileName;
+            encodedFileName = URLEncoder.encode(attachment.getName(), StandardCharsets.UTF_8).replaceAll("\\+", "%20");
+
+            headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''"+encodedFileName);
         }
 
         return ResponseEntity.ok()
